@@ -1,0 +1,24 @@
+<section class="widget{% if stale %} stale{% endif %}">
+  <h2>Getting there{% if stale %} <small class="badge">stale</small>{% endif %}</h2>
+  {% if not event %}
+  <p><small>No trips planned</small></p>
+  {% else %}
+  <p>{{ event.title }} <small>{{ event.start.astimezone(tz).strftime("%a %H:%M") }} · {{ event.location }}</small></p>
+  {% if not target %}
+  <p class="extra">No stop found for “{{ event.location }}”. Add it to places in config.yaml</p>
+  {% elif target.label == "home" %}
+  <p><small>At home, no trip needed</small></p>
+  {% elif not options %}
+  <p class="extra">No direct connection to {{ target.label }}</p>
+  {% else %}
+  <p class="advice">Leave by {{ leave_by.astimezone(tz).strftime("%H:%M") }}</p>
+  {% for c in options %}
+  <div class="event">
+    <span class="when">{{ c.departs.astimezone(tz).strftime("%H:%M") }}</span>
+    <span>{{ "🚋" if c.is_tram else "🚌" }} <b>{{ c.line }}</b> → {{ c.headsign }}<br>
+      <small>{{ c.from_stop }} → {{ c.to_stop }} {{ c.arrives.astimezone(tz).strftime("%H:%M") }}</small></span>
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endif %}
+</section>

@@ -7,11 +7,14 @@ import httpx
 import pytest
 from sqlalchemy.orm import Session
 
+from assistant.core.config import LocationRule
 from assistant.core.db import make_engine
 from assistant.modules.calendar import client, collector, service
 from assistant.modules.calendar.collector import CalendarCollector, parse
+from assistant.modules.calendar.models import CalendarEvent
 
 TZ = ZoneInfo("Europe/Warsaw")
+OFFICE = LocationRule(title="praca", days=["wed"], place="work")
 ITEMS = json.loads(Path("tests/fixtures/calendar/events.json").read_text(encoding="utf-8"))["items"]
 
 
@@ -49,13 +52,36 @@ def db(tmp_path, monkeypatch):
 
 def test_outdoor_events_are_timed_with_location(db):
     with Session(db) as s:
-        assert service.outdoor_events(s, local(5, 7), TZ) == [
+        assert service.outdoor_events(s, local(5, 7), TZ, rules=[]) == [
             (local(5, 10), local(5, 12)),
             (local(5, 12, 15), local(5, 14)),
         ]
-        titles = [e.title for e in service.day_events(s, local(5, 7), TZ)]
+        titles = [e.title for e in service.day_events(s, local(5, 7), TZ, rules=[])]
         assert "Urodziny Zosi" not in titles and titles[0] == "Algorytmy i struktury danych"
-        assert service.next_event_with_location(s, local(5, 11)).title == "Sieci komputerowe"
+        nxt = service.next_event_with_location(s, local(5, 11), TZ, rules=[])
+        assert nxt.title == "Sieci komputerowe"
+
+
+def test_location_rule_sends_work_to_office_only_on_office_days(db):
+    with Session(db) as s, s.begin():
+        for d in (6, 7):  # Tuesday (home office), Wednesday (office)
+            s.add(
+                CalendarEvent(
+                    id=f"work{d}",
+                    start=local(d, 8),
+                    end=local(d, 16),
+                    title="Praca 💼",
+                    location=None,
+                    all_day=False,
+                    kind="default",
+                )
+            )
+    with Session(db) as s:
+        assert service.outdoor_events(s, local(6, 7), TZ, rules=[OFFICE]) == []
+        wed = service.day_events(s, local(7, 7), TZ, rules=[OFFICE])
+        assert [(e.title, e.location) for e in wed] == [("Praca 💼", "work")]
+        nxt = service.next_event_with_location(s, local(5, 15), TZ, rules=[OFFICE])
+        assert (nxt.title, nxt.start) == ("Praca 💼", local(7, 8))
 
 
 def test_rerun_replaces_everything(db, monkeypatch):
@@ -63,7 +89,7 @@ def test_rerun_replaces_everything(db, monkeypatch):
     with Session(db) as s, s.begin():
         CalendarCollector().run(s)
     with Session(db) as s:
-        assert len(service.events_between(s, local(1, 0), local(31, 0))) == 1
+        assert len(service.events_between(s, local(1, 0), local(31, 0), TZ, rules=[])) == 1
 
 
 def test_add_event_posts_to_google(monkeypatch):

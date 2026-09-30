@@ -23,7 +23,7 @@ Most features are scheduled data fetching + filtering rules. **Default to determ
 |---|---|---|---|
 | `weather` | Forecast + clothing advice covering the whole day out (e.g. take a jacket if returning late and it gets cold) | Open-Meteo (free, no key) + calendar end times | No — rules |
 | `calendar` | Events + notifications; add events (bot/voice) | Google Calendar API (OAuth, `calendar.events` scope) | No |
-| `mpk` | Tram/bus departures to the next calendar event's location | Wrocław open data GTFS + live vehicle positions | No |
+| `mpk` | Tram/bus departures to the next calendar event's location | Wrocław open data GTFS (open-data.cui.wroclaw.pl) + live vehicle positions (later) | No |
 | `email` | Summary of important emails | Gmail API; rules filter first | Summary only |
 | `birthdays` | Upcoming birthdays | Google Contacts / manual list in config | No |
 | `jobs` | Interesting job offers | justjoin.it, nofluffjobs, pracuj.pl | Optional ranking |
@@ -119,7 +119,8 @@ Allowed AI uses: email summary, news summary, film/book selection, optional job 
 
 - All datetimes timezone-aware; store UTC, display `Europe/Warsaw`.
 - Configuration in `config/config.yaml`, validated with pydantic on startup; secrets only in `.env`.
-- Place names: user refers to places by aliases (`home`, `uni`, `gym`) defined in config, mapped to GTFS stop IDs. Match spoken/typed stop names with fuzzy matching against the GTFS stop list.
+- Place names: user refers to places by aliases (`home`, `uni`, `work`, `vb`) defined in `places` in config, mapped to GTFS stop **names** (stable across timetable versions, unlike IDs). Free text (calendar locations, later chat/voice) goes through `mpk.service.resolve()`: alias/keyword → stop name in text → fuzzy match. Compare text with `core.config.fold()` (case + Polish diacritics).
+- Calendar events without a location get one from `location_rules` in config (e.g. work → office only on office days). User-editable; later the bot may edit them.
 - Scrapers: identify with a sensible User-Agent, respect rate limits, cache responses, keep request frequency low. Isolate parsing so breakage is easy to fix, and cover it with fixture-based tests.
 - Type hints everywhere; small functions; docstrings on public service functions.
 - Tests: every module gets tests for its parsing and rules using fixtures in `tests/fixtures/<module>/`. No network in tests.
@@ -148,7 +149,7 @@ Work in this order. Keep each step small and working end-to-end before moving on
 - [x] Project skeleton: uv project, `core/` (config, db, logging, collector_runs), worker, api with empty dashboard, docker-compose, `.env.example`, `config/config.yaml`
 - [x] `weather` module: Open-Meteo collector + clothing rules + dashboard widget (first module — proves the whole pattern, no API keys needed)
 - [x] `calendar` module: Google Calendar API (read + `add_event`), widget, feeds weather advice
-- [ ] `mpk` module: GTFS import, departures for aliases, link with next calendar event
+- [x] `mpk` module: GTFS import, departures for aliases, link with next calendar event (live delays + transfers later)
 
 **Phase 2 — alerts**
 - [ ] Telegram bot + `core/notifier`

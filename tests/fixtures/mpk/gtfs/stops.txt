@@ -1,0 +1,6 @@
+stop_id,stop_code,stop_name,stop_lat,stop_lon
+1,1,DWORZEC GŁÓWNY,51.098,17.036
+2,2,DWORZEC GŁÓWNY,51.098,17.037
+3,3,Kościuszki,51.104,17.034
+4,4,PL. GRUNWALDZKI,51.111,17.060
+5,5,most Grunwaldzki,51.110,17.050

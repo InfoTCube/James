@@ -1,6 +1,31 @@
 # User preferences. Validated by assistant.core.config on startup. Secrets go in .env.
 timezone: Europe/Warsaw
 
-location:  # home, Wrocław
+location:  # home, Wrocław (weather)
   latitude: 51.1079
   longitude: 17.0385
+
+# Places you refer to by alias: in calendar event locations, and later in chat/voice.
+# stops: GTFS stop names exactly as in the timetable (case matters: trams are UPPERCASE).
+# keywords: other words that mean this place in a calendar location (case/diacritics ignored).
+places:
+  home:  # Kościuszki 71
+    stops: ["DWORZEC GŁÓWNY (Dworcowa)", "Dworzec Główny (MDK)", "DWORZEC GŁÓWNY", "Kościuszki"]
+    keywords: ["Kościuszki 71"]
+  uni:
+    stops: ["PL. GRUNWALDZKI", "most Grunwaldzki"]
+    keywords: ["Politechnika", "PWr", "Wyspiańskiego"]
+  work:  # Nicolas Business Center
+    stops: ["Rynek", "PL. JANA PAWŁA II"]
+    keywords: ["Nicolas", "office", "biuro"]
+  vb:  # volleyball, SWFiS PWr
+    stops: ["Biegasa", "Chełmońskiego"]
+    keywords: ["SWFiS", "Studium Wychowania Fizycznego", "volleyball", "siatkówka"]
+
+# Calendar events without a location get one from the first matching rule.
+# Work: office on Wed/Thu, home office other days (no location = you don't go out).
+# To change office days, edit `days`.
+location_rules:
+  - title: Praca  # matches events whose title contains this (case/diacritics ignored)
+    days: [wed, thu]
+    place: work

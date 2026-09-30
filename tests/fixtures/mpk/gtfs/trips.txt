@@ -1,0 +1,5 @@
+route_id,service_id,trip_id,trip_headsign
+16,6,t16a,OSOBOWICE
+16,6,t16b,OSOBOWICE
+145,6,t145,BARTOSZOWICE
+145,3,t145sat,BARTOSZOWICE
