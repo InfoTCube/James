@@ -3,7 +3,9 @@
 - **Source:** Google Calendar API (free for personal use), scope `calendar.events` (read + write).
 - **Schedule:** every 15 min. Fetches today + 14 days with recurring events expanded, then replaces
   `calendar_events` completely, which picks up deleted and moved events. A failed fetch leaves the
-  old data untouched. Cancelled events and events you declined are skipped.
+  old data untouched. Cancelled events and events you declined are skipped. Google's contact
+  birthdays (`kind == "birthday"`) are stored but hidden from the widget and other reads; they're
+  meant for the birthdays module.
 - **Config (`.env`):** `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`, and
   `GOOGLE_CALENDAR_IDS`, which is optional. It defaults to `primary`; separate extra calendar IDs
   with spaces.

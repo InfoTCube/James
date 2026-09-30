@@ -34,6 +34,7 @@ def test_parse_skips_cancelled_and_declined():
         rows["call1"].start == datetime(2026, 10, 5, 16, tzinfo=UTC) and not rows["call1"].location
     )
     assert rows["bday1"].all_day and rows["bday1"].start == local(5, 0)
+    assert rows["bday1"].kind == "birthday" and c.kind == "default"
 
 
 @pytest.fixture
@@ -52,7 +53,8 @@ def test_outdoor_events_are_timed_with_location(db):
             (local(5, 10), local(5, 12)),
             (local(5, 12, 15), local(5, 14)),
         ]
-        assert [e.title for e in service.day_events(s, local(5, 7), TZ)][0] == "Urodziny Zosi"
+        titles = [e.title for e in service.day_events(s, local(5, 7), TZ)]
+        assert "Urodziny Zosi" not in titles and titles[0] == "Algorytmy i struktury danych"
         assert service.next_event_with_location(s, local(5, 11)).title == "Sieci komputerowe"
 
 

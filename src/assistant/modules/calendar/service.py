@@ -10,8 +10,11 @@ from assistant.modules.calendar.models import CalendarEvent
 
 
 def events_between(session: Session, start: datetime, end: datetime) -> list[CalendarEvent]:
-    """Events overlapping [start, end), ordered by start (all-day first on the same day)."""
-    q = select(CalendarEvent).where(CalendarEvent.start < end, CalendarEvent.end > start)
+    """Events overlapping [start, end), ordered by start (all-day first on the same day).
+    Birthdays are left out; they're stored for the birthdays module."""
+    q = select(CalendarEvent).where(
+        CalendarEvent.start < end, CalendarEvent.end > start, CalendarEvent.kind != "birthday"
+    )
     return list(session.scalars(q.order_by(CalendarEvent.start, CalendarEvent.all_day.desc())))
 
 

@@ -44,6 +44,7 @@ def parse(items: list[dict], tz: ZoneInfo) -> list[CalendarEvent]:
                 title=(item.get("summary") or "").strip() or "(no title)",
                 location=(item.get("location") or "").strip() or None,
                 all_day=all_day,
+                kind=item.get("eventType", "default"),
             )
         )
     return rows

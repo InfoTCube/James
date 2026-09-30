@@ -17,3 +17,4 @@ class CalendarEvent(Base):
     title: Mapped[str]
     location: Mapped[str | None]
     all_day: Mapped[bool]
+    kind: Mapped[str] = mapped_column(String(30))  # Google eventType: default, birthday, ...
