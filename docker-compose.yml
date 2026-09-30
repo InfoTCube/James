@@ -2,7 +2,7 @@ x-app: &app
   build: .
   env_file: [{ path: .env, required: false }]
   volumes:
-    - ./data:/app/data
+    - data:/app/data  # named volume: SQLite needs real file locking (a Windows bind mount breaks it)
     - ./config:/app/config:ro
   restart: unless-stopped
 
@@ -18,3 +18,6 @@ services:
     <<: *app
     command: python -m assistant.services.bot
     restart: on-failure  # exits cleanly (stays stopped) while TELEGRAM_BOT_TOKEN isn't set
+
+volumes:
+  data:

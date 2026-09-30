@@ -2,6 +2,7 @@
 
 import os
 import unicodedata
+from datetime import time
 from functools import lru_cache
 from pathlib import Path
 from typing import Literal
@@ -52,6 +53,15 @@ class LocationRule(BaseModel):
     place: str  # alias from `places`
 
 
+class AlarmConfig(BaseModel):
+    """Automatic wake-up alarm, planned from your first trip of the day."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    before_leaving_minutes: int = 40
+    latest: time = time(11, 0)  # no automatic alarm at or after this: you're up anyway
+
+
 class Config(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -59,6 +69,9 @@ class Config(BaseModel):
     location: Location
     places: dict[str, Place] = Field(default_factory=dict)
     location_rules: list[LocationRule] = []
+    alarm: AlarmConfig = Field(default_factory=AlarmConfig)
+    voice: str = "en_GB-cori-medium"  # Piper voice for reading aloud (core/tts.py)
+    voice_pl: str = "pl_PL-gosia-medium"  # ...and for Polish names in it
 
     @model_validator(mode="after")
     def _rule_places_exist(self) -> "Config":

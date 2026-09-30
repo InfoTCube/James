@@ -4,6 +4,7 @@ from datetime import timedelta
 from pathlib import Path
 
 from fastapi import APIRouter, Request
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -36,3 +37,15 @@ def weather_widget(request: Request):
             "describe": service.describe,
         },
     )
+
+
+@router.get("/widgets/weather/now")
+def weather_now():
+    """Current temperature for the dashboard's corner, e.g. "☁️ 12°"."""
+    now = utcnow()
+    with Session(get_engine()) as session:
+        hours = service.get_hours(session, now - timedelta(hours=1), now + timedelta(hours=1))
+    if not hours:
+        return HTMLResponse("")
+    icon = service.describe(hours[0].code)[1]
+    return HTMLResponse(f"{icon} {hours[0].temp:.0f}°")

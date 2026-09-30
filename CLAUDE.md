@@ -25,7 +25,7 @@ Most features are scheduled data fetching + filtering rules. **Default to determ
 | `calendar` | Events + notifications; add events (bot/voice) | Google Calendar API (OAuth, `calendar.events` scope) | No |
 | `mpk` | Tram/bus departures to the next calendar event's location | Wrocław open data GTFS (open-data.cui.wroclaw.pl) + live vehicle positions (mpk.wroc.pl, delay estimates) | No |
 | `email` | Summary of important emails | Gmail API; rules filter first | Summary only |
-| `birthdays` | Upcoming birthdays | Google Contacts / manual list in config | No |
+| `birthdays` | Upcoming birthdays + reminders | Google Calendar contact birthdays (via `calendar`) | No |
 | `jobs` | Interesting job offers | justjoin.it, nofluffjobs, pracuj.pl | Optional ranking |
 | `films` | Weekly film suggestions | TMDB API (incl. PL streaming availability) | Selection |
 | `books` | Monthly book suggestions | Open Library / Google Books | Selection |
@@ -69,7 +69,7 @@ Monorepo. **Each feature is a module folder; containers are grouped by runtime r
     └── fixtures/           # recorded API/HTML responses — tests never hit the network
 ```
 
-Containers (docker-compose services): `api`, `worker`, `bot`, later `voice`. All share the `data/` volume and one SQLite database (WAL mode).
+Containers (docker-compose services): `api`, `worker`, `bot`, later `voice`. All share the `data` named volume and one SQLite database (WAL mode). Never bind-mount the DB from a Windows/macOS host folder: Docker Desktop's file sharing breaks SQLite locking (random "unable to open database file"). Local `uv run` uses `./data` — a separate dev database.
 
 ### Module contract
 
@@ -94,6 +94,7 @@ Rules:
 - SQLite via SQLAlchemy 2.x
 - httpx for HTTP; selectolax or BeautifulSoup for scraping
 - python-telegram-bot for the bot
+- Speech: Piper TTS in `core/tts.py` (dashboard reads the briefing and "leave now" aloud; English voice + Polish voice for Polish names; voices in `config.yaml`, downloaded to `data/voices`)
 - Voice (later): openWakeWord, whisper.cpp or faster-whisper (`base.en`), Piper TTS
 - Docker Compose for running everything
 
@@ -133,7 +134,8 @@ uv sync                          # install dependencies
 uv run pytest                    # run tests
 uv run ruff check . && uv run ruff format .
 uv run python -m assistant.services.worker --run-once weather   # run one collector manually
-docker compose up --build        # run the whole system
+docker compose up --build        # run the whole system (data in the `data` named volume)
+docker compose exec worker python -m assistant.services.worker --run-once weather  # against live data
 uv run python -m assistant.services.api                          # dashboard on :8000
 uv run --env-file .env python -m assistant.services.bot          # Telegram bot
 ```
@@ -157,14 +159,15 @@ Work in this order. Keep each step small and working end-to-end before moving on
 - [ ] `flights`, `jobs`, `events`
 
 **Phase 3 — voice & alarm**
-- [ ] `alarm` + morning briefing
+- [x] `alarm` + morning briefing (Telegram for now; sound + speech with voice)
 - [ ] `voice` service with intent matcher; AI fallback
-- [ ] `notes`
+- [x] `notes` (Telegram /note /notes /note_del; voice later)
 
 **Phase 4 — AI-assisted & the rest**
 - [ ] `core/ai.py` wrapper
 - [ ] `email`, `news`, `films`, `books`
-- [ ] `sports`, `birthdays`, `biedronka`, `music`
+- [x] `birthdays`
+- [ ] `sports`, `biedronka`, `music`
 
 ## How to work in this repo
 

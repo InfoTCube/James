@@ -24,10 +24,10 @@ def format_connection(c: service.Connection, tz: ZoneInfo) -> str:
         live = f" ~{c.delay_min:+d} min"
     elif c.delay_min == 0:
         live = " (on time)"
+    arrival = ("~" if c.delay_min else "") + f"{c.expected_arrival.astimezone(tz):%H:%M}"
     return (
         f"{icon} {c.line} → {c.headsign} from {c.from_stop} at "
-        f"{c.departs.astimezone(tz):%H:%M}{live} "
-        f"(arrives {c.to_stop} {c.arrives.astimezone(tz):%H:%M})"
+        f"{c.departs.astimezone(tz):%H:%M}{live} (arrives {c.to_stop} {arrival})"
     )
 
 
@@ -50,8 +50,13 @@ def leave_now_message(
     minutes = round((leave_by - now).total_seconds() / 60)
     when = f"in {minutes} min" if minutes > 0 else "now"
     leg, first = trip.leg, trip.options[0]
+    head = (
+        f"🚶 Leave {when} for {leg.title} ({leg.arrive_by.astimezone(tz):%H:%M}, {leg.dest.label})"
+    )
+    if trip.late_min:
+        head += f". You'll be ~{trip.late_min} min late"
     lines = [
-        f"🚶 Leave {when} for {leg.title} ({leg.arrive_by.astimezone(tz):%H:%M}, {leg.dest.label})",
+        head,
         format_connection(first, tz),
     ]
     if len(trip.options) > 1:

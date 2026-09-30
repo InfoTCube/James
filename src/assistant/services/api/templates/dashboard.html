@@ -4,52 +4,350 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=Barlow+Condensed:wght@300;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.4/dist/htmx.min.js"></script>
   <style>
-    :root { --bg: #0e0f11; --card: #17191c; --fg: #e8e6e3; --dim: #8a8f98; --accent: #7cc4ff; --warn: #ffb454; }
+    :root {
+      --night: #15212c;   /* background: dark, but not black, for a room at night */
+      --panel: #1c2b38;
+      --paper: #ece5d5;   /* text */
+      --slate: #7d8c9a;   /* secondary text */
+      --amber: #f2a93b;   /* only for "act now": leaving, the card on screen */
+      --sky: #8fb9d6;     /* weather, live "on time" */
+      --numbers: "Barlow Condensed", "Arial Narrow", sans-serif;
+      --text: "Barlow", "Segoe UI", sans-serif;
+      --gap: clamp(12px, min(2.2vw, 3.9vh), 44px);
+    }
     * { box-sizing: border-box; }
-    body { margin: 0; padding: 2.5vh 2.5vw; background: var(--bg); color: var(--fg);
-           font: 1.4rem/1.35 system-ui, sans-serif; height: 100vh; overflow: hidden; }
-    header { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 2vh; }
-    #clock { font-size: 5rem; font-weight: 200; font-variant-numeric: tabular-nums; }
-    #date { color: var(--dim); font-size: 1.6rem; }
-    main { display: grid; grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr)); gap: 1.5rem; }
-    main > div:empty { display: none; }  /* widgets with nothing to show return nothing */
-    .widget { background: var(--card); border-radius: 1rem; padding: 1.2rem 1.5rem; }
-    .widget h2 { margin: 0 0 .6rem; font-size: 1rem; font-weight: 600; letter-spacing: .1em;
-                 text-transform: uppercase; color: var(--dim); }
-    .widget.stale { opacity: .55; }
-    .badge { color: var(--warn); margin-left: .5rem; }
-    small { color: var(--dim); font-size: .75em; }
-    .now { display: flex; align-items: center; gap: 1rem; }
-    .now .icon { font-size: 3.5rem; }
-    .big { font-size: 4.5rem; font-weight: 200; line-height: 1; }
-    .strip { display: flex; justify-content: space-between; margin: 1rem 0; text-align: center; }
-    .strip > div { display: flex; flex-direction: column; }
-    .rain { color: var(--accent); min-height: 1.2em; }
-    .advice { font-size: 1.6rem; margin: .5rem 0 .2rem; }
-    .extra { margin: .2rem 0; color: var(--warn); }
-    .widget h3 { margin: .8rem 0 .3rem; font-size: 1.1rem; color: var(--accent); }
-    .event { display: flex; gap: 1rem; margin: .4rem 0; }
-    .live { color: #8fd18f; }
-    .late { color: var(--warn); }
-    .when { min-width: 7.5rem; font-variant-numeric: tabular-nums; color: var(--dim); }
+    html, body { height: 100%; }
+    body {
+      margin: 0; background: var(--night); color: var(--paper);
+      font: clamp(14px, min(1.9vw, 3.35vh), 38px)/1.3 var(--text);
+      display: grid; grid-template-columns: minmax(260px, 27vw) 1fr; overflow: hidden;
+    }
+
+    /* left rail: always visible */
+    #rail {
+      display: flex; flex-direction: column; gap: calc(var(--gap) / 2);
+      padding: var(--gap); border-right: 1px solid var(--panel);
+    }
+    #clock {
+      font: 300 clamp(56px, min(11vw, 19.5vh), 230px)/0.85 var(--numbers);
+      font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+    }
+    #date { font-size: 1.15em; }
+    #date span { display: block; color: var(--slate); }
+    #temp { font: 500 2.2em/1 var(--numbers); color: var(--sky); min-height: 1em; }
+    #next-alarm { font: 500 1.6em/1 var(--numbers); }
+    #next-alarm span { color: var(--slate); font: 400 0.6em var(--text); margin-left: 0.3em; }
+    #cards { margin: auto 0 0; padding: 0; list-style: none; color: var(--slate); font-size: 0.8em; }
+    #cards li { padding: 0.25em 0 0.25em 0.9em; border-left: 3px solid transparent; }
+    #cards li.on { color: var(--paper); border-left-color: var(--amber); }
+
+    /* stage: one card at a time */
+    main { display: grid; grid-template-rows: 1fr auto; min-width: 0; }
+    #stage { position: relative; }
+    .slot {
+      position: absolute; inset: 0; padding: var(--gap) calc(var(--gap) * 1.4);
+      opacity: 0; visibility: hidden; overflow: hidden;
+      transition: opacity 0.6s ease, visibility 0s linear 0.6s;
+      font-size: 1.35em;  /* cards are read from across the room */
+    }
+    .slot.on { opacity: 1; visibility: visible; transition: opacity 0.6s ease; }
+    #strip:empty { display: none; }
+    #strip {
+      display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3em 1.2em;
+      padding: calc(var(--gap) * 0.6) calc(var(--gap) * 1.4);
+      background: var(--amber); color: var(--night); font-size: 1.1em;
+    }
+    #strip b { font: 600 1.5em/1 var(--numbers); }
+
+    /* alarm: takes over the whole screen */
+    #alarm[hidden] { display: none; }
+    #alarm { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; }
+    #alarm.ringing { background: var(--amber); color: var(--night); }
+    #alarm.briefing { background: var(--night); cursor: pointer; overflow-y: auto; place-items: start center; }
+    #ring { display: grid; justify-items: center; gap: calc(var(--gap) / 2); text-align: center; }
+    #alarm.briefing #ring, #alarm.ringing #briefing { display: none; }
+    #bell { width: min(34vh, 34vw); height: auto; transform-origin: 50% 8%; animation: swing 1s ease-in-out infinite alternate; }
+    @keyframes swing { from { transform: rotate(-14deg); } to { transform: rotate(14deg); } }
+    #ring-time { font: 300 clamp(80px, 16vh, 220px)/0.9 var(--numbers); }
+    #ring-label { font-size: 1.2em; min-height: 1.3em; }
+    #ring-buttons { display: flex; gap: var(--gap); margin-top: var(--gap); }
+    #ring-buttons button {
+      font: 600 1.5em/1 var(--numbers); padding: 0.55em 1.4em; border-radius: 0.3em; cursor: pointer;
+      border: 3px solid var(--night); background: var(--night); color: var(--amber);
+    }
+    #ring-buttons #snooze { background: transparent; color: var(--night); }
+    #ring-buttons button:focus-visible { outline: 4px solid var(--paper); outline-offset: 4px; }
+    #briefing { max-width: 34em; padding: var(--gap); font-size: 1.35em; }
+    #briefing p { margin: 0.35em 0; color: var(--slate); transition: color 0.3s; }
+    #briefing p.read, #briefing p.reading { color: var(--paper); }
+    #briefing p:first-child { font: 300 2.2em/1 var(--numbers); margin-bottom: 0.6em; }
+    #briefing-close { color: var(--slate); font-size: 0.6em; margin-top: 2em; }
+    #sound-hint { color: var(--amber); font-size: 0.7em; }
+    #leave[hidden] { display: none; }
+    #leave {
+      position: fixed; inset: 0; z-index: 9; display: grid; align-content: center;
+      padding: var(--gap) 12vw; background: var(--amber); color: var(--night); cursor: pointer;
+    }
+    #leave p { margin: 0.3em 0; font-size: 1.4em; opacity: 0.55; transition: opacity 0.3s; }
+    #leave p.reading, #leave p.read { opacity: 1; }
+    #leave p:first-child { font: 600 3em/1 var(--numbers); margin-bottom: 0.5em; }
+
+    /* card content (the module widgets) */
+    .widget h2 { margin: 0 0 0.8em; font: 500 1em/1 var(--text); color: var(--slate); }
+    .widget h3 { margin: 1em 0 0.3em; font: 600 1.4em/1 var(--numbers); color: var(--sky); }
+    .widget.stale { opacity: 0.6; }
+    .badge { color: var(--amber); margin-left: 0.4em; font-size: 0.8em; }
+    small { color: var(--slate); font-size: 0.72em; }
+    .now { display: flex; align-items: center; gap: 0.6em; }
+    .now .icon { font-size: 3.4em; }
+    .big { font: 300 5.5em/0.9 var(--numbers); }
+    .strip { display: flex; justify-content: space-between; margin: 1.4em 0; text-align: center; }
+    .strip > div { display: flex; flex-direction: column; gap: 0.1em; }
+    .strip .icon { font-size: 1.6em; }
+    .rain { color: var(--sky); min-height: 1.2em; }
+    .advice { margin: 0.6em 0 0.2em; font-size: 1.4em; }
+    .extra { margin: 0.25em 0; color: var(--amber); }
+    .event { display: flex; gap: 1em; margin: 0.45em 0; }
+    .event > span:last-child { min-width: 0; }
+    .event small { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }  /* long addresses: one line */
+    .when {
+      min-width: 4.6em; font: 500 1.25em/1.1 var(--numbers); color: var(--slate);
+      font-variant-numeric: tabular-nums;
+    }
+    .live { color: var(--sky); }
+    .late { color: var(--amber); }
+
+    @media (prefers-reduced-motion: reduce) { .slot, .slot.on { transition: none; } #bell { animation: none; } }
+    @media (max-width: 700px) {  /* phone: stack rail above the stage */
+      body { grid-template-columns: 1fr; overflow: auto; }
+      #rail { border-right: 0; border-bottom: 1px solid var(--panel); }
+      #stage { min-height: 70vh; }
+    }
   </style>
 </head>
 <body>
-  <header><span id="clock"></span><span id="date"></span></header>
+  <aside id="rail">
+    <div id="clock"></div>
+    <div id="date"></div>
+    <div id="temp" hx-get="/widgets/weather/now" hx-trigger="load, every 10m"></div>
+    <div id="next-alarm" hx-get="/widgets/alarm/next" hx-trigger="load, every 1m"></div>
+    <ul id="cards"></ul>
+    <div id="sound-hint" hidden>Click anywhere once to allow the alarm sound</div>
+  </aside>
   <main>
-    <div hx-get="/widgets/weather" hx-trigger="load, every 10m"></div>
-    <div hx-get="/widgets/calendar" hx-trigger="load, every 5m"></div>
-    <div hx-get="/widgets/mpk" hx-trigger="load, every 1m"></div>
+    <div id="stage">
+      <div class="slot" data-name="Weather" hx-get="/widgets/weather" hx-trigger="load, every 10m"></div>
+      <div class="slot" data-name="Getting there" hx-get="/widgets/mpk" hx-trigger="load, every 1m"></div>
+      <div class="slot" data-name="Calendar" hx-get="/widgets/calendar" hx-trigger="load, every 5m"></div>
+      <div class="slot" data-name="Birthdays" hx-get="/widgets/birthdays" hx-trigger="load, every 30m"></div>
+    </div>
+    <div id="strip" hx-get="/widgets/mpk/strip" hx-trigger="load, every 1m"></div>
   </main>
+  <div id="leave" hidden role="alert"></div>
+  <div id="alarm" hidden>
+    <div id="ring" role="alert">
+      <svg id="bell" viewBox="0 0 100 110" aria-hidden="true">
+        <circle cx="50" cy="8" r="6" fill="currentColor"/>
+        <path d="M50 12c-20 0-32 16-32 36v22L8 84v6h84v-6L82 70V48c0-20-12-36-32-36z" fill="currentColor"/>
+        <circle cx="50" cy="100" r="9" fill="currentColor"/>
+      </svg>
+      <div id="ring-time"></div>
+      <div id="ring-label"></div>
+      <div id="ring-buttons">
+        <button id="stop" type="button">Stop</button>
+        <button id="snooze" type="button">Snooze 10 min</button>
+      </div>
+    </div>
+    <div id="briefing">
+      <div id="briefing-text"></div>
+      <div id="briefing-close">Closes by itself after reading. Click to close now.</div>
+    </div>
+  </div>
   <script>
+    const TZ = "Europe/Warsaw", ROTATE_MS = 8000;
+    const slots = [...document.querySelectorAll(".slot")];
+    const list = document.getElementById("cards");
+    let current = null;
+
     function tick() {
       const now = new Date();
-      clock.textContent = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" });
-      date.textContent = now.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "Europe/Warsaw" });
+      clock.textContent = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: TZ });
+      date.innerHTML = now.toLocaleDateString("en-GB", { weekday: "long", timeZone: TZ })
+        + "<span>" + now.toLocaleDateString("en-GB", { day: "numeric", month: "long", timeZone: TZ }) + "</span>";
     }
+
+    // Show one card; cards whose widget returned nothing are skipped.
+    function show(advance) {
+      const filled = slots.filter(s => s.firstElementChild);
+      if (!filled.includes(current)) current = filled[0] || null;
+      else if (advance) current = filled[(filled.indexOf(current) + 1) % filled.length];
+      slots.forEach(s => s.classList.toggle("on", s === current));
+      list.replaceChildren(...filled.map(s => {
+        const li = document.createElement("li");
+        li.textContent = s.dataset.name;
+        li.classList.toggle("on", s === current);
+        return li;
+      }));
+    }
+
     tick(); setInterval(tick, 1000);
+    setInterval(() => show(true), ROTATE_MS);
+    document.body.addEventListener("htmx:afterSwap", () => show(false));
+
+    // --- alarm: bell + sound while ringing, then the briefing (shown and read aloud) ---
+    const overlay = document.getElementById("alarm");
+    const audio = new AudioContext();
+    let alarm = { state: "idle" }, beeper = null, briefingFor = null, closedFor = null;
+
+    const hint = document.getElementById("sound-hint");
+    let soundClick = false;  // this click only allowed sound: don't also act on it
+    const unlock = e => {
+      if (audio.state === "running") return;
+      soundClick = e.type === "click";
+      audio.resume().then(() => { hint.hidden = true; });
+    };
+    hint.hidden = audio.state === "running";
+    document.addEventListener("click", unlock, { capture: true });  // runs before the screens' own
+    document.addEventListener("keydown", unlock, { capture: true });
+    const closeClick = () => { const ignore = soundClick; soundClick = false; return !ignore; };
+
+    function beep(at, freq) {
+      const osc = audio.createOscillator(), gain = audio.createGain();
+      osc.frequency.value = freq; osc.connect(gain); gain.connect(audio.destination);
+      gain.gain.setValueAtTime(0.0001, at);
+      gain.gain.exponentialRampToValueAtTime(0.6, at + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, at + 0.18);
+      osc.start(at); osc.stop(at + 0.2);
+    }
+    function startBeeping(secondsLeft) {
+      if (beeper) return;
+      const ring = () => { const t = audio.currentTime; beep(t, 880); beep(t + 0.25, 1175); };
+      ring(); beeper = setInterval(ring, 1000);
+      setTimeout(stopBeeping, secondsLeft * 1000);  // gives up after 3 min even if offline
+    }
+    function stopBeeping() { clearInterval(beeper); beeper = null; }
+
+    // Speech: the server's Piper voice (/api/tts); the browser's own voice if that fails.
+    const spoken = text => text.replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}]/gu, "")
+      .replace(/·/g, ",").replace(/→/g, "to").trim();
+    function fetchSpeech(text) {  // starts generating now; resolves to an audio URL or null
+      return fetch("/api/tts?text=" + encodeURIComponent(spoken(text)))
+        .then(r => r.ok ? r.blob() : null).then(b => b && URL.createObjectURL(b)).catch(() => null);
+    }
+    function play(url, text) {
+      return new Promise(resolve => {
+        const words = text.split(/\s+/).length;
+        const safety = setTimeout(resolve, 4000 + words * 700);  // never hang on a line
+        const done = () => { clearTimeout(safety); resolve(); };
+        if (url) {
+          const a = new Audio(url);
+          a.onended = a.onerror = done;
+          a.play().catch(done);  // e.g. sound not allowed yet
+          playing = a;
+        } else if ("speechSynthesis" in window) {
+          const u = new SpeechSynthesisUtterance(spoken(text));
+          u.lang = "en-GB"; u.onend = u.onerror = done;
+          speechSynthesis.speak(u);
+        } else done();
+      });
+    }
+    let playing = null, reading = 0;  // `reading` is bumped to abandon a read-through
+    function hush() { reading++; playing?.pause(); window.speechSynthesis?.cancel(); }
+
+    // Read lines aloud one by one: highlight + scroll to each, at least a reading-pace pause.
+    async function readThrough(paragraphs) {
+      hush();
+      const run = reading;
+      let next = paragraphs.length ? fetchSpeech(paragraphs[0].textContent) : null;
+      for (const [i, p] of paragraphs.entries()) {
+        const url = await next;
+        if (run !== reading) return false;
+        next = i + 1 < paragraphs.length ? fetchSpeech(paragraphs[i + 1].textContent) : null;
+        p.classList.add("reading");
+        p.scrollIntoView({ behavior: "smooth", block: "center" });
+        const words = p.textContent.split(/\s+/).length;
+        await Promise.all([play(url, p.textContent), new Promise(r => setTimeout(r, 600 + words * 300))]);
+        if (run !== reading) return false;
+        p.classList.replace("reading", "read");
+      }
+      return true;
+    }
+
+    const CLOSE_AFTER_MS = 20000;  // after the last line, then back to the normal dashboard
+    function closeBriefing(id) { closedFor = id; hush(); overlay.hidden = true; }
+
+    async function apply(next) {
+      alarm = next;
+      if (alarm.state !== "idle" && !leave.hidden) { hush(); leave.hidden = true; }
+      if (alarm.state === "ringing") {
+        overlay.className = "ringing"; overlay.hidden = false;
+        document.getElementById("ring-time").textContent = alarm.time;
+        document.getElementById("ring-label").textContent = alarm.label;
+        startBeeping(alarm.seconds_left);
+        return;
+      }
+      stopBeeping();
+      if (alarm.state === "briefing" && closedFor !== alarm.id) {
+        overlay.className = "briefing"; overlay.hidden = false;
+        if (briefingFor !== alarm.id) {
+          briefingFor = alarm.id;
+          const box = document.getElementById("briefing-text");
+          box.innerHTML = await (await fetch("/widgets/briefing")).text();
+          const id = alarm.id;
+          readThrough([...box.querySelectorAll("p")]).then(finished => {
+            if (finished) setTimeout(() => { if (closedFor !== id && briefingFor === id) closeBriefing(id); }, CLOSE_AFTER_MS);
+          });
+        }
+        return;
+      }
+      overlay.hidden = true;
+    }
+    async function poll() {
+      try { apply(await (await fetch("/api/alarm/state")).json()); } catch (e) { /* retry next poll */ }
+    }
+    async function act(what) {
+      const r = await fetch(`/api/alarm/${alarm.id}/${what}`, { method: "POST" });
+      if (r.ok) apply(await r.json()); else poll();
+    }
+    document.getElementById("stop").addEventListener("click", () => act("stop"));
+    document.getElementById("snooze").addEventListener("click", () => act("snooze"));
+    document.getElementById("briefing").addEventListener("click", () => {
+      if (closeClick()) closeBriefing(alarm.id);
+    });
+    poll(); setInterval(poll, 3000);
+
+    // "Leave now": same moment as the Telegram alert; shown and read once per trip.
+    const leave = document.getElementById("leave");
+    let announced = null;
+    async function pollLeave() {
+      if (!overlay.hidden || !leave.hidden) return;  // alarm, briefing or "leave now" showing
+      try {
+        const a = await (await fetch("/api/mpk/announce")).json();
+        if (!a.key || a.key === announced) return;
+        if (!overlay.hidden) return;  // the briefing started meanwhile: it goes first
+        announced = a.key;
+        leave.innerHTML = a.lines.map(l => `<p>${l.replace(/[<&]/g, c => ({"<": "&lt;", "&": "&amp;"})[c])}</p>`).join("");
+        leave.hidden = false;
+        await readThrough([...leave.querySelectorAll("p")]);
+        setTimeout(() => { leave.hidden = true; }, CLOSE_AFTER_MS);
+      } catch (e) { /* try again next time */ }
+    }
+    leave.addEventListener("click", () => { if (closeClick()) { hush(); leave.hidden = true; } });
+    pollLeave(); setInterval(pollLeave, 15000);
+
+    // After a deploy the server's version changes: reload to get the new page (kiosk has no F5).
+    // Not while ringing or showing the briefing, so an update never interrupts an alarm.
+    setInterval(async () => {
+      try {
+        const { version } = await (await fetch("/api/health")).json();
+        if (version !== "{{ version }}" && alarm.state === "idle") location.reload();
+      } catch (e) { /* server restarting: try again next minute */ }
+    }, 60000);
   </script>
 </body>
 </html>

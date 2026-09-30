@@ -29,3 +29,16 @@ location_rules:
   - title: Praca  # matches events whose title contains this (case/diacritics ignored)
     days: [wed, thu]
     place: work
+
+# Automatic wake-up: this long before you have to leave for your first event,
+# but only if that's before `latest` (otherwise you're assumed to be up already).
+alarm:
+  before_leaving_minutes: 40
+  latest: "11:00"
+
+# Voice for reading aloud (briefing, "leave now"): a Piper voice name, downloaded on first use.
+# Try others: en_GB-alan-medium, en_US-lessac-medium, en_US-ryan-medium (full list:
+# https://huggingface.co/rhasspy/piper-voices).
+voice: en_GB-cori-medium
+# Polish names (stops, streets, people) are read by this Polish voice. Also: pl_PL-darkman-medium
+voice_pl: pl_PL-gosia-medium

@@ -253,3 +253,21 @@ def test_live_delay_interpolates_between_stops():
     # halfway between DWORZEC GŁÓWNY (09:30) and Kościuszki (09:33) → scheduled 09:31:30
     now = at(1, 9, 33) + timedelta(seconds=30)
     assert delay_after([51.097, 51.101], now) == 2
+
+
+def test_late_trip_shows_connections_arriving_up_to_20_min_late(db, monkeypatch):
+    from assistant.core.config import Config
+
+    config = Config(location={"latitude": 51.1, "longitude": 17.0}, places=PLACES)
+    leg = service.Leg("Class", HOME, UNI, None, at(1, 9, 45), at(1, 7, 45), at(1, 9, 45))
+    monkeypatch.setattr(service, "day_legs", lambda s, n, c: [leg])
+    with Session(db) as s:
+        on_time = service.current_trip(s, at(1, 9, 20), config)
+        late = service.current_trip(s, at(1, 9, 36), config)
+    assert on_time.late_min is None and on_time.options
+    # nothing leaves after 09:41 that arrives by 09:40; tram 16 at 09:53 arrives 10:00 (+5 walk)
+    assert late.late_min == 20
+    assert [(c.line, c.departs, c.arrives) for c in late.options] == [
+        ("16", at(1, 9, 53), at(1, 10, 0))
+    ]
+    assert late.leave_by == at(1, 9, 48)

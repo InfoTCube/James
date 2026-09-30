@@ -70,3 +70,11 @@ def next_event_with_location(
     """The next timed event with a location that hasn't started yet (looks 7 days ahead)."""
     upcoming = events_between(session, now, now + timedelta(days=7), tz, rules)
     return next((e for e in upcoming if e.start > now and e.location and not e.all_day), None)
+
+
+def birthdays_between(session: Session, start: datetime, end: datetime) -> list[CalendarEvent]:
+    """Google's contact birthdays (all-day events) starting in [start, end), by date."""
+    q = select(CalendarEvent).where(
+        CalendarEvent.kind == "birthday", CalendarEvent.start >= start, CalendarEvent.start < end
+    )
+    return list(session.scalars(q.order_by(CalendarEvent.start)))

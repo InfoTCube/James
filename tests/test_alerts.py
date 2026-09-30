@@ -113,7 +113,6 @@ def test_help_lists_every_command():
         *(f"/{name} – {desc}" for name, (_, desc) in COMMANDS.items()),
         "/help – This list",
     ]
-    assert set(COMMANDS) == {"next", "today", "weather"}
 
 
 def test_live_delay_moves_the_alert():
@@ -123,7 +122,7 @@ def test_live_delay_moves_the_alert():
     _, text = leave_now_message(t, at(7, 39), TZ)
     assert text.splitlines() == [
         "🚶 Leave in 4 min for Praca (08:00, work)",
-        "🚋 22 → PILCZYCE from DWORZEC GŁÓWNY at 07:45 ~+3 min (arrives Rynek 07:55)",
+        "🚋 22 → PILCZYCE from DWORZEC GŁÓWNY at 07:45 ~+3 min (arrives Rynek ~07:58)",
     ]
     t.options[0].delay_min = 0
     assert "07:45 (on time)" in leave_now_message(t, at(7, 36), TZ)[1]

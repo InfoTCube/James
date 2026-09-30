@@ -46,6 +46,12 @@ class Connection:
     from_seq: int = 0
     delay_min: int | None = None  # live estimate; None = unknown
 
+    @property
+    def expected_arrival(self) -> datetime:
+        """Arrival with the live delay estimate added (the timetable time if there's none).
+        ponytail: assumes the delay stays the same for the rest of the trip."""
+        return self.arrives + timedelta(minutes=self.delay_min or 0)
+
 
 def resolve(location: str, places: dict[str, Place], stop_names: list[str]) -> Target | None:
     """Map free text (calendar location, later chat/voice) to stops.
@@ -363,6 +369,7 @@ def estimate_delay(
 # --- the trip you need right now -----------------------------------------------------------------
 
 HOME_WINDOW = timedelta(hours=2)  # how far ahead to look for a ride home
+LATE_WINDOW = timedelta(minutes=20)  # nothing on time: show connections arriving this late
 
 
 @dataclass
@@ -371,15 +378,16 @@ class Trip:
     options: list[Connection]
     leave_by: datetime | None  # for trips with a deadline: last moment to leave the origin
     timetable_end: date | None  # set when the timetable has run out (times are a fallback)
+    late_min: int | None = None  # nothing on time: minutes late with the first option
 
 
-def day_legs(session: Session, now: datetime, config: Config) -> list[Leg]:
-    """All trips planned around now (events from yesterday to tomorrow)."""
-    home_place = config.places["home"]
-    home = Target("home", home_place.stops, home_place.walk_minutes)
-    events = calendar.events_between(
-        session, now - timedelta(days=1), now + timedelta(days=1), config.tz
-    )
+def _home(config: Config) -> Target:
+    return Target("home", config.places["home"].stops, config.places["home"].walk_minutes)
+
+
+def legs_between(session: Session, start: datetime, end: datetime, config: Config) -> list[Leg]:
+    """Trips planned for the located events in [start, end)."""
+    events = calendar.events_between(session, start, end, config.tz)
     targets: dict[str, Target | None] = {}
     located = []
     for e in events:
@@ -387,7 +395,12 @@ def day_legs(session: Session, now: datetime, config: Config) -> list[Leg]:
             if e.location not in targets:
                 targets[e.location] = find_target(session, e.location, config.places)
             located.append((e.title, e.start, e.end, targets[e.location]))
-    return plan_legs(located, home)
+    return plan_legs(located, _home(config))
+
+
+def day_legs(session: Session, now: datetime, config: Config) -> list[Leg]:
+    """All trips planned around now (events from yesterday to tomorrow)."""
+    return legs_between(session, now - timedelta(days=1), now + timedelta(days=1), config)
 
 
 def current_trip(session: Session, now: datetime, config: Config) -> Trip | None:
@@ -415,8 +428,73 @@ def current_trip(session: Session, now: datetime, config: Config) -> Trip | None
             tz=config.tz,
             latest_first=leg.arrive_by is not None,
         )
+        late_min = None
+        if not options and leg.arrive_by:  # you'll be late: earliest arrivals, up to 20 min late
+            options = connections(
+                session,
+                leg.origin,
+                leg.dest,
+                arrive_by=arrive_by + LATE_WINDOW,
+                not_before=not_before,
+                tz=config.tz,
+                latest_first=False,
+            )
+            options.sort(key=lambda c: c.arrives)
+            if options:
+                walk = timedelta(minutes=leg.dest.walk_minutes)
+                late = options[0].arrives + walk - leg.arrive_by
+                late_min = max(1, round(late.total_seconds() / 60))
         if options and leg.arrive_by:
             leave_by = options[0].departs - timedelta(minutes=leg.origin.walk_minutes)
+    else:
+        late_min = None
     end = timetable_end(session)
     expired = end if end and end < now.astimezone(config.tz).date() else None
-    return Trip(leg, options, leave_by, expired)
+    return Trip(leg, options, leave_by, expired, late_min)
+
+
+FALLBACK_TRAVEL = timedelta(minutes=45)  # no connection found: assume this much door to door
+
+
+@dataclass
+class Departure:
+    leg: Leg
+    leave_by: datetime
+    connection: Connection | None  # None: leave_by is the FALLBACK_TRAVEL guess
+
+
+def first_departure(
+    session: Session, day: date, config: Config, after: datetime | None = None
+) -> Departure | None:
+    """When you first have to leave home on `day` (for the alarm), or with `after`, the first
+    time from home for an event starting after it (morning briefing). None if there's none."""
+    if "home" not in config.places:
+        return None
+    start = datetime.combine(day, time.min, config.tz)
+    legs = legs_between(session, start, start + timedelta(days=1), config)
+    leg = next(
+        (
+            g
+            for g in legs
+            if g.arrive_by
+            and g.origin
+            and g.origin.label == "home"
+            and (after is None or g.arrive_by > after)
+        ),
+        None,
+    )
+    if leg is None:
+        return None
+    if leg.dest:
+        options = connections(
+            session,
+            leg.origin,
+            leg.dest,
+            arrive_by=leg.arrive_by - timedelta(minutes=leg.dest.walk_minutes),
+            not_before=leg.arrive_by - LOOKAHEAD,
+            tz=config.tz,
+        )
+        if options:
+            walk = timedelta(minutes=leg.origin.walk_minutes)
+            return Departure(leg, options[0].departs - walk, options[0])
+    return Departure(leg, leg.arrive_by - FALLBACK_TRAVEL, None)
