@@ -145,8 +145,8 @@ Work in this order. Keep each step small and working end-to-end before moving on
 
 **Phase 1 — skeleton + daily essentials** ← current
 - [x] Project skeleton: uv project, `core/` (config, db, logging, collector_runs), worker, api with empty dashboard, docker-compose, `.env.example`, `config/config.yaml`
-- [ ] `weather` module: Open-Meteo collector + clothing rules + dashboard widget (first module — proves the whole pattern, no API keys needed)
-- [ ] `calendar` module
+- [x] `weather` module: Open-Meteo collector + clothing rules + dashboard widget (first module — proves the whole pattern, no API keys needed)
+- [ ] `calendar` module: also pass today's in-person events to `weather.service.get_clothing_advice(events=...)` (widget + briefing)
 - [ ] `mpk` module: GTFS import, departures for aliases, link with next calendar event
 
 **Phase 2 — alerts**

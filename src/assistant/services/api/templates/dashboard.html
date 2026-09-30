@@ -4,29 +4,44 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Assistant</title>
-  <meta http-equiv="refresh" content="60">
+  <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.4/dist/htmx.min.js"></script>
   <style>
-    body { font-family: system-ui, sans-serif; background: #111; color: #eee; margin: 2rem; }
-    .error { color: #f66; }
-    td { padding: .2rem 1rem .2rem 0; }
+    :root { --bg: #0e0f11; --card: #17191c; --fg: #e8e6e3; --dim: #8a8f98; --accent: #7cc4ff; --warn: #ffb454; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 2.5vh 2.5vw; background: var(--bg); color: var(--fg);
+           font: 1.4rem/1.35 system-ui, sans-serif; height: 100vh; overflow: hidden; }
+    header { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 2vh; }
+    #clock { font-size: 5rem; font-weight: 200; font-variant-numeric: tabular-nums; }
+    #date { color: var(--dim); font-size: 1.6rem; }
+    main { display: grid; grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr)); gap: 1.5rem; }
+    .widget { background: var(--card); border-radius: 1rem; padding: 1.2rem 1.5rem; }
+    .widget h2 { margin: 0 0 .6rem; font-size: 1rem; font-weight: 600; letter-spacing: .1em;
+                 text-transform: uppercase; color: var(--dim); }
+    .widget.stale { opacity: .55; }
+    .badge { color: var(--warn); margin-left: .5rem; }
+    small { color: var(--dim); font-size: .75em; }
+    .now { display: flex; align-items: center; gap: 1rem; }
+    .now .icon { font-size: 3.5rem; }
+    .big { font-size: 4.5rem; font-weight: 200; line-height: 1; }
+    .strip { display: flex; justify-content: space-between; margin: 1rem 0; text-align: center; }
+    .strip > div { display: flex; flex-direction: column; }
+    .rain { color: var(--accent); min-height: 1.2em; }
+    .advice { font-size: 1.6rem; margin: .5rem 0 .2rem; }
+    .extra { margin: .2rem 0; color: var(--warn); }
   </style>
 </head>
 <body>
-  <h1>Assistant</h1>
-  <h2>Collectors</h2>
-  {% if runs %}
-  <table>
-    {% for r in runs %}
-    <tr class="{{ r.status }}">
-      <td>{{ r.module }}</td>
-      <td>{{ r.status }}</td>
-      <td>{{ r.finished_at.astimezone(tz).strftime("%Y-%m-%d %H:%M") }}</td>
-      <td>{{ r.error or "" }}</td>
-    </tr>
-    {% endfor %}
-  </table>
-  {% else %}
-  <p>No collector runs yet.</p>
-  {% endif %}
+  <header><span id="clock"></span><span id="date"></span></header>
+  <main>
+    <div hx-get="/widgets/weather" hx-trigger="load, every 10m"></div>
+  </main>
+  <script>
+    function tick() {
+      const now = new Date();
+      clock.textContent = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" });
+      date.textContent = now.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "Europe/Warsaw" });
+    }
+    tick(); setInterval(tick, 1000);
+  </script>
 </body>
 </html>

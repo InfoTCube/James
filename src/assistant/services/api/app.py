@@ -9,9 +9,11 @@ from sqlalchemy.orm import Session
 
 from assistant.core.config import load_config
 from assistant.core.db import CollectorRun, get_engine
+from assistant.modules.weather.routes import router as weather_router
 
 templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
 app = FastAPI(title="Assistant")
+app.include_router(weather_router)
 
 
 def latest_runs() -> list[CollectorRun]:
@@ -34,6 +36,11 @@ def health() -> dict:
 
 @app.get("/")
 def dashboard(request: Request):
+    return templates.TemplateResponse(request, "dashboard.html")
+
+
+@app.get("/debug")
+def debug(request: Request):
     return templates.TemplateResponse(
-        request, "dashboard.html", {"runs": latest_runs(), "tz": load_config().tz}
+        request, "debug.html", {"runs": latest_runs(), "tz": load_config().tz}
     )

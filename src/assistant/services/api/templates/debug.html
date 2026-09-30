@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Assistant</title>
+  <meta http-equiv="refresh" content="60">
+  <style>
+    body { font-family: system-ui, sans-serif; background: #111; color: #eee; margin: 2rem; }
+    .error { color: #f66; }
+    td { padding: .2rem 1rem .2rem 0; }
+  </style>
+</head>
+<body>
+  <h1>Assistant</h1>
+  <h2>Collectors</h2>
+  {% if runs %}
+  <table>
+    {% for r in runs %}
+    <tr class="{{ r.status }}">
+      <td>{{ r.module }}</td>
+      <td>{{ r.status }}</td>
+      <td>{{ r.finished_at.astimezone(tz).strftime("%Y-%m-%d %H:%M") }}</td>
+      <td>{{ r.error or "" }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>No collector runs yet.</p>
+  {% endif %}
+</body>
+</html>

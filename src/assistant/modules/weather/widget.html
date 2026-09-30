@@ -1,0 +1,27 @@
+<section class="widget{% if stale %} stale{% endif %}">
+  <h2>Weather{% if stale %} <small class="badge">stale</small>{% endif %}</h2>
+  {% if now %}
+  {% set label, icon = describe(now.code) %}
+  <div class="now">
+    <span class="icon">{{ icon }}</span>
+    <span class="big">{{ "%.0f"|format(now.temp) }}°</span>
+    <span>{{ label }}<br><small>feels {{ "%.0f"|format(now.feels_like) }}°</small></span>
+  </div>
+  <div class="strip">
+    {% for h in strip %}
+    <div>
+      <small>{{ h.time.astimezone(tz).strftime("%H:%M") }}</small>
+      <span class="icon">{{ describe(h.code)[1] }}</span>
+      <span>{{ "%.0f"|format(h.temp) }}°</span>
+      <small class="rain">{% if h.precip_prob >= 30 %}{{ h.precip_prob }}%{% endif %}</small>
+    </div>
+    {% endfor %}
+  </div>
+  {% if advice %}
+  <p class="advice">{{ advice.layers }}</p>
+  {% for e in advice.extras %}<p class="extra">{{ e }}</p>{% endfor %}
+  {% endif %}
+  {% else %}
+  <p>No forecast yet.</p>
+  {% endif %}
+</section>
