@@ -114,3 +114,34 @@ def test_help_lists_every_command():
         "/help – This list",
     ]
     assert set(COMMANDS) == {"next", "today", "weather"}
+
+
+def test_live_delay_moves_the_alert():
+    t = trip(leave_by=at(7, 40))
+    t.options[0].delay_min = 3  # tram ~3 min late → leave by 07:43
+    assert leave_now_message(t, at(7, 37), TZ) is None  # would have fired without the delay
+    _, text = leave_now_message(t, at(7, 39), TZ)
+    assert text.splitlines() == [
+        "🚶 Leave in 4 min for Praca (08:00, work)",
+        "🚋 22 → PILCZYCE from DWORZEC GŁÓWNY at 07:45 ~+3 min (arrives Rynek 07:55)",
+    ]
+    t.options[0].delay_min = 0
+    assert "07:45 (on time)" in leave_now_message(t, at(7, 36), TZ)[1]
+
+
+def test_worker_polls_live_positions_only_near_leave_by(engine, monkeypatch):
+    from assistant.modules.mpk import alerts
+
+    polled, sent = [], []
+    now = {"t": at(7, 20)}
+    monkeypatch.setattr(alerts, "utcnow", lambda: now["t"])
+    monkeypatch.setattr(alerts.service, "current_trip", lambda *a: trip(leave_by=at(7, 40)))
+    monkeypatch.setattr(alerts, "add_live_delays", lambda s, opts, n, tr: polled.append(n))
+    monkeypatch.setattr(alerts, "notify", lambda s, text, key: sent.append(key))
+    job = alerts.LeaveNowAlert()
+    for t in (at(7, 20), at(7, 26), at(7, 36)):
+        now["t"] = t
+        with Session(engine) as s, s.begin():
+            job.run(s)
+    assert polled == [at(7, 26), at(7, 36)]  # from 07:25 (15 min before leave-by)
+    assert sent == [f"leave:Praca:{at(8).isoformat()}"]
