@@ -1,18 +1,27 @@
 """Place matching and departures from the imported timetable. No network here."""
 
 import difflib
+import math
 import re
 from dataclasses import dataclass
-from datetime import datetime, time, timedelta
+from datetime import date, datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
-from sqlalchemy import select, text
+from sqlalchemy import func, select, text
 from sqlalchemy.orm import Session
 
 from assistant.core.config import Place, fold
-from assistant.modules.mpk.models import MpkStop
+from assistant.modules.mpk.models import MpkGeocode, MpkServiceDate, MpkServiceWeekday, MpkStop
 
 DEFAULT_WALK = 5  # minutes, for stops matched by name rather than a configured place
+STOP_RADIUS = 400  # m: stops considered near a looked-up address
+PLACE_RADIUS = 300  # m: an address this close to one of a place's stops counts as that place
+WALK_SPEED = 80  # m per minute
+
+LOOKAHEAD = timedelta(hours=2)  # show a trip to an event from this long before it starts
+END_LEAD = timedelta(minutes=30)  # show a trip from an event from this long before it ends
+HOME_GRACE = timedelta(hours=1)  # ...and a trip home until this long after it ends
+CHAIN_GAP = timedelta(hours=1, minutes=30)  # next event this soon after: go straight there
 
 
 @dataclass
@@ -66,6 +75,104 @@ def stop_names(session: Session) -> list[str]:
     return list(session.scalars(select(MpkStop.name).distinct()))
 
 
+def distance_m(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """Great-circle distance in metres."""
+    p1, p2 = math.radians(lat1), math.radians(lat2)
+    dlon = math.radians(lon2 - lon1)
+    a = math.sin((p2 - p1) / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dlon / 2) ** 2
+    return 12_742_000 * math.asin(math.sqrt(a))
+
+
+def resolve_near(
+    lat: float, lon: float, label: str, places: dict[str, Place], stops: list[MpkStop]
+) -> Target | None:
+    """Stops near a point: one of your places if it's that close, else the nearby stops."""
+    near: dict[str, float] = {}
+    for s in stops:
+        d = distance_m(lat, lon, s.lat, s.lon)
+        if d <= STOP_RADIUS and d < near.get(s.name, math.inf):
+            near[s.name] = d
+    if not near:
+        return None
+    for alias, place in places.items():
+        if any(near.get(n, math.inf) <= PLACE_RADIUS for n in place.stops):
+            return Target(alias, place.stops, place.walk_minutes)
+    names = sorted(near, key=near.__getitem__)
+    return Target(label, names, max(1, math.ceil(near[names[0]] / WALK_SPEED)))
+
+
+def find_target(session: Session, location: str, places: dict[str, Place]) -> Target | None:
+    """Text rules first (`resolve`), then the cached address lookup made by the collector."""
+    if target := resolve(location, places, stop_names(session)):
+        return target
+    geo = session.get(MpkGeocode, location)
+    if geo and geo.lat is not None:
+        stops = list(session.scalars(select(MpkStop)))
+        return resolve_near(geo.lat, geo.lon, location.split(",")[0], places, stops)
+    return None
+
+
+@dataclass
+class Leg:
+    """One trip of the day. Shown on the dashboard while show_from <= now < show_until."""
+
+    title: str  # where you're going: event title or "Home"
+    origin: Target | None  # None: the previous event's location didn't match any stop
+    dest: Target | None  # None: the event's location didn't match any stop
+    not_before: datetime | None  # can't leave before this (previous event's end); None = now
+    arrive_by: datetime | None  # event start; None = going home, no deadline
+    show_from: datetime
+    show_until: datetime
+
+
+def plan_legs(
+    events: list[tuple[str, datetime, datetime, Target | None]], home: Target
+) -> list[Leg]:
+    """Trips for located events (title, start, end, target), sorted by start.
+
+    Home → first event. Between events: straight on if the next starts within CHAIN_GAP of
+    this one ending, otherwise home and out again. Last event → home. No trip between two
+    events at the same place.
+    """
+    legs: list[Leg] = []
+
+    def go_home(end: datetime, origin: Target | None) -> None:
+        if origin is None or origin.label != home.label:
+            legs.append(Leg("Home", origin, home, end, None, end - END_LEAD, end + HOME_GRACE))
+
+    prev = None
+    for title, start, end, target in events:
+        if prev and start - prev[2] <= CHAIN_GAP:
+            origin, not_before, show_from = prev[3], prev[2], prev[2] - END_LEAD
+        else:
+            if prev:
+                go_home(prev[2], prev[3])
+            origin, not_before, show_from = home, None, start - LOOKAHEAD
+        same_place = target and origin and origin.label == target.label
+        if not same_place:
+            legs.append(Leg(title, origin, target, not_before, start, show_from, start))
+        prev = (title, start, end, target)
+    if prev:
+        go_home(prev[2], prev[3])
+    return legs
+
+
+def timetable_end(session: Session) -> date | None:
+    """Last day the imported timetable covers."""
+    return session.scalar(select(func.max(MpkServiceDate.day)))
+
+
+def services_on(session: Session, day: date) -> list[str]:
+    """Service ids running on `day`. After the timetable ends: the services that normally
+    run on that weekday (holiday exceptions ignored), until a new timetable arrives."""
+    end = timetable_end(session)
+    if end is not None and day > end:
+        q = select(MpkServiceWeekday.service_id).where(MpkServiceWeekday.weekday == day.weekday())
+    else:
+        q = select(MpkServiceDate.service_id).where(MpkServiceDate.day == day)
+    return list(session.scalars(q))
+
+
 def _names_sql(prefix: str, names: list[str]) -> tuple[str, dict]:
     keys = {f"{prefix}{i}": n for i, n in enumerate(names)}
     return ", ".join(f":{k}" for k in keys), keys
@@ -79,17 +186,23 @@ def connections(
     not_before: datetime,
     tz: ZoneInfo,
     limit: int = 3,
+    latest_first: bool = True,
 ) -> list[Connection]:
     """Direct trips from origin to dest that leave the origin stop at/after `not_before`
-    and reach the dest stop by `arrive_by`. Latest arrivals first, one row per trip.
+    and reach the dest stop by `arrive_by`, one row per trip. latest_first: latest arrivals
+    first (you have a deadline); otherwise earliest departures first (going home).
 
     ponytail: direct trips only, same service day only (no after-midnight trips of the
     previous day). Add transfers (e.g. RAPTOR) if a common trip needs a change.
     """
-    day = arrive_by.astimezone(tz).date()
+    day = not_before.astimezone(tz).date()
     midnight = datetime.combine(day, time.min, tz)
+    services = services_on(session, day)
+    if not services:
+        return []
     o_sql, o_keys = _names_sql("o", origin.stops)
     d_sql, d_keys = _names_sql("d", dest.stops)
+    s_sql, s_keys = _names_sql("s", services)
     rows = session.execute(
         text(f"""
             SELECT a.trip_id, a.dep, b.arr, r.short_name, r.route_type, t.headsign,
@@ -99,14 +212,14 @@ def connections(
             JOIN mpk_stop_times b ON b.trip_id = a.trip_id AND b.seq > a.seq
             JOIN mpk_stops sb ON sb.stop_id = b.stop_id AND sb.name IN ({d_sql})
             JOIN mpk_trips t ON t.trip_id = a.trip_id
-            JOIN mpk_service_dates sd ON sd.service_id = t.service_id AND sd.day = :day
+                               AND t.service_id IN ({s_sql})
             JOIN mpk_routes r ON r.route_id = t.route_id
             WHERE a.dep >= :earliest AND b.arr <= :latest
         """),  # noqa: S608  names are bound parameters, only placeholders are formatted
         {
             **o_keys,
             **d_keys,
-            "day": day.isoformat(),
+            **s_keys,
             "earliest": int((not_before - midnight).total_seconds()),
             "latest": int((arrive_by - midnight).total_seconds()),
         },
@@ -117,7 +230,10 @@ def connections(
         cur = best.get(r.trip_id)
         if cur is None or (r.dep, -r.arr) > (cur.dep, -cur.arr):
             best[r.trip_id] = r
-    ordered = sorted(best.values(), key=lambda r: (r.arr, r.dep), reverse=True)[:limit]
+    if latest_first:
+        ordered = sorted(best.values(), key=lambda r: (r.arr, r.dep), reverse=True)[:limit]
+    else:
+        ordered = sorted(best.values(), key=lambda r: (r.dep, r.arr))[:limit]
     return [
         Connection(
             line=r.short_name,

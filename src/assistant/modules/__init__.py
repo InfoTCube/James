@@ -2,7 +2,12 @@
 
 from assistant.core.collector import Collector
 from assistant.modules.calendar.collector import CalendarCollector
-from assistant.modules.mpk.collector import MpkCollector
+from assistant.modules.mpk.collector import GeocodeCollector, MpkCollector
 from assistant.modules.weather.collector import WeatherCollector
 
-COLLECTORS: list[Collector] = [WeatherCollector(), CalendarCollector(), MpkCollector()]
+COLLECTORS: list[Collector] = [
+    WeatherCollector(),
+    CalendarCollector(),
+    MpkCollector(),
+    GeocodeCollector(),
+]

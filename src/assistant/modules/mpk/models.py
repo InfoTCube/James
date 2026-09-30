@@ -60,3 +60,25 @@ class MpkServiceDate(Base):
 
     service_id: Mapped[str] = mapped_column(String(20), primary_key=True)
     day: Mapped[date] = mapped_column(primary_key=True)
+
+
+class MpkServiceWeekday(Base):
+    """calendar.txt without exceptions: service_id normally runs on weekday (0 = Monday).
+    Used after the timetable's end date, until a new one is published."""
+
+    __tablename__ = "mpk_service_weekdays"
+
+    service_id: Mapped[str] = mapped_column(String(20), primary_key=True)
+    weekday: Mapped[int] = mapped_column(primary_key=True)
+
+
+class MpkGeocode(Base):
+    """Cache of address lookups (OpenStreetMap Nominatim) for locations no text rule matched.
+    lat/lon are None when nothing was found; a changed location text is looked up again."""
+
+    __tablename__ = "mpk_geocode"
+
+    query: Mapped[str] = mapped_column(primary_key=True)  # the calendar location text
+    lat: Mapped[float | None]
+    lon: Mapped[float | None]
+    looked_up_at: Mapped[datetime] = mapped_column(UTCDateTime)

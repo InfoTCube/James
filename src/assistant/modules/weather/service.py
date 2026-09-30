@@ -1,7 +1,7 @@
 """Weather reads + clothing rules. No network here."""
 
 from dataclasses import dataclass
-from datetime import datetime, time, timedelta
+from datetime import datetime, timedelta
 from itertools import pairwise
 from zoneinfo import ZoneInfo
 
@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from assistant.modules.weather.models import WeatherHourly
 
-DEFAULT_RETURN = time(22, 0)  # ponytail: until calendar exists, assume home by 22:00
+QUICK_TRIP = timedelta(hours=1)  # no more events today: dress for a short trip out now
 
 # WMO code -> (label, icon). Codes: https://open-meteo.com/en/docs (bottom of page)
 CODES = {
@@ -63,10 +63,9 @@ def outdoor_windows(events: list[Window], now: datetime) -> list[Window]:
     return [(max(s, now), e) for s, e in windows if e > now]
 
 
-def default_window(now: datetime, tz: ZoneInfo) -> Window:
-    """No events: from now until DEFAULT_RETURN (at least 3 h ahead late at night)."""
-    until = datetime.combine(now.astimezone(tz).date(), DEFAULT_RETURN, tz)
-    return now, max(until, now + timedelta(hours=3))
+def default_window(now: datetime) -> Window:
+    """No more events today: the next QUICK_TRIP, e.g. 12:22-13:22."""
+    return now, now + QUICK_TRIP
 
 
 def hours_in(session: Session, windows: list[Window]) -> list[WeatherHourly]:
@@ -129,7 +128,7 @@ def get_clothing_advice(
     """Clothing advice for the time you're outside today. None if there's no forecast data.
 
     `events`: today's (start, end) events you go out for (the calendar module passes these).
-    No events → assume you're out from now until DEFAULT_RETURN.
+    No more events today → a short trip out now (QUICK_TRIP).
     """
     windows = outdoor_windows(events, now) if events else []
-    return clothing_advice(hours_in(session, windows or [default_window(now, tz)]), tz)
+    return clothing_advice(hours_in(session, windows or [default_window(now)]), tz)

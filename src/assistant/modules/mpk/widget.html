@@ -1,17 +1,20 @@
 <section class="widget{% if stale %} stale{% endif %}">
-  <h2>Getting there{% if stale %} <small class="badge">stale</small>{% endif %}</h2>
-  {% if not event %}
-  <p><small>No trips planned</small></p>
-  {% else %}
-  <p>{{ event.title }} <small>{{ event.start.astimezone(tz).strftime("%a %H:%M") }} · {{ event.location }}</small></p>
-  {% if not target %}
-  <p class="extra">No stop found for “{{ event.location }}”. Add it to places in config.yaml</p>
-  {% elif target.label == "home" %}
-  <p><small>At home, no trip needed</small></p>
+  <h2>{% if leg.arrive_by %}Getting there{% else %}Going home{% endif %}{% if stale %} <small class="badge">stale</small>{% endif %}</h2>
+  <p>
+    {% if leg.origin %}{{ leg.origin.label }}{% else %}?{% endif %} →
+    {% if leg.arrive_by %}{{ leg.title }} <small>{{ leg.arrive_by.astimezone(tz).strftime("%H:%M") }}{% if leg.dest %} · {{ leg.dest.label }}{% endif %}</small>{% else %}home{% endif %}
+  </p>
+  {% if timetable_end %}
+  <p class="extra">Timetable ended {{ timetable_end.strftime("%d.%m") }}: times follow last week’s schedule</p>
+  {% endif %}
+  {% if not leg.dest %}
+  <p class="extra">No stop found for {{ leg.title }}’s location. Add a keyword to places in config.yaml</p>
+  {% elif not leg.origin %}
+  <p class="extra">No stop found for the previous event’s location</p>
   {% elif not options %}
-  <p class="extra">No direct connection to {{ target.label }}</p>
+  <p class="extra">{% if leg.arrive_by %}No direct connection gets you there on time{% else %}No direct connection in the next 2 hours{% endif %}</p>
   {% else %}
-  <p class="advice">Leave by {{ leave_by.astimezone(tz).strftime("%H:%M") }}</p>
+  {% if leave_by %}<p class="advice">Leave by {{ leave_by.astimezone(tz).strftime("%H:%M") }}</p>{% endif %}
   {% for c in options %}
   <div class="event">
     <span class="when">{{ c.departs.astimezone(tz).strftime("%H:%M") }}</span>
@@ -19,6 +22,5 @@
       <small>{{ c.from_stop }} → {{ c.to_stop }} {{ c.arrives.astimezone(tz).strftime("%H:%M") }}</small></span>
   </div>
   {% endfor %}
-  {% endif %}
   {% endif %}
 </section>

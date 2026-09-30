@@ -7,6 +7,7 @@ python -m assistant.services.worker --run-once NAME   # run one collector now
 import argparse
 import logging
 import sys
+from datetime import datetime
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 
@@ -32,9 +33,16 @@ def main() -> int:
 
     scheduler = BlockingScheduler(timezone=config.tz)
     for c in COLLECTORS:
+        # run once at startup (fresh data after a restart), then on schedule;
         # coalesce + max_instances=1: a slow/missed run never piles up
         scheduler.add_job(
-            run_collector, c.schedule, args=[c, engine], id=c.name, coalesce=True, max_instances=1
+            run_collector,
+            c.schedule,
+            args=[c, engine],
+            id=c.name,
+            coalesce=True,
+            max_instances=1,
+            next_run_time=datetime.now(config.tz),
         )
     logging.info("worker started with %d collectors", len(COLLECTORS))
     scheduler.start()

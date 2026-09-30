@@ -4,6 +4,7 @@ import csv
 import io
 import logging
 import re
+import time
 import zipfile
 from collections.abc import Iterator
 from datetime import date, datetime, timedelta
@@ -11,15 +12,20 @@ from itertools import batched
 
 import httpx
 from apscheduler.triggers.cron import CronTrigger
+from apscheduler.triggers.interval import IntervalTrigger
 from sqlalchemy import delete, insert, select
 from sqlalchemy.orm import Session
 
 from assistant.core.config import load_config
 from assistant.core.db import utcnow
+from assistant.modules.calendar import service as calendar
+from assistant.modules.mpk import service
 from assistant.modules.mpk.models import (
     MpkFeed,
+    MpkGeocode,
     MpkRoute,
     MpkServiceDate,
+    MpkServiceWeekday,
     MpkStop,
     MpkStopTime,
     MpkTrip,
@@ -100,6 +106,12 @@ def import_feed(session: Session, zf: zipfile.ZipFile) -> None:
             for r in _rows(zf, "stop_times.txt")
         ),
         MpkServiceDate: _service_dates(zf),
+        MpkServiceWeekday: (
+            {"service_id": c["service_id"], "weekday": i}
+            for c in _rows(zf, "calendar.txt")
+            for i, col in enumerate(WEEKDAY_COLS)
+            if c[col] == "1"
+        ),
     }  # fmt: skip
     for model, rows in tables.items():
         conn.execute(delete(model))
@@ -132,3 +144,41 @@ class MpkCollector:
         session.execute(delete(MpkFeed))
         session.add(MpkFeed(file_id=current, name=files[current], imported_at=utcnow()))
         log.info("imported timetable %s", files[current])
+
+
+NOMINATIM = "https://nominatim.openstreetmap.org/search"
+WROCLAW_BOX = "16.80,51.21,17.18,51.04"  # lon/lat viewbox: only Wrocław results
+LOOKUPS_PER_RUN = 5  # Nominatim policy: max 1 request/s, be gentle
+
+
+def geocode(client: httpx.Client, query: str) -> tuple[float, float] | None:
+    """Address → (lat, lon) inside Wrocław via OpenStreetMap Nominatim, or None."""
+    params = {"q": query, "format": "json", "limit": 1, "countrycodes": "pl",
+              "viewbox": WROCLAW_BOX, "bounded": 1}  # fmt: skip
+    hits = client.get(NOMINATIM, params=params).raise_for_status().json()
+    return (float(hits[0]["lat"]), float(hits[0]["lon"])) if hits else None
+
+
+class GeocodeCollector:
+    """Looks up calendar locations that no text rule matches, so trips can use nearby stops.
+    Sends only the location text to OpenStreetMap; each text is looked up once."""
+
+    name = "mpk_geocode"
+    schedule = IntervalTrigger(minutes=15)
+
+    def run(self, session: Session) -> None:
+        config, now = load_config(), utcnow()
+        events = calendar.events_between(session, now, now + timedelta(days=7), config.tz)
+        names = service.stop_names(session)
+        todo = [
+            loc
+            for loc in dict.fromkeys(e.location for e in events if e.location and not e.all_day)
+            if not service.resolve(loc, config.places, names) and not session.get(MpkGeocode, loc)
+        ][:LOOKUPS_PER_RUN]
+        with httpx.Client(headers=HEADERS, timeout=20) as client:
+            for i, loc in enumerate(todo):
+                if i:
+                    time.sleep(1.1)
+                lat, lon = geocode(client, loc) or (None, None)
+                session.add(MpkGeocode(query=loc, lat=lat, lon=lon, looked_up_at=utcnow()))
+                log.info("geocoded %r: %s", loc, "found" if lat else "not found")

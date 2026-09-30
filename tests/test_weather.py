@@ -99,10 +99,8 @@ def test_outdoor_windows_drops_the_past():
     assert outdoor_windows(classes, now=local(15)) == []
 
 
-def test_default_window_until_22_local_and_looks_ahead_late_at_night():
-    assert default_window(local(8, 30), TZ) == (local(8, 30), local(22))
-    start, end = default_window(local(23, 10), TZ)
-    assert end - start == timedelta(hours=3)
+def test_default_window_is_the_next_hour():
+    assert default_window(local(12, 22)) == (local(12, 22), local(13, 22))
 
 
 def test_get_clothing_advice_reads_db(tmp_path):

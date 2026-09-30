@@ -1,9 +1,10 @@
-"""Dashboard widget: how to get to the next event."""
+"""Dashboard widget: the trip you need right now (to an event, between events, or home)."""
 
 from datetime import timedelta
 from pathlib import Path
 
 from fastapi import APIRouter, Request
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
@@ -16,34 +17,66 @@ from assistant.modules.mpk import service
 router = APIRouter()
 templates = Jinja2Templates(directory=Path(__file__).parent)
 
-LOOKAHEAD = timedelta(hours=2)  # show the trip only this long before the event starts
+HOME_WINDOW = timedelta(hours=2)  # how far ahead to look for a ride home
 
 
 @router.get("/widgets/mpk")
 def mpk_widget(request: Request):
     config, now, engine = load_config(), utcnow(), get_engine()
-    tz, ctx = config.tz, {"event": None, "target": None, "options": [], "leave_by": None}
+    if "home" not in config.places:
+        return HTMLResponse("")
+    home_place = config.places["home"]
+    home = service.Target("home", home_place.stops, home_place.walk_minutes)
+
     with Session(engine) as session:
-        event = calendar.next_event_with_location(session, now, tz)
-        if event and event.start - now <= LOOKAHEAD and "home" in config.places:
-            home = config.places["home"]
-            origin = service.Target("home", home.stops, home.walk_minutes)
-            target = service.resolve(event.location, config.places, service.stop_names(session))
-            ctx |= {"event": event, "target": target}
-            if target and target.label != "home":
-                ctx["options"] = service.connections(
-                    session,
-                    origin,
-                    target,
-                    arrive_by=event.start - timedelta(minutes=target.walk_minutes),
-                    not_before=now + timedelta(minutes=origin.walk_minutes),
-                    tz=tz,
-                )
-                if ctx["options"]:
-                    first = ctx["options"][0].departs
-                    ctx["leave_by"] = first - timedelta(minutes=origin.walk_minutes)
+        events = calendar.events_between(
+            session, now - timedelta(days=1), now + timedelta(days=1), config.tz
+        )
+        targets: dict[str, service.Target | None] = {}
+        located = []
+        for e in events:
+            if e.location and not e.all_day:
+                if e.location not in targets:
+                    targets[e.location] = service.find_target(session, e.location, config.places)
+                located.append((e.title, e.start, e.end, targets[e.location]))
+        leg = next(
+            (g for g in service.plan_legs(located, home) if g.show_from <= now < g.show_until),
+            None,
+        )
+        if leg is None:
+            return HTMLResponse("")  # no trip right now: the card disappears
+
+        options, leave_by = [], None
+        if leg.origin and leg.dest:
+            not_before = max(now, leg.not_before or now) + timedelta(
+                minutes=leg.origin.walk_minutes
+            )
+            if leg.arrive_by:
+                arrive_by = leg.arrive_by - timedelta(minutes=leg.dest.walk_minutes)
+            else:
+                arrive_by = not_before + HOME_WINDOW
+            options = service.connections(
+                session,
+                leg.origin,
+                leg.dest,
+                arrive_by=arrive_by,
+                not_before=not_before,
+                tz=config.tz,
+                latest_first=leg.arrive_by is not None,
+            )
+            if options and leg.arrive_by:
+                leave_by = options[0].departs - timedelta(minutes=leg.origin.walk_minutes)
+
+        end = service.timetable_end(session)
     return templates.TemplateResponse(
         request,
         "widget.html",
-        {**ctx, "tz": tz, "stale": is_stale(engine, "mpk", timedelta(days=2))},
+        {
+            "timetable_end": end if end and end < now.astimezone(config.tz).date() else None,
+            "leg": leg,
+            "options": options,
+            "leave_by": leave_by,
+            "tz": config.tz,
+            "stale": is_stale(engine, "mpk", timedelta(days=2)),
+        },
     )
