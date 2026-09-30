@@ -3,8 +3,8 @@
 - **Source:** [Open-Meteo](https://open-meteo.com/en/docs) forecast API. Free, no key.
 - **Schedule:** hourly. Fetches 2 days of hourly data and upserts into `weather_hourly` (UTC).
 - **Config:** `location.latitude`, `location.longitude`.
-- **Service:** `get_clothing_advice(session, now, tz, events=None)`. The advice covers only the time
-  you're likely outside. You're inside during events. You're outside 30 min before the first event,
+- **Service:** `get_clothing_advice(session, now, tz, events=None)`. The widget passes
+  `calendar.service.outdoor_events()`. The advice covers only the time you're likely outside. You're inside during events. You're outside 30 min before the first event,
   30 min after the last, and during any break longer than 1 h. With no events it assumes you're out
   from now until 22:00. Tune with `TRAVEL`, `LONG_BREAK`, `DEFAULT_RETURN` in `service.py`.
   Rules: dress for the coldest outdoor hour, and warn about a big temperature drop, rain (≥50% or

@@ -1,0 +1,67 @@
+{
+  "kind": "calendar#events",
+  "summary": "tymek@example.com",
+  "timeZone": "Europe/Warsaw",
+  "items": [
+    {
+      "id": "class1_20261005T080000Z",
+      "status": "confirmed",
+      "summary": "Algorytmy i struktury danych",
+      "location": "Politechnika Wrocławska, budynek C-13, Wrocław",
+      "start": {"dateTime": "2026-10-05T10:00:00+02:00", "timeZone": "Europe/Warsaw"},
+      "end": {"dateTime": "2026-10-05T12:00:00+02:00", "timeZone": "Europe/Warsaw"},
+      "recurringEventId": "class1"
+    },
+    {
+      "id": "class2_20261005T101500Z",
+      "status": "confirmed",
+      "summary": "Sieci komputerowe",
+      "location": "C-13, sala 1.31",
+      "start": {"dateTime": "2026-10-05T12:15:00+02:00", "timeZone": "Europe/Warsaw"},
+      "end": {"dateTime": "2026-10-05T14:00:00+02:00", "timeZone": "Europe/Warsaw"},
+      "recurringEventId": "class2"
+    },
+    {
+      "id": "call1",
+      "status": "confirmed",
+      "summary": "Online call",
+      "start": {"dateTime": "2026-10-05T16:00:00Z"},
+      "end": {"dateTime": "2026-10-05T17:00:00Z"}
+    },
+    {
+      "id": "bday1",
+      "status": "confirmed",
+      "summary": "Urodziny Zosi",
+      "start": {"date": "2026-10-05"},
+      "end": {"date": "2026-10-06"}
+    },
+    {
+      "id": "declined1",
+      "status": "confirmed",
+      "summary": "Team lunch",
+      "location": "Rynek, Wrocław",
+      "start": {"dateTime": "2026-10-05T13:00:00+02:00"},
+      "end": {"dateTime": "2026-10-05T14:00:00+02:00"},
+      "attendees": [
+        {"email": "boss@example.com", "responseStatus": "accepted"},
+        {"email": "tymek@example.com", "self": true, "responseStatus": "declined"}
+      ]
+    },
+    {
+      "id": "cancelled1",
+      "status": "cancelled",
+      "summary": "Cancelled thing",
+      "start": {"dateTime": "2026-10-05T18:00:00+02:00"},
+      "end": {"dateTime": "2026-10-05T19:00:00+02:00"}
+    },
+    {
+      "id": "class1_20261019T080000Z",
+      "status": "confirmed",
+      "summary": "Algorytmy i struktury danych (moved)",
+      "location": "Politechnika Wrocławska, budynek C-13, Wrocław",
+      "start": {"dateTime": "2026-10-19T11:00:00+02:00", "timeZone": "Europe/Warsaw"},
+      "end": {"dateTime": "2026-10-19T13:00:00+02:00", "timeZone": "Europe/Warsaw"},
+      "recurringEventId": "class1"
+    }
+  ]
+}

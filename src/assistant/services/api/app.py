@@ -9,11 +9,13 @@ from sqlalchemy.orm import Session
 
 from assistant.core.config import load_config
 from assistant.core.db import CollectorRun, get_engine
+from assistant.modules.calendar.routes import router as calendar_router
 from assistant.modules.weather.routes import router as weather_router
 
 templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
 app = FastAPI(title="Assistant")
 app.include_router(weather_router)
+app.include_router(calendar_router)
 
 
 def latest_runs() -> list[CollectorRun]:

@@ -28,12 +28,16 @@
     .rain { color: var(--accent); min-height: 1.2em; }
     .advice { font-size: 1.6rem; margin: .5rem 0 .2rem; }
     .extra { margin: .2rem 0; color: var(--warn); }
+    .widget h3 { margin: .8rem 0 .3rem; font-size: 1.1rem; color: var(--accent); }
+    .event { display: flex; gap: 1rem; margin: .4rem 0; }
+    .when { min-width: 7.5rem; font-variant-numeric: tabular-nums; color: var(--dim); }
   </style>
 </head>
 <body>
   <header><span id="clock"></span><span id="date"></span></header>
   <main>
     <div hx-get="/widgets/weather" hx-trigger="load, every 10m"></div>
+    <div hx-get="/widgets/calendar" hx-trigger="load, every 5m"></div>
   </main>
   <script>
     function tick() {

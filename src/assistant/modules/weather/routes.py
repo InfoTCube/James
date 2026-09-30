@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from assistant.core.collector import is_stale
 from assistant.core.config import load_config
 from assistant.core.db import get_engine, utcnow
+from assistant.modules.calendar import service as calendar
 from assistant.modules.weather import service
 
 router = APIRouter()
@@ -21,7 +22,8 @@ def weather_widget(request: Request):
     tz, now, engine = load_config().tz, utcnow(), get_engine()
     with Session(engine) as session:
         hours = service.get_hours(session, now - timedelta(hours=1), now + timedelta(hours=24))
-        advice = service.get_clothing_advice(session, now, tz)
+        events = calendar.outdoor_events(session, now, tz)
+        advice = service.get_clothing_advice(session, now, tz, events)
     return templates.TemplateResponse(
         request,
         "widget.html",

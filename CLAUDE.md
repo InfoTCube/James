@@ -22,7 +22,7 @@ Most features are scheduled data fetching + filtering rules. **Default to determ
 | Module | What it does | Data source | AI? |
 |---|---|---|---|
 | `weather` | Forecast + clothing advice covering the whole day out (e.g. take a jacket if returning late and it gets cold) | Open-Meteo (free, no key) + calendar end times | No — rules |
-| `calendar` | Events + notifications | Google Calendar API (or CalDAV) | No |
+| `calendar` | Events + notifications; add events (bot/voice) | Google Calendar API (OAuth, `calendar.events` scope) | No |
 | `mpk` | Tram/bus departures to the next calendar event's location | Wrocław open data GTFS + live vehicle positions | No |
 | `email` | Summary of important emails | Gmail API; rules filter first | Summary only |
 | `birthdays` | Upcoming birthdays | Google Contacts / manual list in config | No |
@@ -78,6 +78,7 @@ Each module folder contains:
 - `models.py` — the module's own tables (prefixed with module name, e.g. `weather_hourly`).
 - `service.py` — read logic used by the API, bot and voice (e.g. `get_clothing_advice(date)`). No I/O to external services here — read from the DB.
 - `routes.py` — optional FastAPI router for the module's endpoints/dashboard widget.
+- `client.py` — optional, when the module talks to an authenticated API (incl. writes, e.g. `calendar.client.add_event`). Other modules may call its public functions.
 - `README.md` — short: source, schedule, config keys, known fragility.
 
 Rules:
@@ -146,7 +147,7 @@ Work in this order. Keep each step small and working end-to-end before moving on
 **Phase 1 — skeleton + daily essentials** ← current
 - [x] Project skeleton: uv project, `core/` (config, db, logging, collector_runs), worker, api with empty dashboard, docker-compose, `.env.example`, `config/config.yaml`
 - [x] `weather` module: Open-Meteo collector + clothing rules + dashboard widget (first module — proves the whole pattern, no API keys needed)
-- [ ] `calendar` module: also pass today's in-person events to `weather.service.get_clothing_advice(events=...)` (widget + briefing)
+- [x] `calendar` module: Google Calendar API (read + `add_event`), widget, feeds weather advice
 - [ ] `mpk` module: GTFS import, departures for aliases, link with next calendar event
 
 **Phase 2 — alerts**

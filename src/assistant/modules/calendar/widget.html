@@ -1,0 +1,14 @@
+<section class="widget{% if stale %} stale{% endif %}">
+  <h2>Calendar{% if stale %} <small class="badge">stale</small>{% endif %}</h2>
+  {% for label, events in days %}
+  <h3>{{ label }}</h3>
+  {% for e in events %}
+  <div class="event">
+    <span class="when">{% if e.all_day %}all day{% else %}{{ e.start.astimezone(tz).strftime("%H:%M") }}–{{ e.end.astimezone(tz).strftime("%H:%M") }}{% endif %}</span>
+    <span>{{ e.title }}{% if e.location %}<br><small>{{ e.location }}</small>{% endif %}</span>
+  </div>
+  {% else %}
+  <p><small>Nothing planned</small></p>
+  {% endfor %}
+  {% endfor %}
+</section>
