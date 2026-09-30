@@ -23,7 +23,7 @@ Most features are scheduled data fetching + filtering rules. **Default to determ
 |---|---|---|---|
 | `weather` | Forecast + clothing advice covering the whole day out (e.g. take a jacket if returning late and it gets cold) | Open-Meteo (free, no key) + calendar end times | No — rules |
 | `calendar` | Events + notifications; add events (bot/voice) | Google Calendar API (OAuth, `calendar.events` scope) | No |
-| `mpk` | Tram/bus departures to the next calendar event's location | Wrocław open data GTFS (open-data.cui.wroclaw.pl) + live vehicle positions (later) | No |
+| `mpk` | Tram/bus departures to the next calendar event's location | Wrocław open data GTFS (open-data.cui.wroclaw.pl) + live vehicle positions (mpk.wroc.pl, delay estimates) | No |
 | `email` | Summary of important emails | Gmail API; rules filter first | Summary only |
 | `birthdays` | Upcoming birthdays | Google Contacts / manual list in config | No |
 | `jobs` | Interesting job offers | justjoin.it, nofluffjobs, pracuj.pl | Optional ranking |
@@ -78,7 +78,7 @@ Each module folder contains:
 - `models.py` — the module's own tables (prefixed with module name, e.g. `weather_hourly`).
 - `service.py` — read logic used by the API, bot and voice (e.g. `get_clothing_advice(date)`). No I/O to external services here — read from the DB.
 - `routes.py` — optional FastAPI router for the module's endpoints/dashboard widget.
-- `client.py` — optional, when the module talks to an authenticated API (incl. writes, e.g. `calendar.client.add_event`). Other modules may call its public functions.
+- `client.py` — optional, for external calls that can't wait for a collector: authenticated APIs incl. writes (e.g. `calendar.client.add_event`) and live data (e.g. `mpk.client.vehicle_positions`, cached, `[]` on failure). Other modules may call its public functions.
 - `README.md` — short: source, schedule, config keys, known fragility.
 
 Rules:
@@ -149,7 +149,7 @@ Work in this order. Keep each step small and working end-to-end before moving on
 - [x] Project skeleton: uv project, `core/` (config, db, logging, collector_runs), worker, api with empty dashboard, docker-compose, `.env.example`, `config/config.yaml`
 - [x] `weather` module: Open-Meteo collector + clothing rules + dashboard widget (first module — proves the whole pattern, no API keys needed)
 - [x] `calendar` module: Google Calendar API (read + `add_event`), widget, feeds weather advice
-- [x] `mpk` module: GTFS import, departures for aliases, link with next calendar event (live delays + transfers later)
+- [x] `mpk` module: GTFS import, departures for aliases, link with next calendar event + live delay estimates (transfers later)
 
 **Phase 2 — alerts**
 - [ ] Telegram bot + `core/notifier`

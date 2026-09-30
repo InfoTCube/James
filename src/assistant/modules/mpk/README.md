@@ -25,11 +25,13 @@
 - **Expired timetable:** each file covers ~2 weeks. If no newer one arrives in time, trips after
   the last covered day use the services that normally run on that weekday (`calendar.txt` without
   holiday exceptions), and the card warns "Timetable ended DD.MM".
-- **Live positions (researched, not built):** `POST https://mpk.wroc.pl/bus_position` with
-  `busList[tram][]=16&busList[bus][]=145` returns live positions every ~10 s: `name` (line),
-  `type`, `x` = **lat**, `y` = **lon** (swapped), `k` = an internal course id that doesn't match
-  GTFS trip ids. The open data vehicle table (`open-data.cui.wroclaw.pl/hdb/db/14?download=json`)
-  is only an hourly snapshot. There's no official GTFS-RT, so delays would have to be estimated by
-  matching positions to the trip's stops.
-- **Not yet:** live delays (vehicle positions at `mpk.wroc.pl/bus_position`), transfers, and street
-  addresses. "Legnicka 5" matches nothing; it would need geocoding.
+- **Live delays (estimates):** there's no official real-time feed for Wrocław.
+  `client.vehicle_positions()` POSTs to `https://mpk.wroc.pl/bus_position` (form
+  `busList[tram][]=16&busList[bus][]=145`; response `x` = **lat**, `y` = **lon**, `k` = MPK run
+  id, not a GTFS trip id), cached 20 s, `[]` on failure. For each option on the card, a vehicle
+  of its line within 150 m of the trip *before* your boarding stop, **moving towards it** (the
+  `Tracker` compares readings between the card's 1-min refreshes), gives
+  delay = now − schedule at its position (interpolated between stops). Plausible range −2..+20
+  min; the closest to on-time wins. The first estimate appears on the second refresh. The open
+  data vehicle table is only an hourly snapshot, so it's unusable.
+- **Not yet:** transfers. Live delays are only computed while the dashboard card is visible.

@@ -1,6 +1,7 @@
 import io
+import json
 import zipfile
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from types import SimpleNamespace
 from zoneinfo import ZoneInfo
@@ -203,3 +204,52 @@ def test_after_timetable_ends_weekday_services_are_reused(db):
         assert service.services_on(s, date(2026, 10, 17)) == ["3"]  # Saturday after the end
         cs = service.connections(s, HOME, UNI, at(15, 9, 55), not_before=at(15, 9), tz=TZ)
     assert [(c.line, c.departs) for c in cs] == [("145", at(15, 9, 35)), ("16", at(15, 9, 33))]
+
+
+def test_parse_positions_swaps_x_y():
+    raw = json.loads(Path("tests/fixtures/mpk/bus_position.json").read_text(encoding="utf-8"))
+    v = service.parse_positions(raw)[0]
+    assert (v.course, v.line, v.lat, v.lon) == (29106483, "145", 51.10648, 17.103416)
+
+
+# trip t16a heading north: DWORZEC GŁÓWNY 09:30 → Kościuszki 09:33 (your boarding stop)
+T16A_TO_KOSCIUSZKI = [(51.098, 17.036, 9 * 3600 + 30 * 60), (51.104, 17.034, 9 * 3600 + 33 * 60)]
+MIDNIGHT = at(1, 0)
+
+
+def tram(lat: float, course: int = 1) -> service.Vehicle:
+    return service.Vehicle(course, "16", lat, 17.036)
+
+
+def delay_after(positions: list[float], now: datetime) -> int | None:
+    tracker = service.Tracker()
+    for i, lat in enumerate(positions):
+        tracker.update([tram(lat)], now - timedelta(minutes=len(positions) - 1 - i))
+    return service.estimate_delay(T16A_TO_KOSCIUSZKI, MIDNIGHT, [tram(positions[-1])], tracker, now)
+
+
+def test_live_delay_needs_movement_towards_your_stop():
+    # at DWORZEC GŁÓWNY at 09:32, having come from the south: 2 min late
+    assert delay_after([51.094, 51.098], at(1, 9, 32)) == 2
+    assert delay_after([51.094, 51.098], at(1, 9, 29)) == -1  # a bit early
+    assert delay_after([51.098], at(1, 9, 32)) is None  # first sighting: direction unknown
+    assert delay_after([51.1005, 51.098], at(1, 9, 32)) is None  # moving away: other direction
+    assert delay_after([51.098, 51.0982], at(1, 9, 32)) is None  # GPS jitter, not a move
+    assert delay_after([51.094, 51.098], at(1, 9, 55)) is None  # 25 min "late": another trip
+    assert delay_after([51.080, 51.084], at(1, 9, 32)) is None  # not near any stop of the trip
+
+
+def test_live_delay_picks_the_most_plausible_vehicle():
+    # two line-16 trams heading north: one reached Kościuszki (09:33 → 3 min late),
+    # the next one is at DWORZEC GŁÓWNY (09:30 → 6 min late); the smaller delay is ours
+    now, tracker = at(1, 9, 36), service.Tracker()
+    tracker.update([tram(51.099, course=1), tram(51.090, course=2)], now - timedelta(minutes=1))
+    moved = [tram(51.104, course=1), tram(51.098, course=2)]
+    tracker.update(moved, now)
+    assert service.estimate_delay(T16A_TO_KOSCIUSZKI, MIDNIGHT, moved, tracker, now) == 3
+
+
+def test_live_delay_interpolates_between_stops():
+    # halfway between DWORZEC GŁÓWNY (09:30) and Kościuszki (09:33) → scheduled 09:31:30
+    now = at(1, 9, 33) + timedelta(seconds=30)
+    assert delay_after([51.097, 51.101], now) == 2

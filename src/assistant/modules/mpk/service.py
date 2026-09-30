@@ -5,6 +5,7 @@ import math
 import re
 from dataclasses import dataclass
 from datetime import date, datetime, time, timedelta
+from itertools import pairwise
 from zoneinfo import ZoneInfo
 
 from sqlalchemy import func, select, text
@@ -40,6 +41,9 @@ class Connection:
     to_stop: str
     departs: datetime
     arrives: datetime
+    trip_id: str = ""
+    from_seq: int = 0
+    delay_min: int | None = None  # live estimate; None = unknown
 
 
 def resolve(location: str, places: dict[str, Place], stop_names: list[str]) -> Target | None:
@@ -205,7 +209,8 @@ def connections(
     s_sql, s_keys = _names_sql("s", services)
     rows = session.execute(
         text(f"""
-            SELECT a.trip_id, a.dep, b.arr, r.short_name, r.route_type, t.headsign,
+            SELECT a.trip_id, a.seq AS from_seq, a.dep, b.arr, r.short_name, r.route_type,
+                   t.headsign,
                    sa.name AS from_stop, sb.name AS to_stop
             FROM mpk_stop_times a
             JOIN mpk_stops sa ON sa.stop_id = a.stop_id AND sa.name IN ({o_sql})
@@ -243,6 +248,112 @@ def connections(
             to_stop=r.to_stop,
             departs=midnight + timedelta(seconds=r.dep),
             arrives=midnight + timedelta(seconds=r.arr),
+            trip_id=r.trip_id,
+            from_seq=r.from_seq,
         )
         for r in ordered
     ]
+
+
+# --- live delays -------------------------------------------------------------------------------
+# There's no official real-time delay feed for Wrocław, only live positions. A vehicle of the
+# right line that's near a stop *before* your boarding stop, and moving towards it, is assumed to
+# be your trip; delay = now - scheduled time at that stop.
+
+MATCH_RADIUS = 150  # m: vehicle this close to a stop is "at" it
+MOVED = 40  # m: smaller position changes are GPS noise / standing at a stop
+EARLIEST, LATEST = -2, 20  # minutes: plausible delays; outside that it's another trip
+FORGET = timedelta(minutes=10)
+
+
+@dataclass
+class Vehicle:
+    course: int  # MPK's id for the run ("k"); not a GTFS trip id
+    line: str
+    lat: float
+    lon: float
+
+
+def parse_positions(data: list[dict]) -> list[Vehicle]:
+    """mpk.wroc.pl/bus_position JSON → vehicles. Note: its x is latitude, y is longitude."""
+    return [Vehicle(int(v["k"]), str(v["name"]), float(v["x"]), float(v["y"])) for v in data]
+
+
+class Tracker:
+    """Remembers where each vehicle was, to tell which way it's moving.
+
+    ponytail: lives in the API process and only learns while the card polls (once a minute),
+    so the first estimate appears on the second refresh. Move polling to the worker if the
+    Telegram "leave now" alert needs it without the dashboard open.
+    """
+
+    def __init__(self) -> None:
+        self._pos: dict[int, tuple[float, float, datetime]] = {}  # last significant position
+        self._anchor: dict[int, tuple[float, float]] = {}  # the one before it
+
+    def update(self, vehicles: list[Vehicle], now: datetime) -> None:
+        for v in vehicles:
+            last = self._pos.get(v.course)
+            if last is None or now - last[2] > FORGET:
+                self._pos[v.course] = (v.lat, v.lon, now)
+                self._anchor.pop(v.course, None)
+            elif distance_m(last[0], last[1], v.lat, v.lon) >= MOVED:
+                self._anchor[v.course] = (last[0], last[1])
+                self._pos[v.course] = (v.lat, v.lon, now)
+        for course in [c for c, p in self._pos.items() if now - p[2] > FORGET]:
+            self._pos.pop(course)
+            self._anchor.pop(course, None)
+
+    def approaching(self, v: Vehicle, lat: float, lon: float) -> bool:
+        """True if the vehicle's last real move brought it closer to (lat, lon)."""
+        anchor = self._anchor.get(v.course)
+        if anchor is None:
+            return False
+        return distance_m(v.lat, v.lon, lat, lon) < distance_m(anchor[0], anchor[1], lat, lon)
+
+
+def trip_stops_until(session: Session, trip_id: str, seq: int) -> list[tuple[float, float, int]]:
+    """(lat, lon, scheduled departure seconds) of the trip's stops up to and including seq."""
+    q = text("""
+        SELECT s.lat, s.lon, st.dep FROM mpk_stop_times st JOIN mpk_stops s USING (stop_id)
+        WHERE st.trip_id = :trip AND st.seq <= :seq ORDER BY st.seq
+    """)
+    return [tuple(r) for r in session.execute(q, {"trip": trip_id, "seq": seq})]
+
+
+def _where_on_trip(v: Vehicle, stops: list[tuple[float, float, int]]) -> tuple[float, float]:
+    """(distance to the trip in m, scheduled seconds for that point). Between two stops the
+    schedule is interpolated along the straight line joining them."""
+    ky, kx = 110_540, 111_320 * math.cos(math.radians(v.lat))  # metres per degree, locally flat
+    best = (distance_m(v.lat, v.lon, stops[0][0], stops[0][1]), float(stops[0][2]))
+    for (lat1, lon1, t1), (lat2, lon2, t2) in pairwise(stops):
+        ax, ay = (lon2 - lon1) * kx, (lat2 - lat1) * ky
+        px, py = (v.lon - lon1) * kx, (v.lat - lat1) * ky
+        f = min(1.0, max(0.0, (px * ax + py * ay) / ((ax * ax + ay * ay) or 1)))
+        d = math.hypot(px - f * ax, py - f * ay)
+        if d < best[0]:
+            best = (d, t1 + f * (t2 - t1))
+    return best
+
+
+def estimate_delay(
+    stops: list[tuple[float, float, int]],
+    midnight: datetime,
+    vehicles: list[Vehicle],
+    tracker: Tracker,
+    now: datetime,
+) -> int | None:
+    """Minutes late (negative = early) of the trip whose stops up to your boarding stop are
+    `stops`, judged from live vehicles of its line. None if no vehicle fits."""
+    if not stops:
+        return None
+    board = stops[-1]
+    best = None
+    for v in vehicles:
+        d, scheduled = _where_on_trip(v, stops)
+        if d > MATCH_RADIUS or not tracker.approaching(v, board[0], board[1]):
+            continue
+        delay = (now - (midnight + timedelta(seconds=scheduled))).total_seconds() / 60
+        if EARLIEST <= delay <= LATEST and (best is None or abs(delay) < abs(best)):
+            best = delay
+    return None if best is None else round(best)
