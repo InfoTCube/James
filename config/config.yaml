@@ -1,0 +1,6 @@
+# User preferences. Validated by assistant.core.config on startup. Secrets go in .env.
+timezone: Europe/Warsaw
+
+location:  # home, Wrocław
+  latitude: 51.1079
+  longitude: 17.0385
