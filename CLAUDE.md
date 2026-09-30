@@ -135,6 +135,7 @@ uv run ruff check . && uv run ruff format .
 uv run python -m assistant.services.worker --run-once weather   # run one collector manually
 docker compose up --build        # run the whole system
 uv run python -m assistant.services.api                          # dashboard on :8000
+uv run --env-file .env python -m assistant.services.bot          # Telegram bot
 ```
 
 Adding a module: implement the `Collector` protocol from `core/collector.py` (`run(session)` runs in one
@@ -152,7 +153,7 @@ Work in this order. Keep each step small and working end-to-end before moving on
 - [x] `mpk` module: GTFS import, departures for aliases, link with next calendar event + live delay estimates (transfers later)
 
 **Phase 2 — alerts**
-- [ ] Telegram bot + `core/notifier`
+- [x] Telegram bot + `core/notifier`: /next /today /weather /help, "leave now" alert 5 min before leave-by
 - [ ] `flights`, `jobs`, `events`
 
 **Phase 3 — voice & alarm**

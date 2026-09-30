@@ -11,7 +11,8 @@ from zoneinfo import ZoneInfo
 from sqlalchemy import func, select, text
 from sqlalchemy.orm import Session
 
-from assistant.core.config import Place, fold
+from assistant.core.config import Config, Place, fold
+from assistant.modules.calendar import service as calendar
 from assistant.modules.mpk.models import MpkGeocode, MpkServiceDate, MpkServiceWeekday, MpkStop
 
 DEFAULT_WALK = 5  # minutes, for stops matched by name rather than a configured place
@@ -357,3 +358,65 @@ def estimate_delay(
         if EARLIEST <= delay <= LATEST and (best is None or abs(delay) < abs(best)):
             best = delay
     return None if best is None else round(best)
+
+
+# --- the trip you need right now -----------------------------------------------------------------
+
+HOME_WINDOW = timedelta(hours=2)  # how far ahead to look for a ride home
+
+
+@dataclass
+class Trip:
+    leg: Leg
+    options: list[Connection]
+    leave_by: datetime | None  # for trips with a deadline: last moment to leave the origin
+    timetable_end: date | None  # set when the timetable has run out (times are a fallback)
+
+
+def day_legs(session: Session, now: datetime, config: Config) -> list[Leg]:
+    """All trips planned around now (events from yesterday to tomorrow)."""
+    home_place = config.places["home"]
+    home = Target("home", home_place.stops, home_place.walk_minutes)
+    events = calendar.events_between(
+        session, now - timedelta(days=1), now + timedelta(days=1), config.tz
+    )
+    targets: dict[str, Target | None] = {}
+    located = []
+    for e in events:
+        if e.location and not e.all_day:
+            if e.location not in targets:
+                targets[e.location] = find_target(session, e.location, config.places)
+            located.append((e.title, e.start, e.end, targets[e.location]))
+    return plan_legs(located, home)
+
+
+def current_trip(session: Session, now: datetime, config: Config) -> Trip | None:
+    """The trip to show right now (dashboard card, bot, alerts), or None."""
+    if "home" not in config.places:
+        return None
+    leg = next(
+        (g for g in day_legs(session, now, config) if g.show_from <= now < g.show_until), None
+    )
+    if leg is None:
+        return None
+    options, leave_by = [], None
+    if leg.origin and leg.dest:
+        not_before = max(now, leg.not_before or now) + timedelta(minutes=leg.origin.walk_minutes)
+        if leg.arrive_by:
+            arrive_by = leg.arrive_by - timedelta(minutes=leg.dest.walk_minutes)
+        else:
+            arrive_by = not_before + HOME_WINDOW
+        options = connections(
+            session,
+            leg.origin,
+            leg.dest,
+            arrive_by=arrive_by,
+            not_before=not_before,
+            tz=config.tz,
+            latest_first=leg.arrive_by is not None,
+        )
+        if options and leg.arrive_by:
+            leave_by = options[0].departs - timedelta(minutes=leg.origin.walk_minutes)
+    end = timetable_end(session)
+    expired = end if end and end < now.astimezone(config.tz).date() else None
+    return Trip(leg, options, leave_by, expired)

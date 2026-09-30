@@ -14,3 +14,7 @@ services:
   worker:
     <<: *app
     command: python -m assistant.services.worker
+  bot:
+    <<: *app
+    command: python -m assistant.services.bot
+    restart: on-failure  # exits cleanly (stays stopped) while TELEGRAM_BOT_TOKEN isn't set

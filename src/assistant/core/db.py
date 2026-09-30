@@ -48,6 +48,15 @@ class CollectorRun(Base):
     error: Mapped[str | None] = mapped_column(Text)
 
 
+class SentNotification(Base):
+    """Keys of alerts already sent, so a restart or re-check never sends one twice."""
+
+    __tablename__ = "sent_notifications"
+
+    key: Mapped[str] = mapped_column(String(200), primary_key=True)
+    sent_at: Mapped[datetime] = mapped_column(UTCDateTime)
+
+
 def make_engine(path: Path) -> Engine:
     """Create an engine with WAL + foreign keys, and create all tables."""
     path.parent.mkdir(parents=True, exist_ok=True)

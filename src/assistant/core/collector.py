@@ -5,12 +5,14 @@ from datetime import datetime, timedelta
 from typing import Protocol
 
 from apscheduler.triggers.base import BaseTrigger
-from sqlalchemy import Engine, func, select
+from sqlalchemy import Engine, delete, func, select
 from sqlalchemy.orm import Session
 
 from assistant.core.db import CollectorRun, utcnow
 
 log = logging.getLogger(__name__)
+
+KEEP_RUNS = timedelta(days=30)  # older collector_runs rows are deleted
 
 
 class Collector(Protocol):
@@ -31,6 +33,7 @@ def run_collector(collector: Collector, engine: Engine) -> bool:
         log.exception("collector %s failed", collector.name)
         error = f"{type(e).__name__}: {e}"
     with Session(engine) as session, session.begin():
+        session.execute(delete(CollectorRun).where(CollectorRun.finished_at < started - KEEP_RUNS))
         session.add(
             CollectorRun(
                 module=collector.name,

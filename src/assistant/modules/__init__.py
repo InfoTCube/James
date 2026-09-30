@@ -2,6 +2,7 @@
 
 from assistant.core.collector import Collector
 from assistant.modules.calendar.collector import CalendarCollector
+from assistant.modules.mpk.alerts import LeaveNowAlert
 from assistant.modules.mpk.collector import GeocodeCollector, MpkCollector
 from assistant.modules.weather.collector import WeatherCollector
 
@@ -10,4 +11,5 @@ COLLECTORS: list[Collector] = [
     CalendarCollector(),
     MpkCollector(),
     GeocodeCollector(),
+    LeaveNowAlert(),
 ]
