@@ -1,0 +1,1532 @@
+{
+ "postings": [
+  {
+   "id": "senior-net-developer-with-azure-banking-industry-f-m-x-sii-polska-Kraków",
+   "name": "Sii Polska",
+   "location": {
+    "places": [
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "city": "Kraków",
+      "street": "ul. Wadowicka 12",
+      "postalCode": "30-415",
+      "geoLocation": {
+       "latitude": 50.0310399,
+       "longitude": 19.937972
+      },
+      "url": "senior-net-developer-with-azure-banking-industry-f-m-x-sii-polska-krakow"
+     }
+    ],
+    "fullyRemote": false,
+    "covidTimeRemotely": false,
+    "hybridDesc": ""
+   },
+   "posted": 1790945952072,
+   "renewed": 1791205152072,
+   "title": "Senior .NET Developer with Azure - banking industry (f/m/x)  ",
+   "technology": ".NET",
+   "logo": {
+    "original": "companies/logos/original/ee4d00005df000158e2008da6654e4da_20240623_114439.png",
+    "jobs_details": "companies/logos/jobs_details/ee4d00005df000158e2008da6654e4da_20240623_114439.png",
+    "jobs_listing": "companies/logos/jobs_listing/ee4d00005df000158e2008da6654e4da_20240623_114439.png",
+    "jobs_details_2x": "companies/logos/jobs_details_2x/ee4d00005df000158e2008da6654e4da_20240623_114439.png",
+    "jobs_listing_2x": "companies/logos/jobs_listing_2x/ee4d00005df000158e2008da6654e4da_20240623_114439.png",
+    "companies_details": "companies/logos/companies_details/ee4d00005df000158e2008da6654e4da_20240623_114439.png",
+    "companies_listing": "companies/logos/companies_listing/ee4d00005df000158e2008da6654e4da_20240623_114439.png",
+    "jobs_details_webp": "companies/logos/jobs_details/ee4d00005df000158e2008da6654e4da_20240623_114439.webp",
+    "jobs_listing_webp": "companies/logos/jobs_listing/ee4d00005df000158e2008da6654e4da_20240623_114439.webp",
+    "companies_details_2x": "companies/logos/companies_details_2x/ee4d00005df000158e2008da6654e4da_20240623_114439.png",
+    "companies_listing_2x": "companies/logos/companies_listing_2x/ee4d00005df000158e2008da6654e4da_20240623_114439.png",
+    "jobs_details_2x_webp": "companies/logos/jobs_details_2x/ee4d00005df000158e2008da6654e4da_20240623_114439.webp",
+    "jobs_listing_2x_webp": "companies/logos/jobs_listing_2x/ee4d00005df000158e2008da6654e4da_20240623_114439.webp",
+    "original_pixel_image": "companies/logos/original_pixel_image/ee4d00005df000158e2008da6654e4da_20240623_114439.png",
+    "companies_details_webp": "companies/logos/companies_details/ee4d00005df000158e2008da6654e4da_20240623_114439.webp",
+    "companies_listing_webp": "companies/logos/companies_listing/ee4d00005df000158e2008da6654e4da_20240623_114439.webp",
+    "companies_details_2x_webp": "companies/logos/companies_details_2x/ee4d00005df000158e2008da6654e4da_20240623_114439.webp",
+    "companies_listing_2x_webp": "companies/logos/companies_listing_2x/ee4d00005df000158e2008da6654e4da_20240623_114439.webp"
+   },
+   "category": "backend",
+   "seniority": [
+    "Senior"
+   ],
+   "url": "senior-net-developer-with-azure-banking-industry-f-m-x-sii-polska-krakow",
+   "regions": [
+    "pl"
+   ],
+   "fullyRemote": false,
+   "salary": {
+    "from": 19000.0,
+    "to": 26000.0,
+    "type": "b2b",
+    "currency": "PLN",
+    "period": "Month",
+    "disclosedAt": "VISIBLE",
+    "flexibleUpperBound": false
+   },
+   "flavors": [
+    "it"
+   ],
+   "topInSearch": false,
+   "highlighted": false,
+   "help4Ua": false,
+   "reference": "1KE7LHCL",
+   "searchBoost": false,
+   "onlineInterviewAvailable": true,
+   "tiles": {
+    "values": [
+     {
+      "value": "backend",
+      "type": "category"
+     },
+     {
+      "value": ".NET",
+      "type": "requirement"
+     },
+     {
+      "value": "C#",
+      "type": "requirement"
+     },
+     {
+      "value": "TypeScript",
+      "type": "requirement"
+     }
+    ]
+   }
+  },
+  {
+   "id": "fullstack-engineer-net-react-mindbox-Kraków-1",
+   "name": "Mindbox Sp. z o.o.",
+   "location": {
+    "places": [
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "city": "Kraków",
+      "street": "",
+      "postalCode": "",
+      "url": "fullstack-engineer-net-react-mindbox-krakow-1"
+     }
+    ],
+    "fullyRemote": false,
+    "covidTimeRemotely": false,
+    "hybridDesc": "6x/miesiąc"
+   },
+   "posted": 1790767958963,
+   "renewed": 1791199958963,
+   "title": "Fullstack Engineer (.NET/React)",
+   "technology": ".NET",
+   "logo": {
+    "original": "companies/logos/original/avatar_20260601_105625.png",
+    "jobs_details": "companies/logos/jobs_details/avatar_20260601_105625.png",
+    "jobs_listing": "companies/logos/jobs_listing/avatar_20260601_105625.png",
+    "jobs_details_2x": "companies/logos/jobs_details_2x/avatar_20260601_105625.png",
+    "jobs_listing_2x": "companies/logos/jobs_listing_2x/avatar_20260601_105625.png",
+    "companies_details": "companies/logos/companies_details/avatar_20260601_105625.png",
+    "companies_listing": "companies/logos/companies_listing/avatar_20260601_105625.png",
+    "jobs_details_webp": "companies/logos/jobs_details/avatar_20260601_105625.webp",
+    "jobs_listing_webp": "companies/logos/jobs_listing/avatar_20260601_105625.webp",
+    "companies_details_2x": "companies/logos/companies_details_2x/avatar_20260601_105625.png",
+    "companies_listing_2x": "companies/logos/companies_listing_2x/avatar_20260601_105625.png",
+    "jobs_details_2x_webp": "companies/logos/jobs_details_2x/avatar_20260601_105625.webp",
+    "jobs_listing_2x_webp": "companies/logos/jobs_listing_2x/avatar_20260601_105625.webp",
+    "original_pixel_image": "companies/logos/original_pixel_image/avatar_20260601_105625.png",
+    "companies_details_webp": "companies/logos/companies_details/avatar_20260601_105625.webp",
+    "companies_listing_webp": "companies/logos/companies_listing/avatar_20260601_105625.webp",
+    "companies_details_2x_webp": "companies/logos/companies_details_2x/avatar_20260601_105625.webp",
+    "companies_listing_2x_webp": "companies/logos/companies_listing_2x/avatar_20260601_105625.webp"
+   },
+   "category": "fullstack",
+   "seniority": [
+    "Senior"
+   ],
+   "url": "fullstack-engineer-net-react-mindbox-krakow-1",
+   "regions": [
+    "pl"
+   ],
+   "fullyRemote": false,
+   "salary": {
+    "from": 25200.0,
+    "to": 30450.0,
+    "type": "b2b",
+    "currency": "PLN",
+    "period": "Month",
+    "disclosedAt": "VISIBLE",
+    "flexibleUpperBound": false
+   },
+   "flavors": [
+    "it"
+   ],
+   "topInSearch": false,
+   "highlighted": false,
+   "help4Ua": false,
+   "reference": "OKUUDWVF",
+   "searchBoost": false,
+   "onlineInterviewAvailable": false,
+   "tiles": {
+    "values": [
+     {
+      "value": "fullstack",
+      "type": "category"
+     },
+     {
+      "value": ".NET",
+      "type": "requirement"
+     },
+     {
+      "value": "Web API",
+      "type": "requirement"
+     },
+     {
+      "value": "React",
+      "type": "requirement"
+     }
+    ]
+   }
+  },
+  {
+   "id": "junior-software-engineer-net-allegro-klik-care-grupa-allegro-Warszawa",
+   "name": "Grupa Allegro Sp. z o. o.",
+   "location": {
+    "places": [
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "city": "Warszawa",
+      "street": "",
+      "postalCode": "",
+      "geoLocation": {
+       "latitude": 52.4000157,
+       "longitude": 16.9208708
+      },
+      "url": "junior-software-engineer-net-allegro-klik-care-grupa-allegro-warszawa"
+     }
+    ],
+    "fullyRemote": false,
+    "covidTimeRemotely": false,
+    "hybridDesc": "Flexible working hours in the hybrid model (4/1) - working hours start between 7:00 a.m. and 10:00 a.m. We also have 30 days of occasional remote work.\n\n"
+   },
+   "posted": 1790678709962,
+   "renewed": 1791197109962,
+   "title": "Junior Software Engineer - .NET - Allegro Klik/Care",
+   "technology": ".NET",
+   "logo": {
+    "original": "companies/logos/original/allegro_logo_20260623_121706.tif",
+    "jobs_details": "companies/logos/jobs_details/allegro_logo_20260623_121706.tif",
+    "jobs_listing": "companies/logos/jobs_listing/allegro_logo_20260623_121706.tif",
+    "jobs_details_2x": "companies/logos/jobs_details_2x/allegro_logo_20260623_121706.tif",
+    "jobs_listing_2x": "companies/logos/jobs_listing_2x/allegro_logo_20260623_121706.tif",
+    "companies_details": "companies/logos/companies_details/allegro_logo_20260623_121706.tif",
+    "companies_listing": "companies/logos/companies_listing/allegro_logo_20260623_121706.tif",
+    "jobs_details_webp": "companies/logos/jobs_details/allegro_logo_20260623_121706.webp",
+    "jobs_listing_webp": "companies/logos/jobs_listing/allegro_logo_20260623_121706.webp",
+    "companies_details_2x": "companies/logos/companies_details_2x/allegro_logo_20260623_121706.tif",
+    "companies_listing_2x": "companies/logos/companies_listing_2x/allegro_logo_20260623_121706.tif",
+    "jobs_details_2x_webp": "companies/logos/jobs_details_2x/allegro_logo_20260623_121706.webp",
+    "jobs_listing_2x_webp": "companies/logos/jobs_listing_2x/allegro_logo_20260623_121706.webp",
+    "original_pixel_image": "companies/logos/original_pixel_image/allegro_logo_20260623_121706.tif",
+    "companies_details_webp": "companies/logos/companies_details/allegro_logo_20260623_121706.webp",
+    "companies_listing_webp": "companies/logos/companies_listing/allegro_logo_20260623_121706.webp",
+    "companies_details_2x_webp": "companies/logos/companies_details_2x/allegro_logo_20260623_121706.webp",
+    "companies_listing_2x_webp": "companies/logos/companies_listing_2x/allegro_logo_20260623_121706.webp"
+   },
+   "category": "backend",
+   "seniority": [
+    "Junior"
+   ],
+   "url": "junior-software-engineer-net-allegro-klik-care-grupa-allegro-warszawa",
+   "regions": [
+    "pl"
+   ],
+   "fullyRemote": false,
+   "salary": {
+    "from": 11200.0,
+    "to": 15250.0,
+    "type": "permanent",
+    "currency": "PLN",
+    "period": "Month",
+    "disclosedAt": "VISIBLE",
+    "flexibleUpperBound": false
+   },
+   "flavors": [
+    "it"
+   ],
+   "topInSearch": false,
+   "highlighted": false,
+   "help4Ua": false,
+   "reference": "JPCTZOZM",
+   "searchBoost": false,
+   "onlineInterviewAvailable": true,
+   "tiles": {
+    "values": [
+     {
+      "value": "backend",
+      "type": "category"
+     },
+     {
+      "value": ".NET",
+      "type": "requirement"
+     },
+     {
+      "value": "Microservices",
+      "type": "requirement"
+     },
+     {
+      "value": "AI",
+      "type": "requirement"
+     }
+    ]
+   }
+  },
+  {
+   "id": "fullstack-enigineer-net-angular-azure-itfs-Remote",
+   "name": "ITFS Sp. z o.o.",
+   "location": {
+    "places": [
+     {
+      "city": "Remote",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-remote"
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "city": "Warszawa",
+      "street": "",
+      "postalCode": "",
+      "geoLocation": {
+       "latitude": 52.2296756,
+       "longitude": 21.0122287
+      },
+      "url": "fullstack-enigineer-net-angular-azure-itfs-warszawa"
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lower-silesian",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-lower-silesian",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "kuyavian-pomeranian",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-kuyavian-pomeranian",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lodz",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-lodz",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lublin",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-lublin",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lubusz",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-lubusz",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lesser-poland",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-lesser-poland",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "opole",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-opole",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "subcarpathian",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-subcarpathian",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "podlaskie",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-podlaskie",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "pomeranian",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-pomeranian",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "silesian",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-silesian",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "holy-cross",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-holy-cross",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "warmian-masurian",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-warmian-masurian",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "greater-poland",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-greater-poland",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "west-pomeranian",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-west-pomeranian",
+      "provinceOnly": true
+     }
+    ],
+    "fullyRemote": true,
+    "covidTimeRemotely": false,
+    "hybridDesc": ""
+   },
+   "posted": 1791195731129,
+   "title": "Fullstack Enigineer (.NET, Angular, Azure)",
+   "technology": ".NET",
+   "logo": {
+    "original": "companies/logos/original/logo_biale_20230522_075850.jpg",
+    "jobs_details": "companies/logos/jobs_details/logo_biale_20230522_075850.jpg",
+    "jobs_listing": "companies/logos/jobs_listing/logo_biale_20230522_075850.jpg",
+    "jobs_details_2x": "companies/logos/jobs_details_2x/logo_biale_20230522_075850.jpg",
+    "jobs_listing_2x": "companies/logos/jobs_listing_2x/logo_biale_20230522_075850.jpg",
+    "companies_details": "companies/logos/companies_details/logo_biale_20230522_075850.jpg",
+    "companies_listing": "companies/logos/companies_listing/logo_biale_20230522_075850.jpg",
+    "jobs_details_webp": "companies/logos/jobs_details/logo_biale_20230522_075850.webp",
+    "jobs_listing_webp": "companies/logos/jobs_listing/logo_biale_20230522_075850.webp",
+    "companies_details_2x": "companies/logos/companies_details_2x/logo_biale_20230522_075850.jpg",
+    "companies_listing_2x": "companies/logos/companies_listing_2x/logo_biale_20230522_075850.jpg",
+    "jobs_details_2x_webp": "companies/logos/jobs_details_2x/logo_biale_20230522_075850.webp",
+    "jobs_listing_2x_webp": "companies/logos/jobs_listing_2x/logo_biale_20230522_075850.webp",
+    "original_pixel_image": "companies/logos/original_pixel_image/logo_biale_20230522_075850.jpg",
+    "companies_details_webp": "companies/logos/companies_details/logo_biale_20230522_075850.webp",
+    "companies_listing_webp": "companies/logos/companies_listing/logo_biale_20230522_075850.webp",
+    "companies_details_2x_webp": "companies/logos/companies_details_2x/logo_biale_20230522_075850.webp",
+    "companies_listing_2x_webp": "companies/logos/companies_listing_2x/logo_biale_20230522_075850.webp"
+   },
+   "category": "fullstack",
+   "seniority": [
+    "Senior"
+   ],
+   "url": "fullstack-enigineer-net-angular-azure-itfs-remote",
+   "regions": [
+    "pl"
+   ],
+   "fullyRemote": false,
+   "salary": {
+    "from": 21000.0,
+    "to": 23520.0,
+    "type": "b2b",
+    "currency": "PLN",
+    "period": "Month",
+    "disclosedAt": "VISIBLE",
+    "flexibleUpperBound": false
+   },
+   "flavors": [
+    "it"
+   ],
+   "topInSearch": false,
+   "highlighted": false,
+   "help4Ua": false,
+   "reference": "PJGS6TKA",
+   "searchBoost": true,
+   "onlineInterviewAvailable": true,
+   "tiles": {
+    "values": [
+     {
+      "value": "fullstack",
+      "type": "category"
+     },
+     {
+      "value": ".NET",
+      "type": "requirement"
+     },
+     {
+      "value": "C#",
+      "type": "requirement"
+     },
+     {
+      "value": "API",
+      "type": "requirement"
+     }
+    ]
+   }
+  },
+  {
+   "id": "fullstack-enigineer-net-angular-azure-itfs-Warszawa",
+   "name": "ITFS Sp. z o.o.",
+   "location": {
+    "places": [
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "city": "Warszawa",
+      "street": "",
+      "postalCode": "",
+      "geoLocation": {
+       "latitude": 52.2296756,
+       "longitude": 21.0122287
+      },
+      "url": "fullstack-enigineer-net-angular-azure-itfs-warszawa"
+     },
+     {
+      "city": "Remote",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-remote"
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lower-silesian",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-lower-silesian",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "kuyavian-pomeranian",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-kuyavian-pomeranian",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lodz",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-lodz",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lublin",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-lublin",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lubusz",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-lubusz",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lesser-poland",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-lesser-poland",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "opole",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-opole",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "subcarpathian",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-subcarpathian",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "podlaskie",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-podlaskie",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "pomeranian",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-pomeranian",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "silesian",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-silesian",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "holy-cross",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-holy-cross",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "warmian-masurian",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-warmian-masurian",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "greater-poland",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-greater-poland",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "west-pomeranian",
+      "url": "fullstack-enigineer-net-angular-azure-itfs-west-pomeranian",
+      "provinceOnly": true
+     }
+    ],
+    "fullyRemote": true,
+    "covidTimeRemotely": false,
+    "hybridDesc": ""
+   },
+   "posted": 1791195731129,
+   "title": "Fullstack Enigineer (.NET, Angular, Azure)",
+   "technology": ".NET",
+   "logo": {
+    "original": "companies/logos/original/logo_biale_20230522_075850.jpg",
+    "jobs_details": "companies/logos/jobs_details/logo_biale_20230522_075850.jpg",
+    "jobs_listing": "companies/logos/jobs_listing/logo_biale_20230522_075850.jpg",
+    "jobs_details_2x": "companies/logos/jobs_details_2x/logo_biale_20230522_075850.jpg",
+    "jobs_listing_2x": "companies/logos/jobs_listing_2x/logo_biale_20230522_075850.jpg",
+    "companies_details": "companies/logos/companies_details/logo_biale_20230522_075850.jpg",
+    "companies_listing": "companies/logos/companies_listing/logo_biale_20230522_075850.jpg",
+    "jobs_details_webp": "companies/logos/jobs_details/logo_biale_20230522_075850.webp",
+    "jobs_listing_webp": "companies/logos/jobs_listing/logo_biale_20230522_075850.webp",
+    "companies_details_2x": "companies/logos/companies_details_2x/logo_biale_20230522_075850.jpg",
+    "companies_listing_2x": "companies/logos/companies_listing_2x/logo_biale_20230522_075850.jpg",
+    "jobs_details_2x_webp": "companies/logos/jobs_details_2x/logo_biale_20230522_075850.webp",
+    "jobs_listing_2x_webp": "companies/logos/jobs_listing_2x/logo_biale_20230522_075850.webp",
+    "original_pixel_image": "companies/logos/original_pixel_image/logo_biale_20230522_075850.jpg",
+    "companies_details_webp": "companies/logos/companies_details/logo_biale_20230522_075850.webp",
+    "companies_listing_webp": "companies/logos/companies_listing/logo_biale_20230522_075850.webp",
+    "companies_details_2x_webp": "companies/logos/companies_details_2x/logo_biale_20230522_075850.webp",
+    "companies_listing_2x_webp": "companies/logos/companies_listing_2x/logo_biale_20230522_075850.webp"
+   },
+   "category": "fullstack",
+   "seniority": [
+    "Senior"
+   ],
+   "url": "fullstack-enigineer-net-angular-azure-itfs-warszawa",
+   "regions": [
+    "pl"
+   ],
+   "fullyRemote": false,
+   "salary": {
+    "from": 21000.0,
+    "to": 23520.0,
+    "type": "b2b",
+    "currency": "PLN",
+    "period": "Month",
+    "disclosedAt": "VISIBLE",
+    "flexibleUpperBound": false
+   },
+   "flavors": [
+    "it"
+   ],
+   "topInSearch": false,
+   "highlighted": false,
+   "help4Ua": false,
+   "reference": "PJGS6TKA",
+   "searchBoost": true,
+   "onlineInterviewAvailable": true,
+   "tiles": {
+    "values": [
+     {
+      "value": "fullstack",
+      "type": "category"
+     },
+     {
+      "value": ".NET",
+      "type": "requirement"
+     },
+     {
+      "value": "C#",
+      "type": "requirement"
+     },
+     {
+      "value": "API",
+      "type": "requirement"
+     }
+    ]
+   }
+  },
+  {
+   "id": "senior-fullstack-developer-net-react-link-group-Warszawa-6",
+   "name": "Link Group",
+   "location": {
+    "places": [
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "city": "Warszawa",
+      "street": "",
+      "postalCode": "",
+      "geoLocation": {
+       "latitude": 52.2296756,
+       "longitude": 21.0122287
+      },
+      "url": "senior-fullstack-developer-net-react-link-group-warszawa-6"
+     }
+    ],
+    "fullyRemote": false,
+    "covidTimeRemotely": false,
+    "hybridDesc": ""
+   },
+   "posted": 1790934554747,
+   "renewed": 1791193754747,
+   "title": "Senior Fullstack Developer - .NET/React",
+   "technology": ".NET",
+   "logo": {
+    "original": "companies/logos/original/link_group_240px_20240110_120451.png",
+    "jobs_details": "companies/logos/jobs_details/link_group_240px_20240110_120451.png",
+    "jobs_listing": "companies/logos/jobs_listing/link_group_240px_20240110_120451.png",
+    "jobs_details_2x": "companies/logos/jobs_details_2x/link_group_240px_20240110_120451.png",
+    "jobs_listing_2x": "companies/logos/jobs_listing_2x/link_group_240px_20240110_120451.png",
+    "companies_details": "companies/logos/companies_details/link_group_240px_20240110_120451.png",
+    "companies_listing": "companies/logos/companies_listing/link_group_240px_20240110_120451.png",
+    "jobs_details_webp": "companies/logos/jobs_details/link_group_240px_20240110_120451.webp",
+    "jobs_listing_webp": "companies/logos/jobs_listing/link_group_240px_20240110_120451.webp",
+    "companies_details_2x": "companies/logos/companies_details_2x/link_group_240px_20240110_120451.png",
+    "companies_listing_2x": "companies/logos/companies_listing_2x/link_group_240px_20240110_120451.png",
+    "jobs_details_2x_webp": "companies/logos/jobs_details_2x/link_group_240px_20240110_120451.webp",
+    "jobs_listing_2x_webp": "companies/logos/jobs_listing_2x/link_group_240px_20240110_120451.webp",
+    "original_pixel_image": "companies/logos/original_pixel_image/link_group_240px_20240110_120451.png",
+    "companies_details_webp": "companies/logos/companies_details/link_group_240px_20240110_120451.webp",
+    "companies_listing_webp": "companies/logos/companies_listing/link_group_240px_20240110_120451.webp",
+    "companies_details_2x_webp": "companies/logos/companies_details_2x/link_group_240px_20240110_120451.webp",
+    "companies_listing_2x_webp": "companies/logos/companies_listing_2x/link_group_240px_20240110_120451.webp"
+   },
+   "category": "fullstack",
+   "seniority": [
+    "Senior"
+   ],
+   "url": "senior-fullstack-developer-net-react-link-group-warszawa-6",
+   "regions": [
+    "pl"
+   ],
+   "fullyRemote": false,
+   "salary": {
+    "from": 30000.0,
+    "to": 42000.0,
+    "type": "permanent",
+    "currency": "PLN",
+    "period": "Month",
+    "disclosedAt": "VISIBLE",
+    "flexibleUpperBound": false
+   },
+   "flavors": [
+    "it"
+   ],
+   "topInSearch": false,
+   "highlighted": true,
+   "help4Ua": false,
+   "reference": "8SISCM7C",
+   "searchBoost": false,
+   "onlineInterviewAvailable": false,
+   "tiles": {
+    "values": [
+     {
+      "value": "fullstack",
+      "type": "category"
+     },
+     {
+      "value": ".NET",
+      "type": "requirement"
+     },
+     {
+      "value": "React",
+      "type": "requirement"
+     },
+     {
+      "value": "ASP.NET",
+      "type": "requirement"
+     }
+    ]
+   }
+  },
+  {
+   "id": "senior-net-developer-link-group-Remote-5",
+   "name": "Link Group",
+   "location": {
+    "places": [
+     {
+      "city": "Remote",
+      "url": "senior-net-developer-link-group-remote-6"
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lower-silesian",
+      "url": "senior-net-developer-link-group-lower-silesian-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "kuyavian-pomeranian",
+      "url": "senior-net-developer-link-group-kuyavian-pomeranian-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lodz",
+      "url": "senior-net-developer-link-group-lodz-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lublin",
+      "url": "senior-net-developer-link-group-lublin-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lubusz",
+      "url": "senior-net-developer-link-group-lubusz-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lesser-poland",
+      "url": "senior-net-developer-link-group-lesser-poland-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "masovian",
+      "url": "senior-net-developer-link-group-masovian-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "opole",
+      "url": "senior-net-developer-link-group-opole-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "subcarpathian",
+      "url": "senior-net-developer-link-group-subcarpathian-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "podlaskie",
+      "url": "senior-net-developer-link-group-podlaskie-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "pomeranian",
+      "url": "senior-net-developer-link-group-pomeranian-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "silesian",
+      "url": "senior-net-developer-link-group-silesian-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "holy-cross",
+      "url": "senior-net-developer-link-group-holy-cross-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "warmian-masurian",
+      "url": "senior-net-developer-link-group-warmian-masurian-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "greater-poland",
+      "url": "senior-net-developer-link-group-greater-poland-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "west-pomeranian",
+      "url": "senior-net-developer-link-group-west-pomeranian-5",
+      "provinceOnly": true
+     }
+    ],
+    "fullyRemote": true,
+    "covidTimeRemotely": false,
+    "hybridDesc": ""
+   },
+   "posted": 1789637692763,
+   "renewed": 1791192892763,
+   "title": "Senior .NET Developer",
+   "technology": ".NET",
+   "logo": {
+    "original": "companies/logos/original/link_group_240px_20230907_142205.png",
+    "jobs_details": "companies/logos/jobs_details/link_group_240px_20230907_142205.png",
+    "jobs_listing": "companies/logos/jobs_listing/link_group_240px_20230907_142205.png",
+    "jobs_details_2x": "companies/logos/jobs_details_2x/link_group_240px_20230907_142205.png",
+    "jobs_listing_2x": "companies/logos/jobs_listing_2x/link_group_240px_20230907_142205.png",
+    "companies_details": "companies/logos/companies_details/link_group_240px_20230907_142205.png",
+    "companies_listing": "companies/logos/companies_listing/link_group_240px_20230907_142205.png",
+    "jobs_details_webp": "companies/logos/jobs_details/link_group_240px_20230907_142205.webp",
+    "jobs_listing_webp": "companies/logos/jobs_listing/link_group_240px_20230907_142205.webp",
+    "companies_details_2x": "companies/logos/companies_details_2x/link_group_240px_20230907_142205.png",
+    "companies_listing_2x": "companies/logos/companies_listing_2x/link_group_240px_20230907_142205.png",
+    "jobs_details_2x_webp": "companies/logos/jobs_details_2x/link_group_240px_20230907_142205.webp",
+    "jobs_listing_2x_webp": "companies/logos/jobs_listing_2x/link_group_240px_20230907_142205.webp",
+    "original_pixel_image": "companies/logos/original_pixel_image/link_group_240px_20230907_142205.png",
+    "companies_details_webp": "companies/logos/companies_details/link_group_240px_20230907_142205.webp",
+    "companies_listing_webp": "companies/logos/companies_listing/link_group_240px_20230907_142205.webp",
+    "companies_details_2x_webp": "companies/logos/companies_details_2x/link_group_240px_20230907_142205.webp",
+    "companies_listing_2x_webp": "companies/logos/companies_listing_2x/link_group_240px_20230907_142205.webp"
+   },
+   "category": "backend",
+   "seniority": [
+    "Senior"
+   ],
+   "url": "senior-net-developer-link-group-remote-6",
+   "regions": [
+    "pl"
+   ],
+   "fullyRemote": false,
+   "salary": {
+    "from": 18480.0,
+    "to": 21000.0,
+    "type": "b2b",
+    "currency": "PLN",
+    "period": "Month",
+    "disclosedAt": "VISIBLE",
+    "flexibleUpperBound": false
+   },
+   "flavors": [
+    "it"
+   ],
+   "topInSearch": false,
+   "highlighted": true,
+   "help4Ua": false,
+   "reference": "S9GZKYUN",
+   "searchBoost": true,
+   "onlineInterviewAvailable": true,
+   "tiles": {
+    "values": [
+     {
+      "value": "backend",
+      "type": "category"
+     },
+     {
+      "value": ".NET",
+      "type": "requirement"
+     },
+     {
+      "value": "C#",
+      "type": "requirement"
+     },
+     {
+      "value": ".NET CORE",
+      "type": "requirement"
+     }
+    ]
+   }
+  },
+  {
+   "id": "senior-net-developer-link-group-Remote-5",
+   "name": "Link Group",
+   "location": {
+    "places": [
+     {
+      "city": "Remote",
+      "url": "senior-net-developer-link-group-remote-6"
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lower-silesian",
+      "url": "senior-net-developer-link-group-lower-silesian-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "kuyavian-pomeranian",
+      "url": "senior-net-developer-link-group-kuyavian-pomeranian-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lodz",
+      "url": "senior-net-developer-link-group-lodz-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lublin",
+      "url": "senior-net-developer-link-group-lublin-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lubusz",
+      "url": "senior-net-developer-link-group-lubusz-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "lesser-poland",
+      "url": "senior-net-developer-link-group-lesser-poland-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "masovian",
+      "url": "senior-net-developer-link-group-masovian-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "opole",
+      "url": "senior-net-developer-link-group-opole-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "subcarpathian",
+      "url": "senior-net-developer-link-group-subcarpathian-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "podlaskie",
+      "url": "senior-net-developer-link-group-podlaskie-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "pomeranian",
+      "url": "senior-net-developer-link-group-pomeranian-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "silesian",
+      "url": "senior-net-developer-link-group-silesian-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "holy-cross",
+      "url": "senior-net-developer-link-group-holy-cross-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "warmian-masurian",
+      "url": "senior-net-developer-link-group-warmian-masurian-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "greater-poland",
+      "url": "senior-net-developer-link-group-greater-poland-5",
+      "provinceOnly": true
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "province": "west-pomeranian",
+      "url": "senior-net-developer-link-group-west-pomeranian-5",
+      "provinceOnly": true
+     }
+    ],
+    "fullyRemote": true,
+    "covidTimeRemotely": false,
+    "hybridDesc": ""
+   },
+   "posted": 1789637692763,
+   "renewed": 1791192892763,
+   "title": "Senior .NET Developer",
+   "technology": ".NET",
+   "logo": {
+    "original": "companies/logos/original/link_group_240px_20230907_142205.png",
+    "jobs_details": "companies/logos/jobs_details/link_group_240px_20230907_142205.png",
+    "jobs_listing": "companies/logos/jobs_listing/link_group_240px_20230907_142205.png",
+    "jobs_details_2x": "companies/logos/jobs_details_2x/link_group_240px_20230907_142205.png",
+    "jobs_listing_2x": "companies/logos/jobs_listing_2x/link_group_240px_20230907_142205.png",
+    "companies_details": "companies/logos/companies_details/link_group_240px_20230907_142205.png",
+    "companies_listing": "companies/logos/companies_listing/link_group_240px_20230907_142205.png",
+    "jobs_details_webp": "companies/logos/jobs_details/link_group_240px_20230907_142205.webp",
+    "jobs_listing_webp": "companies/logos/jobs_listing/link_group_240px_20230907_142205.webp",
+    "companies_details_2x": "companies/logos/companies_details_2x/link_group_240px_20230907_142205.png",
+    "companies_listing_2x": "companies/logos/companies_listing_2x/link_group_240px_20230907_142205.png",
+    "jobs_details_2x_webp": "companies/logos/jobs_details_2x/link_group_240px_20230907_142205.webp",
+    "jobs_listing_2x_webp": "companies/logos/jobs_listing_2x/link_group_240px_20230907_142205.webp",
+    "original_pixel_image": "companies/logos/original_pixel_image/link_group_240px_20230907_142205.png",
+    "companies_details_webp": "companies/logos/companies_details/link_group_240px_20230907_142205.webp",
+    "companies_listing_webp": "companies/logos/companies_listing/link_group_240px_20230907_142205.webp",
+    "companies_details_2x_webp": "companies/logos/companies_details_2x/link_group_240px_20230907_142205.webp",
+    "companies_listing_2x_webp": "companies/logos/companies_listing_2x/link_group_240px_20230907_142205.webp"
+   },
+   "category": "backend",
+   "seniority": [
+    "Senior"
+   ],
+   "url": "senior-net-developer-link-group-remote-6",
+   "regions": [
+    "pl"
+   ],
+   "fullyRemote": false,
+   "salary": {
+    "from": 18480.0,
+    "to": 21000.0,
+    "type": "b2b",
+    "currency": "PLN",
+    "period": "Month",
+    "disclosedAt": "VISIBLE",
+    "flexibleUpperBound": false
+   },
+   "flavors": [
+    "it"
+   ],
+   "topInSearch": false,
+   "highlighted": true,
+   "help4Ua": false,
+   "reference": "S9GZKYUN",
+   "searchBoost": true,
+   "onlineInterviewAvailable": true,
+   "tiles": {
+    "values": [
+     {
+      "value": "backend",
+      "type": "category"
+     },
+     {
+      "value": ".NET",
+      "type": "requirement"
+     },
+     {
+      "value": "C#",
+      "type": "requirement"
+     },
+     {
+      "value": ".NET CORE",
+      "type": "requirement"
+     }
+    ]
+   }
+  },
+  {
+   "id": "net-developer-mindbox-Kraków-1",
+   "name": "Mindbox Sp. z o.o.",
+   "location": {
+    "places": [
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "city": "Kraków",
+      "street": "",
+      "postalCode": "30-001",
+      "geoLocation": {
+       "latitude": 50.0758363,
+       "longitude": 19.9416801
+      },
+      "url": "net-developer-mindbox-krakow-7"
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "city": "Warszawa",
+      "street": "",
+      "postalCode": "",
+      "geoLocation": {
+       "latitude": 52.2296756,
+       "longitude": 21.0122287
+      },
+      "url": "net-developer-mindbox-warszawa-5"
+     }
+    ],
+    "fullyRemote": false,
+    "covidTimeRemotely": false,
+    "hybridDesc": ""
+   },
+   "posted": 1790843336466,
+   "renewed": 1791188936466,
+   "title": ".NET Developer",
+   "technology": ".NET",
+   "logo": {
+    "original": "companies/logos/original/avatar_20260601_105625.png",
+    "jobs_details": "companies/logos/jobs_details/avatar_20260601_105625.png",
+    "jobs_listing": "companies/logos/jobs_listing/avatar_20260601_105625.png",
+    "jobs_details_2x": "companies/logos/jobs_details_2x/avatar_20260601_105625.png",
+    "jobs_listing_2x": "companies/logos/jobs_listing_2x/avatar_20260601_105625.png",
+    "companies_details": "companies/logos/companies_details/avatar_20260601_105625.png",
+    "companies_listing": "companies/logos/companies_listing/avatar_20260601_105625.png",
+    "jobs_details_webp": "companies/logos/jobs_details/avatar_20260601_105625.webp",
+    "jobs_listing_webp": "companies/logos/jobs_listing/avatar_20260601_105625.webp",
+    "companies_details_2x": "companies/logos/companies_details_2x/avatar_20260601_105625.png",
+    "companies_listing_2x": "companies/logos/companies_listing_2x/avatar_20260601_105625.png",
+    "jobs_details_2x_webp": "companies/logos/jobs_details_2x/avatar_20260601_105625.webp",
+    "jobs_listing_2x_webp": "companies/logos/jobs_listing_2x/avatar_20260601_105625.webp",
+    "original_pixel_image": "companies/logos/original_pixel_image/avatar_20260601_105625.png",
+    "companies_details_webp": "companies/logos/companies_details/avatar_20260601_105625.webp",
+    "companies_listing_webp": "companies/logos/companies_listing/avatar_20260601_105625.webp",
+    "companies_details_2x_webp": "companies/logos/companies_details_2x/avatar_20260601_105625.webp",
+    "companies_listing_2x_webp": "companies/logos/companies_listing_2x/avatar_20260601_105625.webp"
+   },
+   "category": "backend",
+   "seniority": [
+    "Senior"
+   ],
+   "url": "net-developer-mindbox-krakow-7",
+   "regions": [
+    "pl"
+   ],
+   "fullyRemote": false,
+   "salary": {
+    "from": 23100.0,
+    "to": 27300.0,
+    "type": "b2b",
+    "currency": "PLN",
+    "period": "Month",
+    "disclosedAt": "VISIBLE",
+    "flexibleUpperBound": false
+   },
+   "flavors": [
+    "it"
+   ],
+   "topInSearch": false,
+   "highlighted": false,
+   "help4Ua": false,
+   "reference": "WZIBN1TD",
+   "searchBoost": false,
+   "onlineInterviewAvailable": false,
+   "tiles": {
+    "values": [
+     {
+      "value": "backend",
+      "type": "category"
+     },
+     {
+      "value": ".NET",
+      "type": "requirement"
+     },
+     {
+      "value": ".NET Framework",
+      "type": "requirement"
+     },
+     {
+      "value": "MVC",
+      "type": "requirement"
+     }
+    ]
+   }
+  },
+  {
+   "id": "net-developer-mindbox-Warszawa-2",
+   "name": "Mindbox Sp. z o.o.",
+   "location": {
+    "places": [
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "city": "Warszawa",
+      "street": "",
+      "postalCode": "",
+      "geoLocation": {
+       "latitude": 52.2296756,
+       "longitude": 21.0122287
+      },
+      "url": "net-developer-mindbox-warszawa-5"
+     },
+     {
+      "country": {
+       "code": "POL",
+       "name": "Poland"
+      },
+      "city": "Kraków",
+      "street": "",
+      "postalCode": "30-001",
+      "geoLocation": {
+       "latitude": 50.0758363,
+       "longitude": 19.9416801
+      },
+      "url": "net-developer-mindbox-krakow-7"
+     }
+    ],
+    "fullyRemote": false,
+    "covidTimeRemotely": false,
+    "hybridDesc": ""
+   },
+   "posted": 1790843336466,
+   "renewed": 1791188936466,
+   "title": ".NET Developer",
+   "technology": ".NET",
+   "logo": {
+    "original": "companies/logos/original/avatar_20260601_105625.png",
+    "jobs_details": "companies/logos/jobs_details/avatar_20260601_105625.png",
+    "jobs_listing": "companies/logos/jobs_listing/avatar_20260601_105625.png",
+    "jobs_details_2x": "companies/logos/jobs_details_2x/avatar_20260601_105625.png",
+    "jobs_listing_2x": "companies/logos/jobs_listing_2x/avatar_20260601_105625.png",
+    "companies_details": "companies/logos/companies_details/avatar_20260601_105625.png",
+    "companies_listing": "companies/logos/companies_listing/avatar_20260601_105625.png",
+    "jobs_details_webp": "companies/logos/jobs_details/avatar_20260601_105625.webp",
+    "jobs_listing_webp": "companies/logos/jobs_listing/avatar_20260601_105625.webp",
+    "companies_details_2x": "companies/logos/companies_details_2x/avatar_20260601_105625.png",
+    "companies_listing_2x": "companies/logos/companies_listing_2x/avatar_20260601_105625.png",
+    "jobs_details_2x_webp": "companies/logos/jobs_details_2x/avatar_20260601_105625.webp",
+    "jobs_listing_2x_webp": "companies/logos/jobs_listing_2x/avatar_20260601_105625.webp",
+    "original_pixel_image": "companies/logos/original_pixel_image/avatar_20260601_105625.png",
+    "companies_details_webp": "companies/logos/companies_details/avatar_20260601_105625.webp",
+    "companies_listing_webp": "companies/logos/companies_listing/avatar_20260601_105625.webp",
+    "companies_details_2x_webp": "companies/logos/companies_details_2x/avatar_20260601_105625.webp",
+    "companies_listing_2x_webp": "companies/logos/companies_listing_2x/avatar_20260601_105625.webp"
+   },
+   "category": "backend",
+   "seniority": [
+    "Senior"
+   ],
+   "url": "net-developer-mindbox-warszawa-5",
+   "regions": [
+    "pl"
+   ],
+   "fullyRemote": false,
+   "salary": {
+    "from": 23100.0,
+    "to": 27300.0,
+    "type": "b2b",
+    "currency": "PLN",
+    "period": "Month",
+    "disclosedAt": "VISIBLE",
+    "flexibleUpperBound": false
+   },
+   "flavors": [
+    "it"
+   ],
+   "topInSearch": false,
+   "highlighted": false,
+   "help4Ua": false,
+   "reference": "WZIBN1TD",
+   "searchBoost": false,
+   "onlineInterviewAvailable": false,
+   "tiles": {
+    "values": [
+     {
+      "value": "backend",
+      "type": "category"
+     },
+     {
+      "value": ".NET",
+      "type": "requirement"
+     },
+     {
+      "value": ".NET Framework",
+      "type": "requirement"
+     },
+     {
+      "value": "MVC",
+      "type": "requirement"
+     }
+    ]
+   }
+  }
+ ]
+}

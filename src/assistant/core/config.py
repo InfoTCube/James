@@ -1,6 +1,7 @@
 """Load and validate config/config.yaml."""
 
 import os
+import re
 import unicodedata
 from datetime import time
 from functools import lru_cache
@@ -30,6 +31,12 @@ def fold(text: str) -> str:
         .encode("ascii", "ignore")
         .decode()
     )
+
+
+def has_word(text: str, word: str) -> bool:
+    """`word` appears in `text` as a whole word ("java" not in "javascript"; "c#" works),
+    case and diacritics ignored."""
+    return re.search(rf"(?<!\w){re.escape(fold(word))}(?!\w)", fold(text)) is not None
 
 
 class Place(BaseModel):
@@ -62,6 +69,32 @@ class AlarmConfig(BaseModel):
     latest: time = time(11, 0)  # no automatic alarm at or after this: you're up anyway
 
 
+class JobsConfig(BaseModel):
+    """Which job offers get a Telegram alert. Matching ignores case and Polish diacritics."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    keywords: list[str] = []  # in the title or skills; also the search terms. Empty = jobs off
+    exclude: list[str] = []  # ...but not with one of these in the title
+    seniority: list[str] = []  # e.g. [trainee, junior]; empty = any. Offers with no level pass
+    cities: list[str] = ["Wrocław"]  # any work mode
+    hybrid_cities: list[str] = []  # hybrid only, with at most `max_office_days` in the office
+    max_office_days: int = 1  # per week; offers that don't say pass (check them yourself)
+    remote: bool = True  # also remote offers from anywhere
+
+
+class EventsConfig(BaseModel):
+    """Which IT events and hackathons get a Telegram alert. Matching ignores case and Polish
+    diacritics."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    cities: list[str] = ["Wrocław"]  # all events here match (minus `exclude`); also searched
+    online: bool = True  # online events too, but only with one of `keywords`
+    keywords: list[str] = []  # in the title, kind or topics, e.g. [.net, hackathon]
+    exclude: list[str] = []  # never with one of these in the title, kind or topics
+
+
 class Config(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -70,8 +103,10 @@ class Config(BaseModel):
     places: dict[str, Place] = Field(default_factory=dict)
     location_rules: list[LocationRule] = []
     alarm: AlarmConfig = Field(default_factory=AlarmConfig)
-    voice: str = "en_GB-cori-medium"  # Piper voice for reading aloud (core/tts.py)
-    voice_pl: str = "pl_PL-gosia-medium"  # ...and for Polish names in it
+    jobs: JobsConfig = Field(default_factory=JobsConfig)
+    events: EventsConfig = Field(default_factory=EventsConfig)
+    voice: str = "en_GB-alan-medium"  # Piper voice for reading aloud (core/tts.py)
+    voice_pl: str = "pl_PL-darkman-medium"  # ...and for Polish names in it
 
     @model_validator(mode="after")
     def _rule_places_exist(self) -> "Config":

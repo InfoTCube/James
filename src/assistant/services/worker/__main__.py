@@ -25,6 +25,7 @@ def main() -> int:
     logging.basicConfig(
         level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s"
     )
+    logging.getLogger("httpx").setLevel(logging.WARNING)  # its request log has the bot token
     config, engine = load_config(), get_engine()
 
     if args.run_once:
@@ -34,7 +35,8 @@ def main() -> int:
     scheduler = BlockingScheduler(timezone=config.tz)
     for c in COLLECTORS:
         # run once at startup (fresh data after a restart), then on schedule;
-        # coalesce + max_instances=1: a slow/missed run never piles up
+        # coalesce + max_instances=1: a slow/missed run never piles up;
+        # misfire_grace_time=None: a run waiting for a free thread still runs, however late
         scheduler.add_job(
             run_collector,
             c.schedule,
@@ -42,6 +44,7 @@ def main() -> int:
             id=c.name,
             coalesce=True,
             max_instances=1,
+            misfire_grace_time=None,
             next_run_time=datetime.now(config.tz),
         )
     logging.info("worker started with %d collectors", len(COLLECTORS))

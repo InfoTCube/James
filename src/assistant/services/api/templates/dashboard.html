@@ -16,6 +16,7 @@
       --slate: #7d8c9a;   /* secondary text */
       --amber: #f2a93b;   /* only for "act now": leaving, the card on screen */
       --sky: #8fb9d6;     /* weather, live "on time" */
+      --scroll: #3d5a72;  /* scrollbar: the panels' blue, lifted enough to see */
       --numbers: "Barlow Condensed", "Arial Narrow", sans-serif;
       --text: "Barlow", "Segoe UI", sans-serif;
       --gap: clamp(12px, min(2.2vw, 3.9vh), 44px);
@@ -43,8 +44,13 @@
     #next-alarm { font: 500 1.6em/1 var(--numbers); }
     #next-alarm span { color: var(--slate); font: 400 0.6em var(--text); margin-left: 0.3em; }
     #cards { margin: auto 0 0; padding: 0; list-style: none; color: var(--slate); font-size: 0.8em; }
-    #cards li { padding: 0.25em 0 0.25em 0.9em; border-left: 3px solid transparent; }
-    #cards li.on { color: var(--paper); border-left-color: var(--amber); }
+    #cards button {  /* tap a card's name to show it (touch screen: big enough to hit) */
+      display: block; width: 100%; min-height: 2.2em; padding: 0.25em 0 0.25em 0.9em;
+      border: 0; border-left: 3px solid transparent; background: none; color: inherit;
+      font: inherit; text-align: left; cursor: pointer;
+    }
+    #cards button.on { color: var(--paper); border-left-color: var(--amber); }
+    #cards button:focus-visible { outline: 2px solid var(--paper); outline-offset: -2px; }
 
     /* stage: one card at a time */
     main { display: grid; grid-template-rows: 1fr auto; min-width: 0; }
@@ -56,6 +62,18 @@
       font-size: 1.35em;  /* cards are read from across the room */
     }
     .slot.on { opacity: 1; visibility: visible; transition: opacity 0.6s ease; }
+    /* long lists: swipe on the touch screen. Thin slate bar on the dark panel; the bottom fades
+       out so it's clear the list goes on, and the padding lets the last row scroll clear of it. */
+    .slot.scrolls {
+      overflow-y: auto; overscroll-behavior: contain; padding-bottom: 4em;
+      scrollbar-width: thin; scrollbar-color: var(--scroll) var(--panel);
+      mask-image: linear-gradient(to bottom, #000 calc(100% - 3em), transparent);
+    }
+    .slot.scrolls:active { scrollbar-color: var(--sky) var(--panel); }  /* while dragging */
+    .slot.scrolls::-webkit-scrollbar { width: 8px; }  /* Chromium before scrollbar-color */
+    .slot.scrolls::-webkit-scrollbar-track { background: var(--panel); border-radius: 4px; }
+    .slot.scrolls::-webkit-scrollbar-thumb { background: var(--scroll); border-radius: 4px; }
+    .slot.scrolls::-webkit-scrollbar-thumb:active { background: var(--sky); }
     #strip:empty { display: none; }
     #strip {
       display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3em 1.2em;
@@ -68,7 +86,7 @@
     #alarm[hidden] { display: none; }
     #alarm { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; }
     #alarm.ringing { background: var(--amber); color: var(--night); }
-    #alarm.briefing { background: var(--night); cursor: pointer; overflow-y: auto; place-items: start center; }
+    #alarm.briefing { background: var(--night); overflow-y: auto; place-items: start center; }
     #ring { display: grid; justify-items: center; gap: calc(var(--gap) / 2); text-align: center; }
     #alarm.briefing #ring, #alarm.ringing #briefing { display: none; }
     #bell { width: min(34vh, 34vw); height: auto; transform-origin: 50% 8%; animation: swing 1s ease-in-out infinite alternate; }
@@ -87,15 +105,21 @@
     #briefing p.read, #briefing p.reading { color: var(--paper); }
     #briefing p:first-child { font: 300 2.2em/1 var(--numbers); margin-bottom: 0.6em; }
     #briefing-close { color: var(--slate); font-size: 0.6em; margin-top: 2em; }
+    .close {
+      margin-left: 1em; font: 500 1.2em/1 var(--text); padding: 0.4em 1.2em; border-radius: 0.3em;
+      cursor: pointer; border: 2px solid currentColor; background: transparent; color: inherit;
+    }
+    .close:focus-visible { outline: 3px solid var(--paper); outline-offset: 3px; }
+    #leave .close { margin: 1.2em 0 0; }
     #sound-hint { color: var(--amber); font-size: 0.7em; }
     #leave[hidden] { display: none; }
     #leave {
       position: fixed; inset: 0; z-index: 9; display: grid; align-content: center;
-      padding: var(--gap) 12vw; background: var(--amber); color: var(--night); cursor: pointer;
+      padding: var(--gap) 12vw; background: var(--amber); color: var(--night);
     }
-    #leave p { margin: 0.3em 0; font-size: 1.4em; opacity: 0.55; transition: opacity 0.3s; }
-    #leave p.reading, #leave p.read { opacity: 1; }
-    #leave p:first-child { font: 600 3em/1 var(--numbers); margin-bottom: 0.5em; }
+    #leave-text p { margin: 0.3em 0; font-size: 1.4em; opacity: 0.55; transition: opacity 0.3s; }
+    #leave-text p.reading, #leave-text p.read { opacity: 1; }
+    #leave-text p:first-child { font: 600 3em/1 var(--numbers); margin-bottom: 0.5em; }
 
     /* card content (the module widgets) */
     .widget h2 { margin: 0 0 0.8em; font: 500 1em/1 var(--text); color: var(--slate); }
@@ -119,6 +143,18 @@
       min-width: 4.6em; font: 500 1.25em/1.1 var(--numbers); color: var(--slate);
       font-variant-numeric: tabular-nums;
     }
+    .jobs .event small { white-space: normal; }  /* work mode and hours are at the end: keep them */
+    .events .when { min-width: 6em; }  /* "Wed 14.10 18:00": day and time, wraps for a date range */
+    button.event {  /* a tappable row: looks like the others, reacts to the finger */
+      width: 100%; padding: 0.35em 0.4em; margin: 0.1em -0.4em; border: 0; border-radius: 0.3em;
+      background: none; color: inherit; font: inherit; text-align: left; cursor: pointer;
+    }
+    button.event:active { background: var(--panel); }
+    button.event:focus-visible { outline: 2px solid var(--sky); }
+    .sent { color: var(--sky); }
+    .sent:empty { display: none; }
+    .event.best > span:last-child { font-weight: 500; }
+    .star { color: var(--sky); }
     .live { color: var(--sky); }
     .late { color: var(--amber); }
 
@@ -145,10 +181,16 @@
       <div class="slot" data-name="Getting there" hx-get="/widgets/mpk" hx-trigger="load, every 1m"></div>
       <div class="slot" data-name="Calendar" hx-get="/widgets/calendar" hx-trigger="load, every 5m"></div>
       <div class="slot" data-name="Birthdays" hx-get="/widgets/birthdays" hx-trigger="load, every 30m"></div>
+      <!-- data-every="10": only in every 10th round of the rotation; any time with a tap -->
+      <div class="slot scrolls" data-name="Jobs" data-every="10" hx-get="/widgets/jobs" hx-trigger="load, every 30m"></div>
+      <div class="slot scrolls" data-name="Events" data-every="5" hx-get="/widgets/events" hx-trigger="load, every 30m"></div>
     </div>
     <div id="strip" hx-get="/widgets/mpk/strip" hx-trigger="load, every 1m"></div>
   </main>
-  <div id="leave" hidden role="alert"></div>
+  <div id="leave" hidden role="alert">
+    <div id="leave-text"></div>
+    <div><button type="button" class="close" id="close-leave">Close</button></div>
+  </div>
   <div id="alarm" hidden>
     <div id="ring" role="alert">
       <svg id="bell" viewBox="0 0 100 110" aria-hidden="true">
@@ -165,14 +207,15 @@
     </div>
     <div id="briefing">
       <div id="briefing-text"></div>
-      <div id="briefing-close">Closes by itself after reading. Click to close now.</div>
+      <div id="briefing-close">Closes by itself after reading.
+        <button type="button" class="close" id="close-briefing">Close</button></div>
     </div>
   </div>
   <script>
-    const TZ = "Europe/Warsaw", ROTATE_MS = 8000;
+    const TZ = "Europe/Warsaw", ROTATE_MS = 8000, HOLD_MS = 60000;
     const slots = [...document.querySelectorAll(".slot")];
     const list = document.getElementById("cards");
-    let current = null;
+    let current = null, round = 0, holdUntil = 0;  // round: how many times the rotation wrapped
 
     function tick() {
       const now = new Date();
@@ -181,22 +224,46 @@
         + "<span>" + now.toLocaleDateString("en-GB", { day: "numeric", month: "long", timeZone: TZ }) + "</span>";
     }
 
-    // Show one card; cards whose widget returned nothing are skipped.
+    // The card after `current`, skipping cards not due this round (data-every="N": every Nth).
+    function nextCard(filled) {
+      let i = filled.indexOf(current);
+      for (let tries = 0; tries < 2 * filled.length; tries++) {
+        if (++i >= filled.length) { i = 0; round++; }
+        if (round % (+filled[i].dataset.every || 1) === 0) return filled[i];
+      }
+      return filled[0];
+    }
+
+    // Show one card; cards whose widget returned nothing are skipped. All filled cards are
+    // listed in the rail; tapping one shows it and holds it for HOLD_MS.
+    // When the hold ends, the normal cycle starts over from the first card.
     function show(advance) {
-      const filled = slots.filter(s => s.firstElementChild);
+      const filled = slots.filter(s => s.firstElementChild), before = current;
       if (!filled.includes(current)) current = filled[0] || null;
-      else if (advance) current = filled[(filled.indexOf(current) + 1) % filled.length];
+      else if (advance && holdUntil && Date.now() >= holdUntil) {
+        holdUntil = 0; round = 1;  // round 1: cards shown every Nth round aren't due right away
+        current = filled[0];
+      } else if (advance && Date.now() >= holdUntil) current = nextCard(filled);
+      if (before && before !== current) before.scrollTop = 0;  // a scrolled list starts at the top next time
       slots.forEach(s => s.classList.toggle("on", s === current));
       list.replaceChildren(...filled.map(s => {
-        const li = document.createElement("li");
-        li.textContent = s.dataset.name;
-        li.classList.toggle("on", s === current);
+        const li = document.createElement("li"), button = document.createElement("button");
+        button.type = "button";
+        button.textContent = s.dataset.name;
+        button.classList.toggle("on", s === current);
+        button.addEventListener("click", () => {
+          if (current && current !== s) current.scrollTop = 0;
+          current = s; holdUntil = Date.now() + HOLD_MS; show(false);
+        });
+        li.append(button);
         return li;
       }));
     }
 
     tick(); setInterval(tick, 1000);
     setInterval(() => show(true), ROTATE_MS);
+    // touching the card (e.g. swiping a long list) keeps it on screen too
+    document.getElementById("stage").addEventListener("pointerdown", () => { holdUntil = Date.now() + HOLD_MS; });
     document.body.addEventListener("htmx:afterSwap", () => show(false));
 
     // --- alarm: bell + sound while ringing, then the briefing (shown and read aloud) ---
@@ -205,16 +272,12 @@
     let alarm = { state: "idle" }, beeper = null, briefingFor = null, closedFor = null;
 
     const hint = document.getElementById("sound-hint");
-    let soundClick = false;  // this click only allowed sound: don't also act on it
-    const unlock = e => {
-      if (audio.state === "running") return;
-      soundClick = e.type === "click";
-      audio.resume().then(() => { hint.hidden = true; });
+    const unlock = () => {
+      if (audio.state !== "running") audio.resume().then(() => { hint.hidden = true; });
     };
     hint.hidden = audio.state === "running";
     document.addEventListener("click", unlock, { capture: true });  // runs before the screens' own
     document.addEventListener("keydown", unlock, { capture: true });
-    const closeClick = () => { const ignore = soundClick; soundClick = false; return !ignore; };
 
     function beep(at, freq) {
       const osc = audio.createOscillator(), gain = audio.createGain();
@@ -316,9 +379,7 @@
     }
     document.getElementById("stop").addEventListener("click", () => act("stop"));
     document.getElementById("snooze").addEventListener("click", () => act("snooze"));
-    document.getElementById("briefing").addEventListener("click", () => {
-      if (closeClick()) closeBriefing(alarm.id);
-    });
+    document.getElementById("close-briefing").addEventListener("click", () => closeBriefing(alarm.id));
     poll(); setInterval(poll, 3000);
 
     // "Leave now": same moment as the Telegram alert; shown and read once per trip.
@@ -331,13 +392,13 @@
         if (!a.key || a.key === announced) return;
         if (!overlay.hidden) return;  // the briefing started meanwhile: it goes first
         announced = a.key;
-        leave.innerHTML = a.lines.map(l => `<p>${l.replace(/[<&]/g, c => ({"<": "&lt;", "&": "&amp;"})[c])}</p>`).join("");
+        document.getElementById("leave-text").innerHTML = a.lines.map(l => `<p>${l.replace(/[<&]/g, c => ({"<": "&lt;", "&": "&amp;"})[c])}</p>`).join("");
         leave.hidden = false;
-        await readThrough([...leave.querySelectorAll("p")]);
+        await readThrough([...document.querySelectorAll("#leave-text p")]);
         setTimeout(() => { leave.hidden = true; }, CLOSE_AFTER_MS);
       } catch (e) { /* try again next time */ }
     }
-    leave.addEventListener("click", () => { if (closeClick()) { hush(); leave.hidden = true; } });
+    document.getElementById("close-leave").addEventListener("click", () => { hush(); leave.hidden = true; });
     pollLeave(); setInterval(pollLeave, 15000);
 
     // After a deploy the server's version changes: reload to get the new page (kiosk has no F5).

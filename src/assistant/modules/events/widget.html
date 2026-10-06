@@ -1,0 +1,10 @@
+<section class="widget events{% if stale %} stale{% endif %}">
+  <h2>Events · next 30 days · tap one to get its link on Telegram{% if stale %} <small class="badge">stale</small>{% endif %}</h2>
+  {% for id, when, title, details in rows %}
+  <button type="button" class="event"
+          hx-post="/api/events/send/{{ id | urlencode }}" hx-target="find .sent" hx-swap="innerHTML">
+    <span class="when">{{ when }}</span>
+    <span>{{ title }}<small>{{ details }}</small><small class="sent" aria-live="polite"></small></span>
+  </button>
+  {% endfor %}
+</section>

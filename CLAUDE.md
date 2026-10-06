@@ -142,21 +142,24 @@ uv run --env-file .env python -m assistant.services.bot          # Telegram bot
 
 Adding a module: implement the `Collector` protocol from `core/collector.py` (`run(session)` runs in one
 transaction, committed only on success) and append it to `COLLECTORS` in `modules/__init__.py`.
-Use `is_stale()` to flag stale data in widgets. Datetime columns use `core.db.UTCDateTime`.
+Use `is_stale()` to flag stale data in widgets. Dashboard cards rotate; `data-every="N"` on a
+card's slot shows it only every Nth round, and every card is reachable by tapping its name in the rail. Datetime columns use `core.db.UTCDateTime`.
 
 ## Roadmap
 
 Work in this order. Keep each step small and working end-to-end before moving on.
 
-**Phase 1 — skeleton + daily essentials** ← current
+**Phase 1 — skeleton + daily essentials**
 - [x] Project skeleton: uv project, `core/` (config, db, logging, collector_runs), worker, api with empty dashboard, docker-compose, `.env.example`, `config/config.yaml`
 - [x] `weather` module: Open-Meteo collector + clothing rules + dashboard widget (first module — proves the whole pattern, no API keys needed)
 - [x] `calendar` module: Google Calendar API (read + `add_event`), widget, feeds weather advice
 - [x] `mpk` module: GTFS import, departures for aliases, link with next calendar event + live delay estimates (transfers later)
 
-**Phase 2 — alerts**
+**Phase 2 — alerts** ← current
 - [x] Telegram bot + `core/notifier`: /next /today /weather /help, "leave now" alert 5 min before leave-by
-- [ ] `flights`, `jobs`, `events`
+- [x] `jobs` (justjoin.it, nofluffjobs, pracuj.pl; keyword/seniority/place rules incl. hybrid office days, cross-board dedupe, best-fit ranking, /jobs, dashboard card with tap-to-Telegram)
+- [x] `events` (Meetup, Crossweb, Devpost, MLH; city/online-keyword/exclude rules, cross-site dedupe, /events, dashboard card with tap-to-Telegram)
+- [ ] `flights`
 
 **Phase 3 — voice & alarm**
 - [x] `alarm` + morning briefing (Telegram for now; sound + speech with voice)

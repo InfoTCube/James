@@ -1,0 +1,1966 @@
+{
+ "data": [
+  {
+   "guid": "405c1ef5-023a-4996-aaf1-4ff60390ded3",
+   "slug": "nexio-management-sp-z-o-o--junior-sharepoint-developer-k-m-n--warszawa-net",
+   "title": "Junior SharePoint Developer (k/m/n)",
+   "workplaceType": "hybrid",
+   "workingTime": "full_time",
+   "experienceLevel": "junior",
+   "category": {
+    "key": "net",
+    "parentKey": null
+   },
+   "city": "Warszawa",
+   "street": "Puławska",
+   "latitude": 52.23584,
+   "longitude": 21.011959,
+   "isRemoteInterview": false,
+   "companyName": "Nexio Management Sp. z o. o.",
+   "companyLogoThumbUrl": "https://imgproxy.justjoinit.tech/WI2oUQ1AMvrg-khAzyaESkuG7r8f3cVe1OvcpkI64oY/h:200/w:200/plain/https://public.rocketjobs.pl/companies/logos/original/5b9db85250fd96135d3ac9e938da542c2f4cfdf1.png",
+   "publishedAt": "2026-10-05T13:06:51.6495497Z",
+   "isOpenToHireUkrainians": false,
+   "locations": [
+    {
+     "city": "Warszawa",
+     "street": "Puławska",
+     "latitude": 52.23584,
+     "longitude": 21.011959,
+     "slug": "nexio-management-sp-z-o-o--junior-sharepoint-developer-k-m-n--warszawa-net"
+    }
+   ],
+   "employmentTypes": [
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "PLN",
+     "currencySource": "original",
+     "type": "b2b",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "CHF",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "EUR",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "GBP",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "USD",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "month",
+     "gross": false
+    }
+   ],
+   "requiredSkills": [
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "SharePoint",
+     "level": 2,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": ".Net",
+     "level": 2,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "C#",
+     "level": 2,
+     "group": null
+    }
+   ],
+   "niceToHaveSkills": [],
+   "languages": [],
+   "isPromoted": false,
+   "isSuperOffer": false,
+   "applyMethod": "external",
+   "applyUrl": "https://nexio.traffit.com/public/form/a/6711aadb15f58bbb91d328e4205ef72676594d74?source=justjoin.it",
+   "lastPublishedAt": "2026-10-05T13:06:51.6495497Z",
+   "expiredAt": "2027-01-03T22:59:59.9999999Z",
+   "companyProfileSlug": "nexio-management",
+   "hybridWorkSchedule": null
+  },
+  {
+   "guid": "baec2c1b-6b74-4905-ab26-dfb3608be3dd",
+   "slug": "emagine-polska--net-developer-bucharest-net",
+   "title": ".NET Developer",
+   "workplaceType": "remote",
+   "workingTime": "full_time",
+   "experienceLevel": "senior",
+   "category": {
+    "key": "net",
+    "parentKey": null
+   },
+   "city": "Bucharest",
+   "street": "Centrum",
+   "latitude": 44.4330436,
+   "longitude": 26.1024262,
+   "isRemoteInterview": true,
+   "companyName": "emagine Polska",
+   "companyLogoThumbUrl": "https://imgproxy.justjoinit.tech/BzWgyxi50NEVw8vVhCjtH0e1OtZow3scOIpr5d1O1qQ/h:200/w:200/plain/https://public.justjoin.it/companies/logos/original/b6fd52b7d3d170271a3d77ac5cc99a1212236ce3.jpg",
+   "publishedAt": "2026-10-05T13:05:05.6116866Z",
+   "isOpenToHireUkrainians": true,
+   "locations": [
+    {
+     "city": "Bucharest",
+     "street": "Centrum",
+     "latitude": 44.4330436,
+     "longitude": 26.1024262,
+     "slug": "emagine-polska--net-developer-bucharest-net"
+    }
+   ],
+   "employmentTypes": [
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "GBP",
+     "currencySource": "conversion",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "USD",
+     "currencySource": "conversion",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "EUR",
+     "currencySource": "conversion",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "CHF",
+     "currencySource": "conversion",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "PLN",
+     "currencySource": "original",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    }
+   ],
+   "requiredSkills": [
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "PostgreSQL",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "C#",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "SQL",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Microsoft Visual Studio",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": ".Net",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Quality Assurance (QA)",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "CI/CD",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Backend",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Git",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "REST",
+     "level": 4,
+     "group": null
+    }
+   ],
+   "niceToHaveSkills": [],
+   "languages": [
+    {
+     "code": "en",
+     "level": "B1"
+    }
+   ],
+   "isPromoted": false,
+   "isSuperOffer": false,
+   "applyMethod": "external",
+   "applyUrl": "https://portal.emagine.org/jobs/180578/net-developer?utm_source=JustJoinIt",
+   "lastPublishedAt": "2026-09-25T12:16:04.532425Z",
+   "expiredAt": "2026-12-24T12:16:04.532425Z",
+   "companyProfileSlug": null,
+   "hybridWorkSchedule": null
+  },
+  {
+   "guid": "92435be8-305d-4fb7-92ef-fb0b8bf58d3c",
+   "slug": "scalo-senior-fullstack-net-developer-warszawa-net",
+   "title": "Senior Fullstack .NET Developer",
+   "workplaceType": "hybrid",
+   "workingTime": "full_time",
+   "experienceLevel": "senior",
+   "category": {
+    "key": "net",
+    "parentKey": null
+   },
+   "city": "Warszawa",
+   "street": "Aleje Jerozolimskie",
+   "latitude": 52.2162074,
+   "longitude": 20.9606594,
+   "isRemoteInterview": false,
+   "companyName": "Scalo",
+   "companyLogoThumbUrl": "https://imgproxy.justjoinit.tech/KZ7Ye9DAc8P985WzJ6b84Miw7mTiB1s42lbQU4CpWTE/h:200/w:200/plain/https://public.justjoin.it/companies/logos/original/8ba5b243db4213dae53629b886aa1a8c06975325.png",
+   "publishedAt": "2026-10-05T13:05:05.0098658Z",
+   "isOpenToHireUkrainians": false,
+   "locations": [
+    {
+     "city": "Warszawa",
+     "street": "Aleje Jerozolimskie",
+     "latitude": 52.2162074,
+     "longitude": 20.9606594,
+     "slug": "scalo-senior-fullstack-net-developer-warszawa-net"
+    },
+    {
+     "city": "Łódź",
+     "street": "Centrum",
+     "latitude": 51.7652976,
+     "longitude": 19.4544251,
+     "slug": "scalo-senior-fullstack-net-developer-lodz-net"
+    },
+    {
+     "city": "Wrocław",
+     "street": "Powstańców Śląskich",
+     "latitude": 51.0893253,
+     "longitude": 17.0159794,
+     "slug": "scalo-senior-fullstack-net-developer-wroclaw-net"
+    },
+    {
+     "city": "Kraków",
+     "street": "Aleja Pokoju",
+     "latitude": 50.0643763,
+     "longitude": 19.9889404,
+     "slug": "scalo-senior-fullstack-net-developer-krakow-net"
+    }
+   ],
+   "employmentTypes": [
+    {
+     "from": 21840.0,
+     "fromPerUnit": 130.0,
+     "to": 23520.0,
+     "toPerUnit": 140.0,
+     "currency": "PLN",
+     "currencySource": "original",
+     "type": "b2b",
+     "unit": "Hour",
+     "gross": false
+    },
+    {
+     "from": 5662.0,
+     "fromPerUnit": 33.70495203526061,
+     "to": 6098.0,
+     "toPerUnit": 36.29764065335758,
+     "currency": "USD",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "Hour",
+     "gross": false
+    },
+    {
+     "from": 4975.0,
+     "fromPerUnit": 29.61275626423686,
+     "to": 5358.0,
+     "toPerUnit": 31.89066059225508,
+     "currency": "EUR",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "Hour",
+     "gross": false
+    },
+    {
+     "from": 4687.0,
+     "fromPerUnit": 27.90118687356468,
+     "to": 5048.0,
+     "toPerUnit": 30.04743201768504,
+     "currency": "CHF",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "Hour",
+     "gross": false
+    },
+    {
+     "from": 4277.0,
+     "fromPerUnit": 25.45974422749264,
+     "to": 4606.0,
+     "toPerUnit": 27.41818609114592,
+     "currency": "GBP",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "Hour",
+     "gross": false
+    }
+   ],
+   "requiredSkills": [
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": ".Net",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Angular",
+     "level": 3,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Microsoft SQL Server",
+     "level": 3,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "RabbitMQ",
+     "level": 3,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Docker",
+     "level": 3,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Kubernetes",
+     "level": 2,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Redis",
+     "level": 2,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Elasticsearch",
+     "level": 2,
+     "group": null
+    }
+   ],
+   "niceToHaveSkills": [],
+   "languages": [],
+   "isPromoted": false,
+   "isSuperOffer": true,
+   "applyMethod": "external",
+   "applyUrl": "https://scalo.traffit.com/public/form/a/4bf1abf453bf291b884d8e2287049225444c687448513d3d",
+   "lastPublishedAt": "2026-09-18T10:01:44.236633Z",
+   "expiredAt": "2026-10-15T13:32:45.349Z",
+   "companyProfileSlug": "scalo",
+   "hybridWorkSchedule": null
+  },
+  {
+   "guid": "8e12cb16-d38b-4ab6-a318-e85269b8a4e2",
+   "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-warszawa-python",
+   "title": "Mid/Senior Cloud Data Engineer (GCP / Azure / Snowflake / BigQuery) 100% Remote",
+   "workplaceType": "remote",
+   "workingTime": "full_time",
+   "experienceLevel": "mid",
+   "category": {
+    "key": "python",
+    "parentKey": null
+   },
+   "city": "Warszawa",
+   "street": "-",
+   "latitude": 52.2296756,
+   "longitude": 21.0122287,
+   "isRemoteInterview": false,
+   "companyName": "Datumo",
+   "companyLogoThumbUrl": "https://imgproxy.justjoinit.tech/mtr2tUnlE2H8l78TJt454VFKOxdSy7wd9LMePq3dtVU/h:200/w:200/plain/https://public.justjoin.it/companies/logos/original/35e5140ea356f2a0f39cf329570be14317d8b801.png",
+   "publishedAt": "2026-10-05T13:05:04.7465788Z",
+   "isOpenToHireUkrainians": false,
+   "locations": [
+    {
+     "city": "Warszawa",
+     "street": "-",
+     "latitude": 52.2296756,
+     "longitude": 21.0122287,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-warszawa-python"
+    },
+    {
+     "city": "Gdańsk",
+     "street": "-",
+     "latitude": 54.35202520000001,
+     "longitude": 18.6466384,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-gdansk-python"
+    },
+    {
+     "city": "Kraków",
+     "street": "-",
+     "latitude": 50.06465009999999,
+     "longitude": 19.9449799,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-krakow-python"
+    },
+    {
+     "city": "Wrocław",
+     "street": "-",
+     "latitude": 51.10929480000001,
+     "longitude": 17.0386019,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-wroclaw-python"
+    },
+    {
+     "city": "Poznań",
+     "street": "-",
+     "latitude": 52.40567859999999,
+     "longitude": 16.9312766,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-poznan-python"
+    },
+    {
+     "city": "Katowice",
+     "street": "-",
+     "latitude": 50.26489189999999,
+     "longitude": 19.0237815,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-katowice-python"
+    },
+    {
+     "city": "Rzeszów",
+     "street": "-",
+     "latitude": 50.0411867,
+     "longitude": 21.9991196,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-rzeszow-python"
+    },
+    {
+     "city": "Białystok",
+     "street": "-",
+     "latitude": 53.13248859999999,
+     "longitude": 23.1688403,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-bialystok-python"
+    },
+    {
+     "city": "Olsztyn",
+     "street": "-",
+     "latitude": 53.778422,
+     "longitude": 20.4801193,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-olsztyn-python"
+    },
+    {
+     "city": "Szczecin",
+     "street": "-",
+     "latitude": 53.4285438,
+     "longitude": 14.5528116,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-szczecin-python"
+    }
+   ],
+   "employmentTypes": [
+    {
+     "from": 20000.0,
+     "fromPerUnit": 20000.0,
+     "to": 30000.0,
+     "toPerUnit": 30000.0,
+     "currency": "PLN",
+     "currencySource": "original",
+     "type": "b2b",
+     "unit": "Month",
+     "gross": false
+    },
+    {
+     "from": 5185.0,
+     "fromPerUnit": 5185.37723619394,
+     "to": 7778.0,
+     "toPerUnit": 7778.06585429091,
+     "currency": "USD",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "Month",
+     "gross": false
+    },
+    {
+     "from": 4556.0,
+     "fromPerUnit": 4555.80865603644,
+     "to": 6834.0,
+     "toPerUnit": 6833.71298405466,
+     "currency": "EUR",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "Month",
+     "gross": false
+    },
+    {
+     "from": 4292.0,
+     "fromPerUnit": 4292.49028824072,
+     "to": 6439.0,
+     "toPerUnit": 6438.73543236108,
+     "currency": "CHF",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "Month",
+     "gross": false
+    },
+    {
+     "from": 3917.0,
+     "fromPerUnit": 3916.88372730656,
+     "to": 5875.0,
+     "toPerUnit": 5875.32559095984,
+     "currency": "GBP",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "Month",
+     "gross": false
+    }
+   ],
+   "requiredSkills": [
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Data modeling",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Cloud",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Google Cloud",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Azure",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "BigQuery",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Snowflake",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Java",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Python",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "SQL",
+     "level": 4,
+     "group": null
+    }
+   ],
+   "niceToHaveSkills": [],
+   "languages": [],
+   "isPromoted": false,
+   "isSuperOffer": true,
+   "applyMethod": "external",
+   "applyUrl": "https://datumo.traffit.com/public/form/a/427e62fb080e98c39ea635a52e9af91c786a733d",
+   "lastPublishedAt": "2026-07-15T11:05:05.69507Z",
+   "expiredAt": "2027-03-12T22:59:59.999999Z",
+   "companyProfileSlug": "datumo",
+   "hybridWorkSchedule": null
+  },
+  {
+   "guid": "fbac033b-193f-4cee-8a17-b07fe187f7ff",
+   "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-warszawa-python-5d4144f1",
+   "title": "Mid/Senior Cloud Data Engineer (GCP / Azure / Snowflake / BigQuery) 100% Remote",
+   "workplaceType": "remote",
+   "workingTime": "full_time",
+   "experienceLevel": "senior",
+   "category": {
+    "key": "python",
+    "parentKey": null
+   },
+   "city": "Warszawa",
+   "street": "-",
+   "latitude": 52.2296756,
+   "longitude": 21.0122287,
+   "isRemoteInterview": false,
+   "companyName": "Datumo",
+   "companyLogoThumbUrl": "https://imgproxy.justjoinit.tech/mtr2tUnlE2H8l78TJt454VFKOxdSy7wd9LMePq3dtVU/h:200/w:200/plain/https://public.justjoin.it/companies/logos/original/35e5140ea356f2a0f39cf329570be14317d8b801.png",
+   "publishedAt": "2026-10-05T13:05:03.4164053Z",
+   "isOpenToHireUkrainians": false,
+   "locations": [
+    {
+     "city": "Warszawa",
+     "street": "-",
+     "latitude": 52.2296756,
+     "longitude": 21.0122287,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-warszawa-python-5d4144f1"
+    },
+    {
+     "city": "Gdańsk",
+     "street": "-",
+     "latitude": 54.35202520000001,
+     "longitude": 18.6466384,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-gdansk-python-c5357290"
+    },
+    {
+     "city": "Kraków",
+     "street": "-",
+     "latitude": 50.06465009999999,
+     "longitude": 19.9449799,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-krakow-python-64257045"
+    },
+    {
+     "city": "Wrocław",
+     "street": "-",
+     "latitude": 51.10929480000001,
+     "longitude": 17.0386019,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-wroclaw-python-28eaf240"
+    },
+    {
+     "city": "Poznań",
+     "street": "-",
+     "latitude": 52.40567859999999,
+     "longitude": 16.9312766,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-poznan-python-ad98f572"
+    },
+    {
+     "city": "Katowice",
+     "street": "-",
+     "latitude": 50.26489189999999,
+     "longitude": 19.0237815,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-katowice-python-5bded725"
+    },
+    {
+     "city": "Rzeszów",
+     "street": "-",
+     "latitude": 50.0411867,
+     "longitude": 21.9991196,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-rzeszow-python-24ab710e"
+    },
+    {
+     "city": "Białystok",
+     "street": "-",
+     "latitude": 53.13248859999999,
+     "longitude": 23.1688403,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-bialystok-python-285fb1c6"
+    },
+    {
+     "city": "Olsztyn",
+     "street": "-",
+     "latitude": 53.778422,
+     "longitude": 20.4801193,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-olsztyn-python-a3c31c0d"
+    },
+    {
+     "city": "Szczecin",
+     "street": "-",
+     "latitude": 53.4285438,
+     "longitude": 14.5528116,
+     "slug": "datumo-mid-senior-cloud-data-engineer-gcp-azure-snowflake-bigquery-100-remote-szczecin-python-f07bb357"
+    }
+   ],
+   "employmentTypes": [
+    {
+     "from": 20000.0,
+     "fromPerUnit": 20000.0,
+     "to": 30000.0,
+     "toPerUnit": 30000.0,
+     "currency": "PLN",
+     "currencySource": "original",
+     "type": "b2b",
+     "unit": "Month",
+     "gross": false
+    },
+    {
+     "from": 5185.0,
+     "fromPerUnit": 5185.37723619394,
+     "to": 7778.0,
+     "toPerUnit": 7778.06585429091,
+     "currency": "USD",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "Month",
+     "gross": false
+    },
+    {
+     "from": 4556.0,
+     "fromPerUnit": 4555.80865603644,
+     "to": 6834.0,
+     "toPerUnit": 6833.71298405466,
+     "currency": "EUR",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "Month",
+     "gross": false
+    },
+    {
+     "from": 4292.0,
+     "fromPerUnit": 4292.49028824072,
+     "to": 6439.0,
+     "toPerUnit": 6438.73543236108,
+     "currency": "CHF",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "Month",
+     "gross": false
+    },
+    {
+     "from": 3917.0,
+     "fromPerUnit": 3916.88372730656,
+     "to": 5875.0,
+     "toPerUnit": 5875.32559095984,
+     "currency": "GBP",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "Month",
+     "gross": false
+    }
+   ],
+   "requiredSkills": [
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Data modeling",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Cloud",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Google Cloud",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Azure",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "BigQuery",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Snowflake",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Java",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Python",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "SQL",
+     "level": 4,
+     "group": null
+    }
+   ],
+   "niceToHaveSkills": [],
+   "languages": [],
+   "isPromoted": false,
+   "isSuperOffer": true,
+   "applyMethod": "external",
+   "applyUrl": "https://datumo.traffit.com/public/form/a/427e62fb080e98c39ea635a52e9af91c786a733d",
+   "lastPublishedAt": "2026-07-15T11:06:28.336962Z",
+   "expiredAt": "2027-03-12T22:59:59.999999Z",
+   "companyProfileSlug": "datumo",
+   "hybridWorkSchedule": null
+  },
+  {
+   "guid": "ad5487d6-51bc-4143-ac31-f795abc1fb64",
+   "slug": "simcorp-senior-software-engineer-net--warszawa-net",
+   "title": "Senior Software Engineer (.NET)",
+   "workplaceType": "hybrid",
+   "workingTime": "full_time",
+   "experienceLevel": "senior",
+   "category": {
+    "key": "net",
+    "parentKey": null
+   },
+   "city": "Warszawa",
+   "street": "Puławska 182",
+   "latitude": 52.1816816,
+   "longitude": 21.0219519,
+   "isRemoteInterview": false,
+   "companyName": "SimCorp",
+   "companyLogoThumbUrl": "https://imgproxy.justjoinit.tech/0F2ga-SxQR4M1glrjeTPB8_1afrgYEnjF1QCuDl0vcA/h:200/w:200/plain/https://public.justjoin.it/companies/logos/original/4567acec08fb13e16e09f34570d8529954e9d281.png",
+   "publishedAt": "2026-10-05T13:00:10.0631768Z",
+   "isOpenToHireUkrainians": false,
+   "locations": [
+    {
+     "city": "Warszawa",
+     "street": "Puławska 182",
+     "latitude": 52.1816816,
+     "longitude": 21.0219519,
+     "slug": "simcorp-senior-software-engineer-net--warszawa-net"
+    }
+   ],
+   "employmentTypes": [
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "CHF",
+     "currencySource": "conversion",
+     "type": "permanent",
+     "unit": "month",
+     "gross": true
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "EUR",
+     "currencySource": "conversion",
+     "type": "permanent",
+     "unit": "month",
+     "gross": true
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "USD",
+     "currencySource": "conversion",
+     "type": "permanent",
+     "unit": "month",
+     "gross": true
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "GBP",
+     "currencySource": "conversion",
+     "type": "permanent",
+     "unit": "month",
+     "gross": true
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "PLN",
+     "currencySource": "original",
+     "type": "permanent",
+     "unit": "month",
+     "gross": true
+    }
+   ],
+   "requiredSkills": [
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": ".NET C#",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "AI",
+     "level": 3,
+     "group": null
+    }
+   ],
+   "niceToHaveSkills": [],
+   "languages": [],
+   "isPromoted": false,
+   "isSuperOffer": true,
+   "applyMethod": "external",
+   "applyUrl": "https://simcorp.wd3.myworkdayjobs.com/SimCorp_Jobs/job/Warsaw/Lead-Software-Engineer--C--APL----Portfolio-Analysis_R-212469-1",
+   "lastPublishedAt": "2026-08-21T12:38:34.074276Z",
+   "expiredAt": "2026-11-19T13:30:32.433Z",
+   "companyProfileSlug": null,
+   "hybridWorkSchedule": {
+    "officeDays": 2,
+    "remoteDays": 3
+   }
+  },
+  {
+   "guid": "c413b958-4fe5-4e71-b3ce-0ef0f49b1267",
+   "slug": "vistex-poland-cee--net-developer-lodz-net-a8c2555a",
+   "title": ".NET Developer",
+   "workplaceType": "hybrid",
+   "workingTime": "full_time",
+   "experienceLevel": "mid",
+   "category": {
+    "key": "net",
+    "parentKey": null
+   },
+   "city": "Łódź",
+   "street": "Al. Piłsudskiego 3",
+   "latitude": 51.75877699999999,
+   "longitude": 19.459482,
+   "isRemoteInterview": false,
+   "companyName": "Vistex Poland-CEE",
+   "companyLogoThumbUrl": "https://imgproxy.justjoinit.tech/yRN5u-8Fv6UZlzm17OXEnEUYLzS_VbapOjiilf-iqT4/h:200/w:200/plain/https://public.justjoin.it/companies/logos/original/d4e66bc3ff3e4268dca72f89b379dd2492f8d0bb.png",
+   "publishedAt": "2026-10-05T12:44:18.3695209Z",
+   "isOpenToHireUkrainians": false,
+   "locations": [
+    {
+     "city": "Łódź",
+     "street": "Al. Piłsudskiego 3",
+     "latitude": 51.75877699999999,
+     "longitude": 19.459482,
+     "slug": "vistex-poland-cee--net-developer-lodz-net-a8c2555a"
+    }
+   ],
+   "employmentTypes": [
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "PLN",
+     "currencySource": "original",
+     "type": "permanent",
+     "unit": "month",
+     "gross": true
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "CHF",
+     "currencySource": "conversion",
+     "type": "permanent",
+     "unit": "month",
+     "gross": true
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "EUR",
+     "currencySource": "conversion",
+     "type": "permanent",
+     "unit": "month",
+     "gross": true
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "GBP",
+     "currencySource": "conversion",
+     "type": "permanent",
+     "unit": "month",
+     "gross": true
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "USD",
+     "currencySource": "conversion",
+     "type": "permanent",
+     "unit": "month",
+     "gross": true
+    }
+   ],
+   "requiredSkills": [
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": ".NET Core",
+     "level": 3,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "C#",
+     "level": 3,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "SQL",
+     "level": 3,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Docker",
+     "level": 1,
+     "group": null
+    }
+   ],
+   "niceToHaveSkills": [],
+   "languages": [],
+   "isPromoted": false,
+   "isSuperOffer": false,
+   "applyMethod": "form",
+   "applyUrl": null,
+   "lastPublishedAt": "2026-10-05T12:44:18.3695209Z",
+   "expiredAt": "2026-11-04T12:44:18.3695209Z",
+   "companyProfileSlug": null,
+   "hybridWorkSchedule": {
+    "officeDays": 1,
+    "remoteDays": 4
+   }
+  },
+  {
+   "guid": "a4a01a27-169a-4bbb-b672-5ee8601e2d1d",
+   "slug": "emagine-polska-analyste-qa-senior-senior-qa-analyst---tests-fonctionnels-et-auto-h-f--luxembourg-testing",
+   "title": "Analyste QA senior / Senior QA analyst – Tests fonctionnels et auto (h/f)",
+   "workplaceType": "office",
+   "workingTime": "full_time",
+   "experienceLevel": "senior",
+   "category": {
+    "key": "testing",
+    "parentKey": null
+   },
+   "city": "Luxembourg",
+   "street": "Centrum",
+   "latitude": 49.609999,
+   "longitude": 6.129627,
+   "isRemoteInterview": true,
+   "companyName": "emagine Polska",
+   "companyLogoThumbUrl": "https://imgproxy.justjoinit.tech/BzWgyxi50NEVw8vVhCjtH0e1OtZow3scOIpr5d1O1qQ/h:200/w:200/plain/https://public.justjoin.it/companies/logos/original/b6fd52b7d3d170271a3d77ac5cc99a1212236ce3.jpg",
+   "publishedAt": "2026-10-05T12:20:01.9200594Z",
+   "isOpenToHireUkrainians": true,
+   "locations": [
+    {
+     "city": "Luxembourg",
+     "street": "Centrum",
+     "latitude": 49.609999,
+     "longitude": 6.129627,
+     "slug": "emagine-polska-analyste-qa-senior-senior-qa-analyst---tests-fonctionnels-et-auto-h-f--luxembourg-testing"
+    }
+   ],
+   "employmentTypes": [
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "USD",
+     "currencySource": "conversion",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "GBP",
+     "currencySource": "conversion",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "EUR",
+     "currencySource": "conversion",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "CHF",
+     "currencySource": "conversion",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "PLN",
+     "currencySource": "original",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    }
+   ],
+   "requiredSkills": [
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Project Management",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Risk Management",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Test Cases",
+     "level": 5,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Artificial Intelligence (AI)",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "ITIL",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Coordination",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "strategy",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "CI/CD",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Functional Testing",
+     "level": 5,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Agile",
+     "level": 4,
+     "group": null
+    }
+   ],
+   "niceToHaveSkills": [],
+   "languages": [
+    {
+     "code": "en",
+     "level": "B1"
+    },
+    {
+     "code": "fr",
+     "level": "C1"
+    }
+   ],
+   "isPromoted": false,
+   "isSuperOffer": false,
+   "applyMethod": "external",
+   "applyUrl": "https://portal.emagine.org/jobs/180692/analyste-qa-senior-senior-qa-analyst-tests-fonctionnels-et-auto-hf?utm_source=JustJoinIt",
+   "lastPublishedAt": "2026-09-30T12:15:23.663689Z",
+   "expiredAt": "2026-12-29T12:15:23.663689Z",
+   "companyProfileSlug": null,
+   "hybridWorkSchedule": null
+  },
+  {
+   "guid": "0fd4d0ba-7293-49ea-bce9-6391c055baeb",
+   "slug": "emagine-polska-mid-net-fullstack-developer-lisbon-net",
+   "title": "Mid .Net Fullstack Developer",
+   "workplaceType": "hybrid",
+   "workingTime": "full_time",
+   "experienceLevel": "mid",
+   "category": {
+    "key": "net",
+    "parentKey": null
+   },
+   "city": "Lisbon",
+   "street": "Centrum",
+   "latitude": 38.707008,
+   "longitude": -9.135641,
+   "isRemoteInterview": true,
+   "companyName": "emagine Polska",
+   "companyLogoThumbUrl": "https://imgproxy.justjoinit.tech/BzWgyxi50NEVw8vVhCjtH0e1OtZow3scOIpr5d1O1qQ/h:200/w:200/plain/https://public.justjoin.it/companies/logos/original/b6fd52b7d3d170271a3d77ac5cc99a1212236ce3.jpg",
+   "publishedAt": "2026-10-05T12:20:01.8489384Z",
+   "isOpenToHireUkrainians": true,
+   "locations": [
+    {
+     "city": "Lisbon",
+     "street": "Centrum",
+     "latitude": 38.707008,
+     "longitude": -9.135641,
+     "slug": "emagine-polska-mid-net-fullstack-developer-lisbon-net"
+    }
+   ],
+   "employmentTypes": [
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "EUR",
+     "currencySource": "conversion",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "CHF",
+     "currencySource": "conversion",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "USD",
+     "currencySource": "conversion",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "GBP",
+     "currencySource": "conversion",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "PLN",
+     "currencySource": "original",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    }
+   ],
+   "requiredSkills": [
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "C#",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "SQL",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Active Server Pages (ASP)",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "API (Application Programming Interface)",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": ".Net",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "ASP.NET",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "CMS",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Umbraco",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "REST",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Cloud",
+     "level": 4,
+     "group": null
+    }
+   ],
+   "niceToHaveSkills": [],
+   "languages": [
+    {
+     "code": "en",
+     "level": "B1"
+    }
+   ],
+   "isPromoted": false,
+   "isSuperOffer": false,
+   "applyMethod": "external",
+   "applyUrl": "https://portal.emagine.org/jobs/180697/mid-net-fullstack-developer?utm_source=JustJoinIt",
+   "lastPublishedAt": "2026-09-30T12:15:29.255399Z",
+   "expiredAt": "2026-12-29T12:15:29.255399Z",
+   "companyProfileSlug": null,
+   "hybridWorkSchedule": null
+  },
+  {
+   "guid": "30d4674c-6b59-44c5-bb94-26380c662345",
+   "slug": "emagine-polska-expert-analyst--gdansk-analytics",
+   "title": "Expert Analyst ",
+   "workplaceType": "hybrid",
+   "workingTime": "full_time",
+   "experienceLevel": "senior",
+   "category": {
+    "key": "analytics",
+    "parentKey": null
+   },
+   "city": "Gdansk",
+   "street": "Centrum",
+   "latitude": 54.356031,
+   "longitude": 18.64612,
+   "isRemoteInterview": true,
+   "companyName": "emagine Polska",
+   "companyLogoThumbUrl": "https://imgproxy.justjoinit.tech/BzWgyxi50NEVw8vVhCjtH0e1OtZow3scOIpr5d1O1qQ/h:200/w:200/plain/https://public.justjoin.it/companies/logos/original/b6fd52b7d3d170271a3d77ac5cc99a1212236ce3.jpg",
+   "publishedAt": "2026-10-05T12:15:25.7793977Z",
+   "isOpenToHireUkrainians": true,
+   "locations": [
+    {
+     "city": "Gdansk",
+     "street": "Centrum",
+     "latitude": 54.356031,
+     "longitude": 18.64612,
+     "slug": "emagine-polska-expert-analyst--gdansk-analytics"
+    }
+   ],
+   "employmentTypes": [
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "CHF",
+     "currencySource": "conversion",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "EUR",
+     "currencySource": "conversion",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "GBP",
+     "currencySource": "conversion",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "USD",
+     "currencySource": "conversion",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "PLN",
+     "currencySource": "original",
+     "type": "any",
+     "unit": "month",
+     "gross": false
+    }
+   ],
+   "requiredSkills": [
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Data analysis",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "SQL",
+     "level": 5,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "XSLT",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Business Analysis",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Scrum",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Agile",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Capital Markets",
+     "level": 5,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "BDD (Behavior Driven Development)",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Procurement",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Copywriting (content)",
+     "level": 4,
+     "group": null
+    }
+   ],
+   "niceToHaveSkills": [],
+   "languages": [
+    {
+     "code": "en",
+     "level": "B1"
+    }
+   ],
+   "isPromoted": false,
+   "isSuperOffer": false,
+   "applyMethod": "external",
+   "applyUrl": "https://portal.emagine.org/jobs/180823/expert-analyst?utm_source=JustJoinIt",
+   "lastPublishedAt": "2026-10-05T12:15:25.7793977Z",
+   "expiredAt": "2027-01-03T12:15:25.7793977Z",
+   "companyProfileSlug": null,
+   "hybridWorkSchedule": null
+  },
+  {
+   "guid": "9699ee62-4ddb-43d8-b6b0-e7e960f7bda5",
+   "slug": "flotman-sp-z-o-o---net-developer-mid--krakow-net",
+   "title": ".NET Developer (Mid)",
+   "workplaceType": "hybrid",
+   "workingTime": "full_time",
+   "experienceLevel": "mid",
+   "category": {
+    "key": "net",
+    "parentKey": null
+   },
+   "city": "Kraków",
+   "street": "Cystersów 9",
+   "latitude": 50.0652818,
+   "longitude": 19.9696777,
+   "isRemoteInterview": false,
+   "companyName": "Flotman Sp. z o.o.",
+   "companyLogoThumbUrl": "https://imgproxy.justjoinit.tech/BqFFHSIGqahXhvpyyEF0UXSJTlMfnXCElCr97f1g2_4/h:200/w:200/plain/https://s3.eu-west-1.amazonaws.com/public.justjoin.com/justjoinit/hiring-company-logos/01a0a4eb-da5e-7d20-b652-5cd3ac80d17d.png",
+   "publishedAt": "2026-10-05T12:05:06.2389425Z",
+   "isOpenToHireUkrainians": false,
+   "locations": [
+    {
+     "city": "Kraków",
+     "street": "Cystersów 9",
+     "latitude": 50.0652818,
+     "longitude": 19.9696777,
+     "slug": "flotman-sp-z-o-o---net-developer-mid--krakow-net"
+    }
+   ],
+   "employmentTypes": [
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "CHF",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "CHF",
+     "currencySource": "conversion",
+     "type": "permanent",
+     "unit": "month",
+     "gross": true
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "USD",
+     "currencySource": "conversion",
+     "type": "permanent",
+     "unit": "month",
+     "gross": true
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "USD",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "EUR",
+     "currencySource": "conversion",
+     "type": "permanent",
+     "unit": "month",
+     "gross": true
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "GBP",
+     "currencySource": "conversion",
+     "type": "permanent",
+     "unit": "month",
+     "gross": true
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "GBP",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "EUR",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "PLN",
+     "currencySource": "original",
+     "type": "b2b",
+     "unit": "month",
+     "gross": false
+    },
+    {
+     "from": null,
+     "fromPerUnit": null,
+     "to": null,
+     "toPerUnit": null,
+     "currency": "PLN",
+     "currencySource": "original",
+     "type": "permanent",
+     "unit": "month",
+     "gross": true
+    }
+   ],
+   "requiredSkills": [
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "C#",
+     "level": 3,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "ASP.NET Core",
+     "level": 3,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": ".Net",
+     "level": 3,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "Web API",
+     "level": 3,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "SQL Server",
+     "level": 3,
+     "group": null
+    }
+   ],
+   "niceToHaveSkills": [],
+   "languages": [
+    {
+     "code": "pl",
+     "level": "C2"
+    },
+    {
+     "code": "en",
+     "level": "B2"
+    }
+   ],
+   "isPromoted": false,
+   "isSuperOffer": false,
+   "applyMethod": "external",
+   "applyUrl": "https://system.erecruiter.pl/FormTemplates/RecruitmentForm.aspx?WebID=8d68cd3253da4a4783e9375d4de1325f",
+   "lastPublishedAt": "2026-09-15T12:06:36.357604Z",
+   "expiredAt": "2026-10-16T21:59:59.999999Z",
+   "companyProfileSlug": null,
+   "hybridWorkSchedule": null
+  },
+  {
+   "guid": "c86bcd4d-d290-4a39-b54c-593539ee68dc",
+   "slug": "experis-manpower-group-google-cloud-platform-engineer-warszawa-other",
+   "title": "Google Cloud Platform Engineer",
+   "workplaceType": "hybrid",
+   "workingTime": "freelance",
+   "experienceLevel": "senior",
+   "category": {
+    "key": "other",
+    "parentKey": null
+   },
+   "city": "Warszawa",
+   "street": "Warszawa",
+   "latitude": 52.2296756,
+   "longitude": 21.0122287,
+   "isRemoteInterview": false,
+   "companyName": "Experis Manpower Group",
+   "companyLogoThumbUrl": "https://imgproxy.justjoinit.tech/rM68ZSR4Szt6JiPgA9_UoUOVMs_3SzKrEabeChm1olw/h:200/w:200/plain/https://s3.eu-west-1.amazonaws.com/images.justjoin.it/organization-units/4e7a761c561c42faac2c8fc8968f1574/logos/1781692908_019ed52c42ec742a9722c9fbc4e428b6.png",
+   "publishedAt": "2026-10-05T11:25:10.7150024Z",
+   "isOpenToHireUkrainians": false,
+   "locations": [
+    {
+     "city": "Warszawa",
+     "street": "Warszawa",
+     "latitude": 52.2296756,
+     "longitude": 21.0122287,
+     "slug": "experis-manpower-group-google-cloud-platform-engineer-warszawa-other"
+    },
+    {
+     "city": "Gdańsk",
+     "street": "Gdańsk",
+     "latitude": 54.35202520000001,
+     "longitude": 18.6466384,
+     "slug": "experis-manpower-group-google-cloud-platform-engineer-gdansk-other"
+    },
+    {
+     "city": "Gdynia",
+     "street": "Gdynia",
+     "latitude": 54.518352,
+     "longitude": 18.5291932,
+     "slug": "experis-manpower-group-google-cloud-platform-engineer-gdynia-other"
+    },
+    {
+     "city": "Łódź",
+     "street": "Łódź",
+     "latitude": 51.7592924,
+     "longitude": 19.4558778,
+     "slug": "experis-manpower-group-google-cloud-platform-engineer-lodz-other"
+    }
+   ],
+   "employmentTypes": [
+    {
+     "from": 26880.0,
+     "fromPerUnit": 160.0,
+     "to": 33600.0,
+     "toPerUnit": 200.0,
+     "currency": "PLN",
+     "currencySource": "original",
+     "type": "b2b",
+     "unit": "Hour",
+     "gross": false
+    },
+    {
+     "from": 6975.0,
+     "fromPerUnit": 41.51854062329712,
+     "to": 8719.0,
+     "toPerUnit": 51.8981757791214,
+     "currency": "USD",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "Hour",
+     "gross": false
+    },
+    {
+     "from": 6147.0,
+     "fromPerUnit": 36.58982802780832,
+     "to": 7684.0,
+     "toPerUnit": 45.7372850347604,
+     "currency": "EUR",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "Hour",
+     "gross": false
+    },
+    {
+     "from": 5818.0,
+     "fromPerUnit": 34.63053547465472,
+     "to": 7272.0,
+     "toPerUnit": 43.2881693433184,
+     "currency": "CHF",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "Hour",
+     "gross": false
+    },
+    {
+     "from": 5270.0,
+     "fromPerUnit": 31.366398745344,
+     "to": 6587.0,
+     "toPerUnit": 39.20799843168,
+     "currency": "GBP",
+     "currencySource": "conversion",
+     "type": "b2b",
+     "unit": "Hour",
+     "gross": false
+    }
+   ],
+   "requiredSkills": [
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "GCP",
+     "level": 4,
+     "group": null
+    },
+    {
+     "skillId": "00000000-0000-0000-0000-000000000000",
+     "name": "CI/CD",
+     "level": 4,
+     "group": null
+    }
+   ],
+   "niceToHaveSkills": [],
+   "languages": [
+    {
+     "code": "en",
+     "level": "B2"
+    }
+   ],
+   "isPromoted": false,
+   "isSuperOffer": false,
+   "applyMethod": "external",
+   "applyUrl": "https://www.experis.pl/pl/jobb/29499/google-cloud-platform-engineer",
+   "lastPublishedAt": "2026-09-30T11:24:54.340376Z",
+   "expiredAt": "2026-10-30T22:59:59.999Z",
+   "companyProfileSlug": null,
+   "hybridWorkSchedule": {
+    "officeDays": 3,
+    "remoteDays": 2
+   }
+  }
+ ],
+ "meta": {
+  "from": 0,
+  "totalItems": 778,
+  "prev": {
+   "cursor": null,
+   "itemsCount": 100
+  },
+  "next": {
+   "cursor": 100,
+   "itemsCount": 100
+  }
+ }
+}

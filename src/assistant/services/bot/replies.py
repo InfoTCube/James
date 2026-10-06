@@ -8,6 +8,8 @@ from assistant.core.config import Config
 from assistant.modules.alarm import service as alarm
 from assistant.modules.birthdays import service as birthdays
 from assistant.modules.calendar import service as calendar
+from assistant.modules.events import service as events
+from assistant.modules.jobs import service as jobs
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.alerts import format_connection
 from assistant.modules.notes import service as notes
@@ -149,3 +151,33 @@ def reply_note_del(session: Session, now: datetime, config: Config, args: list[s
         return "Usage: /note_del 3 (numbers from /notes)"
     n = notes.delete_note(session, int(args[0].lstrip("#")))
     return f"🗑️ Deleted #{n.id}: {n.text}" if n else "No such note."
+
+
+def reply_jobs(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/jobs: matching offers from the last 7 days, best fit (⭐) first."""
+    cfg = config.jobs
+    if not cfg.keywords:
+        return "Job alerts are off: set jobs.keywords in config.yaml."
+    offers = jobs.recent(session, now, cfg)
+    if not offers:
+        return "No matching job offers in the last 7 days."
+    shown = [
+        f"{'⭐ ' * jobs.best_fit(o, cfg)}{o.title} – {o.company}\n"
+        + " · ".join(filter(None, [jobs.work_mode(o), jobs.hours(o)]))
+        + f"\n{o.url}"
+        for o in offers[:20]
+    ]
+    if len(offers) > 20:
+        shown.append(f"…and {len(offers) - 20} more")
+    return "\n\n".join(shown)
+
+
+def reply_events(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/events: matching events in the next 30 days, soonest first."""
+    upcoming = events.upcoming(session, now.astimezone(config.tz).date())
+    if not upcoming:
+        return "No matching events in the next 30 days."
+    shown = [events.format_event(e, config.tz) for e in upcoming[:20]]
+    if len(upcoming) > 20:
+        shown.append(f"…and {len(upcoming) - 20} more")
+    return "\n\n".join(shown)

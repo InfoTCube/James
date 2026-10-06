@@ -37,8 +37,33 @@ alarm:
   latest: "11:00"
 
 # Voice for reading aloud (briefing, "leave now"): a Piper voice name, downloaded on first use.
-# Try others: en_GB-alan-medium, en_US-lessac-medium, en_US-ryan-medium (full list:
+# Try others: en_GB-cori-medium (female), en_US-ryan-medium, en_US-lessac-medium (full list:
 # https://huggingface.co/rhasspy/piper-voices).
-voice: en_GB-cori-medium
-# Polish names (stops, streets, people) are read by this Polish voice. Also: pl_PL-darkman-medium
-voice_pl: pl_PL-gosia-medium
+voice: en_GB-alan-medium
+# Polish names (stops, streets, people) are read by this Polish voice. Also: pl_PL-gosia-medium (female)
+voice_pl: pl_PL-darkman-medium
+
+# Job offers (justjoin.it, nofluffjobs, pracuj.pl), checked every 4 h; new matches go to Telegram.
+# An offer matches if its title or skills contain a keyword (whole word, case/diacritics ignored),
+# its title has no `exclude` word, its level is in `seniority` (empty = any), and it's
+# in one of `cities`, or remote (`remote: true`), or hybrid in one of `hybrid_cities` with at most
+# `max_office_days` a week in the office (only justjoin.it says; others are sent marked "hybrid").
+# Use Polish city names, as the boards do. Empty `keywords` turns jobs off.
+jobs:
+  keywords: [.net, c#, asp.net]
+  exclude: [senior, lead, principal, architect, manager, tester, qa]
+  seniority: [trainee, intern, junior]
+  cities: [Wrocław]
+  hybrid_cities: [Kraków, Warszawa]
+  max_office_days: 1
+  remote: true
+
+# IT events and hackathons (Meetup, Crossweb, Devpost, MLH), checked daily; new matches go to
+# Telegram. Every event in one of `cities` matches; online ones only with a `keywords` word in the
+# title, kind (meetup, conference, hackathon, webinar...) or topics. Nothing with an `exclude` word.
+# Use Polish city names. Empty `cities` and `online: false` turns events off.
+events:
+  cities: [Wrocław]
+  online: true
+  keywords: [.net, c#, hackathon]
+  exclude: [hr, startup, ux, lean, marketing, sales]
