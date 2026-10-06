@@ -1,0 +1,842 @@
+{
+ "outboundFlights": [
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-01T00:00:00",
+   "price": {
+    "amount": 0.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 584.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "checkPrice",
+   "departureDates": [
+    "2026-11-01T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-02T00:00:00",
+   "price": {
+    "amount": 0.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 584.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "checkPrice",
+   "departureDates": [
+    "2026-11-02T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-04T00:00:00",
+   "price": {
+    "amount": 269.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 269.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-04T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-06T00:00:00",
+   "price": {
+    "amount": 209.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 209.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-06T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-08T00:00:00",
+   "price": {
+    "amount": 259.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 259.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-08T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-09T00:00:00",
+   "price": {
+    "amount": 259.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 259.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-09T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-11T00:00:00",
+   "price": {
+    "amount": 269.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 269.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-11T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-13T00:00:00",
+   "price": {
+    "amount": 97.9,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 109.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-13T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-15T00:00:00",
+   "price": {
+    "amount": 299.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 299.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-15T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-16T00:00:00",
+   "price": {
+    "amount": 80.9,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 89.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-16T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-18T00:00:00",
+   "price": {
+    "amount": 80.9,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 89.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-18T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-20T00:00:00",
+   "price": {
+    "amount": 80.9,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 89.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-20T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-22T00:00:00",
+   "price": {
+    "amount": 209.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 209.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-22T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-23T00:00:00",
+   "price": {
+    "amount": 97.9,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 109.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-23T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-25T00:00:00",
+   "price": {
+    "amount": 97.9,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 109.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-25T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-27T00:00:00",
+   "price": {
+    "amount": 97.9,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 109.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-27T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-29T00:00:00",
+   "price": {
+    "amount": 529.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 529.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-29T19:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "WRO",
+   "arrivalStation": "LTN",
+   "departureDate": "2026-11-30T00:00:00",
+   "price": {
+    "amount": 123.4,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 139.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-30T19:45:00"
+   ],
+   "hasMacFlight": false
+  }
+ ],
+ "returnFlights": [
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-01T00:00:00",
+   "price": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-01T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-02T00:00:00",
+   "price": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-02T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-04T00:00:00",
+   "price": {
+    "amount": 269.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 269.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-04T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-06T00:00:00",
+   "price": {
+    "amount": 159.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 159.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-06T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-08T00:00:00",
+   "price": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-08T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-09T00:00:00",
+   "price": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-09T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-11T00:00:00",
+   "price": {
+    "amount": 259.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 259.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-11T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-13T00:00:00",
+   "price": {
+    "amount": 259.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 259.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-13T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-15T00:00:00",
+   "price": {
+    "amount": 259.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 259.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-15T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-16T00:00:00",
+   "price": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-16T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-18T00:00:00",
+   "price": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-18T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-20T00:00:00",
+   "price": {
+    "amount": 159.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 159.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-20T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-22T00:00:00",
+   "price": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-22T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-23T00:00:00",
+   "price": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-23T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-25T00:00:00",
+   "price": {
+    "amount": 209.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 209.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-25T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-27T00:00:00",
+   "price": {
+    "amount": 179.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 179.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-27T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-29T00:00:00",
+   "price": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-29T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-11-30T00:00:00",
+   "price": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 149.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-11-30T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-12-02T00:00:00",
+   "price": {
+    "amount": 159.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 159.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-12-02T21:45:00"
+   ],
+   "hasMacFlight": false
+  },
+  {
+   "departureStation": "LTN",
+   "arrivalStation": "WRO",
+   "departureDate": "2026-12-04T00:00:00",
+   "price": {
+    "amount": 299.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "originalPrice": {
+    "amount": 299.0,
+    "currencyCode": "PLN",
+    "exchangedAmount": null,
+    "exchangedCurrencyCode": null
+   },
+   "priceType": "price",
+   "departureDates": [
+    "2026-12-04T21:45:00"
+   ],
+   "hasMacFlight": false
+  }
+ ]
+}

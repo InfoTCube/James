@@ -1,0 +1,915 @@
+{
+ "cities": [
+  {
+   "iata": "TIA",
+   "mac": null,
+   "longitude": 19.72083333333333,
+   "currencyCode": "ALL",
+   "latitude": 41.415,
+   "shortName": "Tirana",
+   "countryName": "Albania",
+   "countryCode": "AL",
+   "connections": [],
+   "aliases": [
+    "Tirana"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    7,
+    8,
+    9,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "VAR",
+   "mac": null,
+   "longitude": 27.825,
+   "currencyCode": "EUR",
+   "latitude": 43.231944444444444,
+   "shortName": "Varna (Black Sea)",
+   "countryName": "Bulgaria",
+   "countryCode": "BG",
+   "connections": [],
+   "aliases": [
+    "Varna (Black Sea)"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    2,
+    6,
+    9,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "SPU",
+   "mac": null,
+   "longitude": 16.292222222222225,
+   "currencyCode": "EUR",
+   "latitude": 43.525,
+   "shortName": "Split",
+   "countryName": "Croatia",
+   "countryCode": "HR",
+   "connections": [],
+   "aliases": [
+    "Split"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    1,
+    4,
+    5,
+    6,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "LCA",
+   "mac": null,
+   "longitude": 33.624722222222225,
+   "currencyCode": "EUR",
+   "latitude": 34.875,
+   "shortName": "Larnaca",
+   "countryName": "Cyprus",
+   "countryCode": "CY",
+   "connections": [],
+   "aliases": [
+    "Larnaca"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    2,
+    5,
+    6,
+    8,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "HRG",
+   "mac": null,
+   "longitude": 33.80138888888889,
+   "currencyCode": "USD",
+   "latitude": 27.178611111111113,
+   "shortName": "Hurghada",
+   "countryName": "Egypt",
+   "countryCode": "EG",
+   "connections": [],
+   "aliases": [
+    "Hurghada"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [],
+   "isFakeStation": false
+  },
+  {
+   "iata": "NCE",
+   "mac": null,
+   "longitude": 7.215,
+   "currencyCode": "EUR",
+   "latitude": 43.665277777777774,
+   "shortName": "Nice",
+   "countryName": "France",
+   "countryCode": "FR",
+   "connections": [],
+   "aliases": [
+    "Nice"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    1,
+    5,
+    6,
+    8,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "KUT",
+   "mac": "GEL",
+   "longitude": 42.4825,
+   "currencyCode": "GEL",
+   "latitude": 42.17666666666666,
+   "shortName": "Kutaisi",
+   "countryName": "Georgia",
+   "countryCode": "GE",
+   "connections": [],
+   "aliases": [
+    "Kutaisi"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    2,
+    3,
+    4,
+    7,
+    8,
+    9,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "DTM",
+   "mac": null,
+   "longitude": 7.612222222222222,
+   "currencyCode": "EUR",
+   "latitude": 51.51833333333333,
+   "shortName": "Dortmund",
+   "countryName": "Germany",
+   "countryCode": "DE",
+   "connections": [],
+   "aliases": [
+    "Dortmund"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    1,
+    4,
+    7,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "BUD",
+   "mac": null,
+   "longitude": 19.255555555555556,
+   "currencyCode": "HUF",
+   "latitude": 47.43694444444444,
+   "shortName": "Budapest",
+   "countryName": "Hungary",
+   "countryCode": "HU",
+   "connections": [],
+   "aliases": [
+    "Budapest"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    1,
+    5,
+    8,
+    9,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "KEF",
+   "mac": null,
+   "longitude": -22.60611111111111,
+   "currencyCode": "EUR",
+   "latitude": 63.985,
+   "shortName": "Reykjavik",
+   "countryName": "Iceland",
+   "countryCode": "IS",
+   "connections": [],
+   "aliases": [
+    "Reykjavik"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    2,
+    3,
+    4,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "BRI",
+   "mac": null,
+   "longitude": 16.788333333333334,
+   "currencyCode": "EUR",
+   "latitude": 41.14111111111111,
+   "shortName": "Bari",
+   "countryName": "Italy",
+   "countryCode": "IT",
+   "connections": [],
+   "aliases": [
+    "Bari"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    2,
+    5,
+    6,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "CTA",
+   "mac": null,
+   "longitude": 15.06388888888889,
+   "currencyCode": "EUR",
+   "latitude": 37.46666666666667,
+   "shortName": "Catania (Sicily)",
+   "countryName": "Italy",
+   "countryCode": "IT",
+   "connections": [],
+   "aliases": [
+    "Catania (Sicily)"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    2,
+    4,
+    5,
+    6,
+    8,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "TRN",
+   "mac": null,
+   "longitude": 7.649444444444444,
+   "currencyCode": "EUR",
+   "latitude": 45.2025,
+   "shortName": "Turin",
+   "countryName": "Italy",
+   "countryCode": "IT",
+   "connections": [],
+   "aliases": [
+    "Turin"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    1,
+    3,
+    4,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "RMO",
+   "mac": null,
+   "longitude": 28.930833333333336,
+   "currencyCode": "MDL",
+   "latitude": 46.92777777777778,
+   "shortName": "Chisinau",
+   "countryName": "Moldova",
+   "countryCode": "MD",
+   "connections": [],
+   "aliases": [
+    "Chisinau"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [],
+   "isFakeStation": false
+  },
+  {
+   "iata": "TGD",
+   "mac": null,
+   "longitude": 19.251944444444444,
+   "currencyCode": "EUR",
+   "latitude": 42.358333333333334,
+   "shortName": "Podgorica",
+   "countryName": "Montenegro",
+   "countryCode": "ME",
+   "connections": [],
+   "aliases": [
+    "Podgorica"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    1,
+    4,
+    8,
+    9,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "EIN",
+   "mac": "NLM",
+   "longitude": 5.374444444444444,
+   "currencyCode": "EUR",
+   "latitude": 51.45,
+   "shortName": "Eindhoven",
+   "countryName": "Netherlands",
+   "countryCode": "NL",
+   "connections": [],
+   "aliases": [
+    "Eindhoven"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    1,
+    8,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "NLM",
+   "mac": "NLM",
+   "longitude": 5.776944444444444,
+   "currencyCode": "EUR",
+   "latitude": 50.91555555555556,
+   "shortName": "Eindhoven / Maastricht",
+   "countryName": "Netherlands",
+   "countryCode": "NL",
+   "connections": [],
+   "aliases": [
+    "Eindhoven / Maastricht"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [],
+   "isFakeStation": true
+  },
+  {
+   "iata": "OHD",
+   "mac": null,
+   "longitude": 20.743055555555557,
+   "currencyCode": "MKD",
+   "latitude": 41.184999999999995,
+   "shortName": "Ohrid",
+   "countryName": "North Macedonia",
+   "countryCode": "MK",
+   "connections": [],
+   "aliases": [
+    "Ohrid"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    1,
+    5,
+    6,
+    7,
+    9,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "WRO",
+   "mac": null,
+   "longitude": 16.885833333333334,
+   "currencyCode": "PLN",
+   "latitude": 51.10277777777778,
+   "shortName": "Wroclaw",
+   "countryName": "Poland",
+   "countryCode": "PL",
+   "connections": [
+    {
+     "iata": "AGP",
+     "operationStartDate": "2026-10-07T05:45:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "BBU",
+     "operationStartDate": "1900-01-01T00:00:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": true,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "BCN",
+     "operationStartDate": "2026-10-06T06:00:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "BIO",
+     "operationStartDate": "2026-12-02T06:00:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": true,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "BRI",
+     "operationStartDate": "2026-10-07T19:15:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "BSL",
+     "operationStartDate": "2026-10-07T14:00:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "BUD",
+     "operationStartDate": "2026-10-07T12:30:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "CTA",
+     "operationStartDate": "2026-10-09T19:45:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "DTM",
+     "operationStartDate": "2026-10-06T06:15:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "EIN",
+     "operationStartDate": "2026-10-08T14:50:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "NLM",
+     "operationStartDate": "2026-10-08T14:50:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "HRG",
+     "operationStartDate": "2026-10-25T14:20:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": true,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "KEF",
+     "operationStartDate": "2026-10-06T16:35:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "KUT",
+     "operationStartDate": "2026-10-07T15:55:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "LCA",
+     "operationStartDate": "2026-10-07T09:00:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "LPA",
+     "operationStartDate": "2026-10-26T13:45:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "LTN",
+     "operationStartDate": "2026-10-07T18:30:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "LON",
+     "operationStartDate": "2026-10-07T18:30:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "MAD",
+     "operationStartDate": "2026-10-09T05:30:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "NCE",
+     "operationStartDate": "2026-10-06T18:25:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "OHD",
+     "operationStartDate": "2027-06-06T06:00:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": true,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "OTP",
+     "operationStartDate": "1900-01-01T00:00:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": true,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "RMO",
+     "operationStartDate": "2026-10-08T13:25:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "SPU",
+     "operationStartDate": "2026-10-09T14:40:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "TGD",
+     "operationStartDate": "2026-10-06T10:10:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": true,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "TIA",
+     "operationStartDate": "2026-10-09T13:15:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": false,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "TRN",
+     "operationStartDate": "2027-01-16T07:15:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": true,
+     "isConnected": false,
+     "isDirectFlight": true
+    },
+    {
+     "iata": "VAR",
+     "operationStartDate": "2026-10-07T13:40:00",
+     "rescueEndDate": "2026-10-06T11:50:57.6339503+01:00",
+     "isDomestic": false,
+     "isNew": true,
+     "isConnected": false,
+     "isDirectFlight": true
+    }
+   ],
+   "aliases": [
+    "Wroclaw"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    1,
+    7,
+    9,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "BBU",
+   "mac": "BUH",
+   "longitude": 26.102222222222224,
+   "currencyCode": "RON",
+   "latitude": 44.50333333333333,
+   "shortName": "Bucharest Baneasa",
+   "countryName": "Romania",
+   "countryCode": "RO",
+   "connections": [],
+   "aliases": [
+    "Bucharest Baneasa"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [],
+   "isFakeStation": false
+  },
+  {
+   "iata": "OTP",
+   "mac": "BUH",
+   "longitude": 26.102222222222224,
+   "currencyCode": "RON",
+   "latitude": 44.57222222222222,
+   "shortName": "Bucharest Otopeni\r\n",
+   "countryName": "Romania",
+   "countryCode": "RO",
+   "connections": [],
+   "aliases": [
+    "Bucharest Otopeni\r\n"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    1,
+    7,
+    8,
+    9,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "BCN",
+   "mac": null,
+   "longitude": 2.0783333333333336,
+   "currencyCode": "EUR",
+   "latitude": 41.29694444444444,
+   "shortName": "Barcelona El Prat",
+   "countryName": "Spain",
+   "countryCode": "ES",
+   "connections": [],
+   "aliases": [
+    "Barcelona El Prat"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    1,
+    2,
+    5,
+    6,
+    8,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "BIO",
+   "mac": null,
+   "longitude": -2.9105555555555553,
+   "currencyCode": "EUR",
+   "latitude": 43.301111111111105,
+   "shortName": "Bilbao",
+   "countryName": "Spain",
+   "countryCode": "ES",
+   "connections": [],
+   "aliases": [
+    "Bilbao"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    0,
+    1,
+    6,
+    7
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "LPA",
+   "mac": null,
+   "longitude": -15.386666666666667,
+   "currencyCode": "EUR",
+   "latitude": 27.931944444444447,
+   "shortName": "Gran Canaria (Canary Islands)\r\n",
+   "countryName": "Spain",
+   "countryCode": "ES",
+   "connections": [],
+   "aliases": [
+    "Gran Canaria (Canary Islands)\r\n"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [],
+   "isFakeStation": false
+  },
+  {
+   "iata": "MAD",
+   "mac": null,
+   "longitude": -3.5666666666666664,
+   "currencyCode": "EUR",
+   "latitude": 40.493611111111115,
+   "shortName": "Madrid",
+   "countryName": "Spain",
+   "countryCode": "ES",
+   "connections": [],
+   "aliases": [
+    "Madrid"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    1,
+    2,
+    5,
+    8,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "AGP",
+   "mac": null,
+   "longitude": -4.4991666666666665,
+   "currencyCode": "EUR",
+   "latitude": 36.675,
+   "shortName": "Malaga",
+   "countryName": "Spain",
+   "countryCode": "ES",
+   "connections": [],
+   "aliases": [
+    "Malaga"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    1,
+    2,
+    6,
+    8,
+    0
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "BSL",
+   "mac": "BAS",
+   "longitude": 7.5216666666666665,
+   "currencyCode": "CHF",
+   "latitude": 47.60111111111111,
+   "shortName": "Basel-Mulhouse-Freiburg",
+   "countryName": "Switzerland",
+   "countryCode": "CH",
+   "connections": [],
+   "aliases": [
+    "Basel-Mulhouse-Freiburg"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    1,
+    3,
+    4,
+    0,
+    0,
+    1,
+    2,
+    3
+   ],
+   "isFakeStation": false
+  },
+  {
+   "iata": "LON",
+   "mac": "LON",
+   "longitude": -0.11805555555555555,
+   "currencyCode": "GBP",
+   "latitude": 51.51,
+   "shortName": "London (All Airports)",
+   "countryName": "United Kingdom",
+   "countryCode": "GB",
+   "connections": [],
+   "aliases": [
+    "London (All Airports)"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [],
+   "isFakeStation": true
+  },
+  {
+   "iata": "LTN",
+   "mac": "LON",
+   "longitude": -0.3683333333333333,
+   "currencyCode": "GBP",
+   "latitude": 51.874722222222225,
+   "shortName": "London Luton",
+   "countryName": "United Kingdom",
+   "countryCode": "GB",
+   "connections": [],
+   "aliases": [
+    "London Luton"
+   ],
+   "isExcludedFromGeoLocation": false,
+   "rank": 1,
+   "categories": [
+    1,
+    2,
+    5,
+    8,
+    0
+   ],
+   "isFakeStation": false
+  }
+ ]
+}

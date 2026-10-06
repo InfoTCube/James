@@ -17,6 +17,7 @@ from assistant.modules.alarm.routes import router as alarm_router
 from assistant.modules.birthdays.routes import router as birthdays_router
 from assistant.modules.calendar.routes import router as calendar_router
 from assistant.modules.events.routes import router as events_router
+from assistant.modules.flights.routes import router as flights_router
 from assistant.modules.jobs.routes import router as jobs_router
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.routes import router as mpk_router
@@ -33,6 +34,7 @@ app.include_router(birthdays_router)
 app.include_router(alarm_router)
 app.include_router(jobs_router)
 app.include_router(events_router)
+app.include_router(flights_router)
 
 # get the voice (~60 MB, once) ready before the first alarm needs it
 for _voice in (load_config().voice, load_config().voice_pl):

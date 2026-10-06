@@ -33,7 +33,7 @@ Most features are scheduled data fetching + filtering rules. **Default to determ
 | `news` | News digest | RSS feeds from config | Summary |
 | `biedronka` | Promotions on products the user actually buys | Biedronka website/leaflet (scraping) | Maybe for leaflet parsing |
 | `notes` | Store and search notes | Local (SQLite and/or Markdown files) | No |
-| `flights` | Good flight deals from WRO for configured date windows, checked ~2×/day | Ryanair fare endpoints (unofficial), others later | No |
+| `flights` | Good flight deals from WRO for date windows and prices set from Telegram, checked ~2×/day | Ryanair + Wizz Air fare endpoints (unofficial) | No |
 | `alarm` | Alarms, tied to a morning briefing | Scheduler + audio | No |
 | `music` | Play/find music | Spotify Connect (spotifyd/raspotify) + Spotify Web API | No |
 | `events` | Hackathons & IT events | Crossweb.pl, Meetup, Devpost, MLH | No — keyword filters |
@@ -119,7 +119,7 @@ Allowed AI uses: email summary, news summary, film/book selection, optional job 
 ## Conventions
 
 - All datetimes timezone-aware; store UTC, display `Europe/Warsaw`.
-- Configuration in `config/config.yaml`, validated with pydantic on startup; secrets only in `.env`.
+- Configuration in `config/config.yaml`, validated with pydantic on startup; secrets only in `.env`. Settings changed from Telegram (flight watches) live in the DB instead.
 - Place names: user refers to places by aliases (`home`, `uni`, `work`, `vb`) defined in `places` in config, mapped to GTFS stop **names** (stable across timetable versions, unlike IDs). Free text (calendar locations, later chat/voice) goes through `mpk.service.resolve()`: alias/keyword → stop name in text → fuzzy match. Compare text with `core.config.fold()` (case + Polish diacritics).
 - Calendar events without a location get one from `location_rules` in config (e.g. work → office only on office days). User-editable; later the bot may edit them.
 - Scrapers: identify with a sensible User-Agent, respect rate limits, cache responses, keep request frequency low. Isolate parsing so breakage is easy to fix, and cover it with fixture-based tests.
@@ -155,13 +155,13 @@ Work in this order. Keep each step small and working end-to-end before moving on
 - [x] `calendar` module: Google Calendar API (read + `add_event`), widget, feeds weather advice
 - [x] `mpk` module: GTFS import, departures for aliases, link with next calendar event + live delay estimates (transfers later)
 
-**Phase 2 — alerts** ← current
+**Phase 2 — alerts**
 - [x] Telegram bot + `core/notifier`: /next /today /weather /help, "leave now" alert 5 min before leave-by
 - [x] `jobs` (justjoin.it, nofluffjobs, pracuj.pl; keyword/seniority/place rules incl. hybrid office days, cross-board dedupe, best-fit ranking, /jobs, dashboard card with tap-to-Telegram)
 - [x] `events` (Meetup, Crossweb, Devpost, MLH; city/online-keyword/exclude rules, cross-site dedupe, /events, dashboard card with tap-to-Telegram)
-- [ ] `flights`
+- [x] `flights` (Ryanair + Wizz Air from WRO; watches set from Telegram: /flight_add /flights /flight_price /flight_del; alerts on new deals and 10% drops; dashboard deals card with tap-to-Telegram)
 
-**Phase 3 — voice & alarm**
+**Phase 3 — voice & alarm** ← current
 - [x] `alarm` + morning briefing (Telegram for now; sound + speech with voice)
 - [ ] `voice` service with intent matcher; AI fallback
 - [x] `notes` (Telegram /note /notes /note_del; voice later)

@@ -1,0 +1,19 @@
+<section class="widget flights{% if stale %} stale{% endif %}">
+  {% if rows %}
+  <h2>Flight deals · tap one to get its link on Telegram{% if stale %} <small class="badge">stale</small>{% endif %}</h2>
+  {% for id, price, where, details in rows %}
+  <button type="button" class="event"
+          hx-post="/api/flights/send/{{ id | urlencode }}" hx-target="find .sent" hx-swap="innerHTML">
+    <span class="when">{{ price }}</span>
+    <span>{{ where }}<small>{{ details }}</small><small class="sent" aria-live="polite"></small></span>
+  </button>
+  {% endfor %}
+  {% else %}
+  <h2>Flight deals · none yet{% if stale %} <small class="badge">stale</small>{% endif %}</h2>
+  {% for watch, status in waiting %}
+  <div class="event"><span class="when">✈</span><span>{{ watch }}<small>{{ status }}</small></span></div>
+  {% else %}
+  <div class="event"><span class="when">✈</span><span>No flight watches<small>Add one on Telegram: /flight_add any 1.11-30.11 2-4 300</small></span></div>
+  {% endfor %}
+  {% endif %}
+</section>

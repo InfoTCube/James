@@ -9,6 +9,7 @@ from assistant.modules.alarm import service as alarm
 from assistant.modules.birthdays import service as birthdays
 from assistant.modules.calendar import service as calendar
 from assistant.modules.events import service as events
+from assistant.modules.flights import service as flights
 from assistant.modules.jobs import service as jobs
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.alerts import format_connection
@@ -181,3 +182,57 @@ def reply_events(session: Session, now: datetime, config: Config, args: list[str
     if len(upcoming) > 20:
         shown.append(f"…and {len(upcoming) - 20} more")
     return "\n\n".join(shown)
+
+
+def reply_flight_add(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/flight_add any 1.11-30.11 2-4 300: watch for flights from WRO under a price."""
+    try:
+        w = flights.parse_watch(args, now.astimezone(config.tz).date())
+    except ValueError as e:
+        return f"{e}\n\n{flights.USAGE}"
+    session.add(w)
+    session.flush()  # assigns the id
+    return f"✈️ Watching {flights.describe(w)}\nFirst check within 15 minutes."
+
+
+def reply_flights(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/flights: watches with the 3 cheapest trips found for each (✅ = under the price)."""
+    watches = flights.watches(session)
+    if not watches:
+        return f"No flight watches.\n\n{flights.USAGE}"
+    parts = []
+    for w in watches:
+        lines = [flights.describe(w)]
+        if w.checked_at is None:
+            lines.append("not checked yet")
+        for f in flights.fares(session, w.id)[:3]:
+            lines.append(f"{'✅' if f.price <= w.max_price else '·'} {flights.format_fare(f)}")
+        if w.checked_at and len(lines) == 1:
+            lines.append("no flights found")
+        parts.append("\n".join(lines))
+    parts.append("Change a price: /flight_price 3 250 · delete: /flight_del 3")
+    return "\n\n".join(parts)
+
+
+def reply_flight_price(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/flight_price 3 250: new max price for watch #3."""
+    usage = "Usage: /flight_price 3 250 (watch number from /flights, price in PLN)"
+    if len(args) != 2 or not args[0].lstrip("#").isdigit():
+        return usage
+    w = flights.get_watch(session, int(args[0].lstrip("#")))
+    if w is None:
+        return "No such watch."
+    try:
+        w.max_price = flights.parse_price(args[1])
+    except ValueError:
+        return usage
+    w.checked_at = None  # check again soon: deals under the new price get sent
+    return f"✈️ Updated {flights.describe(w)}"
+
+
+def reply_flight_del(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/flight_del 3: stop watching #3."""
+    if not args or not args[0].lstrip("#").isdigit():
+        return "Usage: /flight_del 3 (numbers from /flights)"
+    w = flights.delete_watch(session, int(args[0].lstrip("#")))
+    return f"🗑️ Deleted {flights.describe(w)}" if w else "No such watch."

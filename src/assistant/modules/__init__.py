@@ -6,6 +6,7 @@ from assistant.modules.alarm.collector import AlarmPlanner, AlarmRinger
 from assistant.modules.birthdays.collector import BirthdayReminder
 from assistant.modules.calendar.collector import CalendarCollector
 from assistant.modules.events.collector import EventsCollector
+from assistant.modules.flights.collector import FlightsCollector
 from assistant.modules.jobs.collector import JobsCollector
 from assistant.modules.mpk.alerts import LeaveNowAlert
 from assistant.modules.mpk.collector import GeocodeCollector, MpkCollector
@@ -22,4 +23,5 @@ COLLECTORS: list[Collector] = [
     BirthdayReminder(),
     JobsCollector(),
     EventsCollector(),
+    FlightsCollector(),
 ]
