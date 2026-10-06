@@ -95,6 +95,14 @@ class EventsConfig(BaseModel):
     exclude: list[str] = []  # never with one of these in the title, kind or topics
 
 
+class NewsConfig(BaseModel):
+    """RSS/Atom feeds for the news digest (written by AI overnight, raw headlines without it)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    feeds: dict[str, str] = {}  # name → feed URL; empty = news off
+
+
 class Config(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -105,6 +113,7 @@ class Config(BaseModel):
     alarm: AlarmConfig = Field(default_factory=AlarmConfig)
     jobs: JobsConfig = Field(default_factory=JobsConfig)
     events: EventsConfig = Field(default_factory=EventsConfig)
+    news: NewsConfig = Field(default_factory=NewsConfig)
     voice: str = "en_GB-alan-medium"  # Piper voice for reading aloud (core/tts.py)
     voice_pl: str = "pl_PL-darkman-medium"  # ...and for Polish names in it
 

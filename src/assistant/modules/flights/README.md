@@ -17,7 +17,8 @@
     with the right number of nights is put together here. Days marked `checkPrice` have no price
     and are skipped.
 - **Schedule:** the collector runs every 15 min and checks each watch that hasn't been checked for
-  12 h (so twice a day), or at once when new or repriced.
+  12 h (so twice a day), or at once when new or repriced. Only 07:00–22:00 (`DAY`), so alerts
+  never come at night: a check due at night waits until 07:00.
 - **Stored:** `flights_fares`, the cheapest trip per watch, airline and destination at the last
   check (above the price too, for `/flights`). A failing airline keeps its previous fares.
 - **Alerts:** one Telegram message per run with the deals: under the watch's price and not sent

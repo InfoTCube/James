@@ -67,3 +67,15 @@ events:
   online: true
   keywords: [.net, c#]
   exclude: [hr, ux, lean, marketing, sales]
+
+# News (RSS or Atom feeds), fetched hourly. Overnight, AI writes a Polish digest of the last
+# 24 h's headlines (dashboard, /news, top points in the morning briefing); without AI you get the
+# raw headlines. Names show next to headlines. Empty `feeds` turns news off.
+news:
+  feeds:
+    Wrocław: https://www.tuwroclaw.com/rss/wiadomosci.xml
+    Wieluń: https://info.wielun.pl/feed/
+    Poland: https://www.polsatnews.pl/rss/wszystkie.xml
+    World: https://feeds.bbci.co.uk/news/world/rss.xml
+    Hacker News: https://hnrss.org/frontpage
+    .NET: https://devblogs.microsoft.com/dotnet/feed/

@@ -11,7 +11,7 @@ The user interacts with it through:
 - a **Telegram bot** (alerts and quick commands when away from home),
 - **voice** (later phase: wake word → speech-to-text → intent → text-to-speech).
 
-UI and voice language: **English**. Data sources are often Polish (stop names, shop products, job boards) — handle Polish characters and diacritics correctly everywhere.
+UI and voice language: **English**, except the news digest, which is in Polish (read by the Polish voice). Data sources are often Polish (stop names, shop products, job boards) — handle Polish characters and diacritics correctly everywhere.
 
 ## Core principle: plain code first, AI last
 
@@ -30,7 +30,7 @@ Most features are scheduled data fetching + filtering rules. **Default to determ
 | `films` | Weekly film suggestions | TMDB API (incl. PL streaming availability) | Selection |
 | `books` | Monthly book suggestions | Open Library / Google Books | Selection |
 | `sports` | Football/volleyball matches for chosen teams/leagues + scores | api-sports.io (free tiers) | No |
-| `news` | News digest | RSS feeds from config | Summary |
+| `news` | News digest (written overnight; raw headlines without AI) | RSS/Atom feeds from config | Summary |
 | `biedronka` | Promotions on products the user actually buys | Biedronka website/leaflet (scraping) | Maybe for leaflet parsing |
 | `notes` | Store and search notes | Local (SQLite and/or Markdown files) | No |
 | `flights` | Good flight deals from WRO for date windows and prices set from Telegram, checked ~2×/day | Ryanair + Wizz Air fare endpoints (unofficial) | No |
@@ -170,7 +170,8 @@ Work in this order. Keep each step small and working end-to-end before moving on
 
 **Phase 4 — AI-assisted & the rest**
 - [x] `core/ai.py` wrapper
-- [ ] `email`, `news`, `films`, `books`
+- [x] `news` (RSS/Atom hourly; AI digest overnight; dashboard card, /news, top 3 in the morning briefing)
+- [ ] `email`, `films`, `books`
 - [x] `birthdays`
 - [ ] `sports`, `biedronka`, `music`
 

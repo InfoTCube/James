@@ -10,6 +10,7 @@ from assistant.modules.flights.collector import FlightsCollector
 from assistant.modules.jobs.collector import JobsCollector
 from assistant.modules.mpk.alerts import LeaveNowAlert
 from assistant.modules.mpk.collector import GeocodeCollector, MpkCollector
+from assistant.modules.news.collector import NewsCollector, NewsDigestCollector
 from assistant.modules.weather.collector import WeatherCollector
 
 COLLECTORS: list[Collector] = [
@@ -24,4 +25,6 @@ COLLECTORS: list[Collector] = [
     JobsCollector(),
     EventsCollector(),
     FlightsCollector(),
+    NewsCollector(),
+    NewsDigestCollector(),
 ]

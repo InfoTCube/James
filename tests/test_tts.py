@@ -25,3 +25,21 @@ def test_possessive_and_abbreviations():
     assert split("Mateusz's birthday tomorrow") == [("Mateusz", "pl"), ("birthday tomorrow", "en")]
     assert split("It's 07:00") == [("It's 07:00", "en")]
     assert _for_polish_voice("PL. GRUNWALDZKI ") == "plac grunwaldzki "
+
+
+def test_polish_sentences_are_read_whole_by_the_polish_voice():
+    from assistant.core.tts import is_polish_sentence
+
+    polish = [
+        "Pięć ofert w przetargu na autobusy w gminie Wieluń.",
+        "Rosja grozi sąsiadowi Polski, mówi o kolejnej eskalacji napięć.",
+        "W Wieluniu powstanie nowy supermarket przy ulicy Wojska Polskiego.",
+    ]
+    english = [
+        "Mateusz's birthday tomorrow",  # short: names only, voices switch per word
+        "🚋 16 → OSOBOWICE from Kościuszki at 20:47 (arrives most Grunwaldzki 20:53)",
+        "Leave by 08:15 for Wroc.NET meetup at Wędrówki Pub on Podwale",
+        "Light jacket, rain tomorrow, 12 degrees in the afternoon",
+    ]
+    assert [is_polish_sentence(t, LEXICON) for t in polish] == [True] * 3
+    assert [is_polish_sentence(t, LEXICON) for t in english] == [False] * 4

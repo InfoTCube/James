@@ -22,6 +22,7 @@ log = logging.getLogger(__name__)
 ORIGIN = "WRO"
 HEADERS = {"User-Agent": "Mozilla/5.0 (personal home assistant; a few requests a day)"}
 EVERY = timedelta(hours=12)  # each watch is checked twice a day
+DAY = (7, 22)  # local hours when watches are checked (and alerts sent)
 DROP = 0.9  # a deal already sent is sent again when it gets 10% cheaper
 TELEGRAM_MAX = 4096
 WIZZ_MAX_DAYS = 42  # the timetable refuses longer ranges
@@ -243,14 +244,18 @@ def update_fares(
 
 
 class FlightsCollector:
-    """Checks each watch every 12 h; a new or repriced watch (checked_at None) within 15 min."""
+    """Checks each watch every 12 h; a new or repriced watch (checked_at None) within 15 min.
+    Only in the daytime (DAY), so alerts don't wake you: a check due at night waits."""
 
     name = "flights"
     schedule = IntervalTrigger(minutes=15)
 
     def run(self, session: Session) -> None:
         tz, now = load_config().tz, utcnow()
-        today = now.astimezone(tz).date()
+        local = now.astimezone(tz)
+        if not DAY[0] <= local.hour < DAY[1]:  # also guards the run at worker start
+            return
+        today = local.date()
         watches = service.watches(session)
         over = [w for w in watches if last_out(w) < today]
         due = [

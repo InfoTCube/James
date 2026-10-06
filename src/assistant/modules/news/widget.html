@@ -1,0 +1,18 @@
+<section class="widget news{% if stale %} stale{% endif %}">
+  {% if points %}
+  <h2>News · today's digest{% if stale %} <small class="badge">stale</small>{% endif %}</h2>
+  <ul class="digest">
+    {% for point in points %}<li>{{ point }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+  {% if rows %}
+  <h2>{% if points %}Latest{% else %}News · latest headlines{% if stale %} <small class="badge">stale</small>{% endif %}{% endif %} · tap one to get its link on Telegram</h2>
+  {% for id, when, title, feed in rows %}
+  <button type="button" class="event"
+          hx-post="/api/news/send/{{ id }}" hx-target="find .sent" hx-swap="innerHTML">
+    <span class="when">{{ when }}</span>
+    <span>{{ title }}<small>{{ feed }}</small><small class="sent" aria-live="polite"></small></span>
+  </button>
+  {% endfor %}
+  {% endif %}
+</section>

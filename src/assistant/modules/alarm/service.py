@@ -14,6 +14,7 @@ from assistant.modules.birthdays import service as birthdays
 from assistant.modules.calendar import service as calendar
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.alerts import format_connection
+from assistant.modules.news import service as news
 from assistant.modules.weather import service as weather
 
 RING_GRACE = timedelta(minutes=10)  # still ring this late (e.g. after a worker restart)
@@ -146,7 +147,8 @@ def plan_auto_alarm(session: Session, day: date, config: Config) -> Alarm | None
 
 
 def briefing(session: Session, now: datetime, config: Config) -> str:
-    """Good-morning summary: weather and what to wear, when to leave, today's events."""
+    """Good-morning summary: weather and what to wear, when to leave, today's events, and the
+    top news from the overnight digest."""
     tz = config.tz
     local = now.astimezone(tz)
     greeting = "morning" if local.hour < 12 else "afternoon" if local.hour < 18 else "evening"
@@ -186,4 +188,9 @@ def briefing(session: Session, now: datetime, config: Config) -> str:
             lines.append(f"  {when} {e.title}" + (f" · {e.location}" if e.location else ""))
     else:
         lines.append("📅 Nothing in the calendar today.")
+
+    top = news.briefing_lines(session, today)
+    if top:
+        lines.append("📰 News:")
+        lines += [f"  {point}" for point in top]
     return "\n".join(lines)

@@ -151,10 +151,10 @@ def test_alerts_deals_once_and_on_a_real_drop(db):
     db.run(Ryanair=[fare(), fare(destination="BCN", city="Barcelona", price=420.0)])
     assert len(db.sent) == 1 and db.sent[0].startswith("✈️ 1 flight deal\n\n131 zł Gdansk (GDN)")
     db.run(Ryanair=[fare(price=125.0)])  # not due yet (checked < 12 h ago)
-    later = NOW + timedelta(hours=12)
+    later = NOW + timedelta(days=1)  # due again, in the daytime
     db.run(later, Ryanair=[fare(price=125.0)])  # 5% cheaper: not worth a message
     assert len(db.sent) == 1
-    db.run(later + timedelta(hours=12), Ryanair=[fare(price=110.0)])  # >10% cheaper
+    db.run(later + timedelta(days=1), Ryanair=[fare(price=110.0)])  # >10% cheaper
     assert len(db.sent) == 2 and "110 zł" in db.sent[1]
     with Session(db.engine) as s:
         assert [(f.destination, f.price) for f in service.fares(s, 1)] == [("GDN", 110.0)]
@@ -184,7 +184,7 @@ def test_destinations_filter_and_failing_airline(db):
     assert db.sent[0] == "⚠️ Flights: Ryanair failed: ValueError: blocked"
     assert "London Luton (LTN) · Wizz Air" in db.sent[1] and "GDN" not in db.sent[1]
     with pytest.raises(RuntimeError):
-        db.run(NOW + timedelta(hours=12), Ryanair=ValueError("x"), **{"Wizz Air": ValueError("y")})
+        db.run(NOW + timedelta(days=1), Ryanair=ValueError("x"), **{"Wizz Air": ValueError("y")})
 
 
 def test_watch_over_is_removed(db):
@@ -257,3 +257,12 @@ def test_widget_without_deals_says_why(tmp_path, monkeypatch):
     html = client.get("/widgets/flights").text
     assert "checking within 15 minutes" in html
     assert "nothing under the price; cheapest 420 zł Barcelona" in html
+
+
+def test_no_checks_at_night(db):
+    add(db, "any", "1.11-30.11", "2-4", "300")
+    night = datetime(2026, 10, 6, 21, 30, tzinfo=UTC)  # 23:30 in Warsaw
+    db.run(night, Ryanair=[fare()])
+    assert db.sent == []
+    db.run(night + timedelta(hours=8), Ryanair=[fare()])  # 07:30: the waiting check runs
+    assert db.sent[0].startswith("✈️ 1 flight deal")

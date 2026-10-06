@@ -72,14 +72,36 @@ POLISH_SPELLING = re.compile(
 )
 # words of our own English sentences that the checks above would misread as Polish
 ENGLISH = {"tomorrow", "arrives", "overcast", "showers", "drizzle", "degrees", "birthday"}
+# short Polish words the spelling checks miss (none of them English words)
+POLISH_WORDS = {"w", "we", "na", "z", "ze", "od", "po", "dla", "przez", "oraz", "jest", "są",
+                "nie", "się", "że", "już", "czy", "jak", "ma", "będzie", "został"}  # fmt: skip
 ABBREVIATIONS = {"pl": "plac", "ul": "ulica", "al": "aleja", "os": "osiedle"}
+ENGLISH_GLUE = {"the", "a", "an", "and", "of", "in", "on", "at", "to", "for", "from", "by",
+                "with", "is", "are", "it", "your", "you"}  # fmt: skip
+# a line this long and at least this Polish is a Polish sentence (e.g. a Polish news digest):
+# read whole by the Polish voice instead of switching voices word by word
+SENTENCE_WORDS, SENTENCE_SHARE = 6, 0.5
 
 
 def is_polish(word: str, lexicon: set[str]) -> bool:
     w = word.lower()
     if not w.isalpha() or w in ENGLISH:
         return False
-    return bool(POLISH_LETTERS & set(w)) or fold(w) in lexicon or bool(POLISH_SPELLING.search(w))
+    return (
+        w in POLISH_WORDS
+        or bool(POLISH_LETTERS & set(w))
+        or fold(w) in lexicon
+        or bool(POLISH_SPELLING.search(w))
+    )
+
+
+def is_polish_sentence(text: str, lexicon: set[str]) -> bool:
+    """Long, mostly Polish, and no English function words (our lines with stop names have them:
+    "OSOBOWICE from Kościuszki at 20:47")."""
+    words = [w for w in re.findall(r"\w+", text) if w.isalpha()]
+    if len(words) < SENTENCE_WORDS or any(w.lower() in ENGLISH_GLUE for w in words):
+        return False
+    return sum(is_polish(w, lexicon) for w in words) >= SENTENCE_SHARE * len(words)
 
 
 def split_languages(text: str, lexicon: set[str]) -> list[tuple[str, bool]]:
@@ -107,7 +129,10 @@ def _for_polish_voice(chunk: str) -> str:
 
 
 def synthesize_mixed(text: str, voice: str, polish_voice: str, lexicon: set[str]) -> bytes:
-    """Like synthesize(), with the Polish words read by `polish_voice`."""
+    """Like synthesize(), with the Polish words read by `polish_voice` (a whole Polish sentence
+    by it alone)."""
+    if is_polish_sentence(text, lexicon):
+        return synthesize(_for_polish_voice(text), polish_voice)
     chunks = [(c, pl) for c, pl in split_languages(text, lexicon) if any(ch.isalnum() for ch in c)]
     if not any(pl for _, pl in chunks):
         return synthesize(text, voice)

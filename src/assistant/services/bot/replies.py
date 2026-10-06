@@ -13,6 +13,7 @@ from assistant.modules.flights import service as flights
 from assistant.modules.jobs import service as jobs
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.alerts import format_connection
+from assistant.modules.news import service as news
 from assistant.modules.notes import service as notes
 from assistant.modules.weather import service as weather
 
@@ -182,6 +183,22 @@ def reply_events(session: Session, now: datetime, config: Config, args: list[str
     if len(upcoming) > 20:
         shown.append(f"…and {len(upcoming) - 20} more")
     return "\n\n".join(shown)
+
+
+def reply_news(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/news: today's digest (made overnight) and the latest headlines with links; just the
+    headlines without a digest."""
+    if not config.news.feeds:
+        return "News is off: add feeds under news.feeds in config.yaml."
+    parts = []
+    d = news.digest(session, now.astimezone(config.tz).date())
+    if d:
+        parts.append("📰 Today's digest\n" + "\n".join(f"• {p}" for p in news.bullets(d)))
+    latest = news.latest(session, now)
+    if latest:
+        parts.append("Latest:" if d else "📰 Latest headlines (no digest yet):")
+        parts += [f"{i.title} ({i.feed})\n{i.link}" for i in latest]
+    return "\n\n".join(parts) or "No news yet: the first fetch is within the hour."
 
 
 def reply_flight_add(session: Session, now: datetime, config: Config, args: list[str]) -> str:

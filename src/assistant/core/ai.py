@@ -34,7 +34,7 @@ from assistant.core.db import AiCall, get_engine, utcnow
 log = logging.getLogger(__name__)
 
 SYSTEM = "You process data for a personal home assistant. Use only the input you are given."
-TIMEOUT = 180  # seconds
+TIMEOUT = 300  # seconds; the news digest (~70 headlines) took 100 s on Haiku
 # ponytail: a global cap so a bug can't drain the Pro quota shared with the user's own use;
 # per-module budgets if one module ever crowds out the others
 MAX_CALLS_PER_DAY = 30
