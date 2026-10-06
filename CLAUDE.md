@@ -36,7 +36,7 @@ Most features are scheduled data fetching + filtering rules. **Default to determ
 | `flights` | Good flight deals from WRO for date windows and prices set from Telegram, checked ~2×/day | Ryanair + Wizz Air fare endpoints (unofficial) | No |
 | `alarm` | Alarms, tied to a morning briefing | Scheduler + audio | No |
 | `music` | Play/find music | Spotify Connect (spotifyd/raspotify) + Spotify Web API | No |
-| `events` | Hackathons & IT events | Crossweb.pl, Meetup, Devpost, MLH | No — keyword filters |
+| `events` | Hackathons & IT events (in your cities; online ones by keyword, no online hackathons) | Crossweb.pl, Meetup | No — keyword filters |
 
 Cross-cutting: **morning briefing** (spoken/displayed summary after alarm), **Telegram alerts** (flights, jobs, events, "leave now for your tram"), **settings** in config files.
 
@@ -112,7 +112,9 @@ The wrapper must:
 - cache results so the same input isn't sent twice,
 - log each call (module, duration, success) so usage can be monitored.
 
-Auth: `CLAUDE_CODE_OAUTH_TOKEN` environment variable (generated once with `claude setup-token`). The `worker` container needs the Claude Code CLI installed.
+Auth: `CLAUDE_CODE_OAUTH_TOKEN` environment variable (generated once with `claude setup-token`). The Docker image installs the Claude Code CLI.
+
+Usage: `ai.ask(module, prompt, data, model="haiku")` → answer text or `None`. **Claude is only called 01:00–06:00 local time** (`ai.NIGHT`), so AI work doesn't use the Pro quota while the user does: schedule AI collectors in that window, and make them retry next night if they got `None` (the worker also runs every collector at startup, often in the daytime). Only what can't wait (voice fallback) passes `anytime=True`. Call it before writing in your collector's transaction (it records the call in its own). Calls are logged in the `ai_calls` table (also the cache); at most `MAX_CALLS_PER_DAY` (30) real calls per day. The CLI flags (no tools/MCP/settings, one-line system prompt) keep overhead ~600 input tokens per call; `--bare` can't be used because it ignores OAuth.
 
 Allowed AI uses: email summary, news summary, film/book selection, optional job ranking, optional leaflet parsing, voice fallback for requests the intent matcher doesn't understand. Anything else: ask first. The Pro quota is shared with the user's normal Claude usage — keep calls few and batched (daily/weekly jobs, not per-item loops).
 
@@ -158,7 +160,7 @@ Work in this order. Keep each step small and working end-to-end before moving on
 **Phase 2 — alerts**
 - [x] Telegram bot + `core/notifier`: /next /today /weather /help, "leave now" alert 5 min before leave-by
 - [x] `jobs` (justjoin.it, nofluffjobs, pracuj.pl; keyword/seniority/place rules incl. hybrid office days, cross-board dedupe, best-fit ranking, /jobs, dashboard card with tap-to-Telegram)
-- [x] `events` (Meetup, Crossweb, Devpost, MLH; city/online-keyword/exclude rules, cross-site dedupe, /events, dashboard card with tap-to-Telegram)
+- [x] `events` (Meetup, Crossweb; city/online-keyword/exclude rules, no online hackathons, cross-site dedupe, /events, dashboard card with tap-to-Telegram)
 - [x] `flights` (Ryanair + Wizz Air from WRO; watches set from Telegram: /flight_add /flights /flight_price /flight_del; alerts on new deals and 10% drops; dashboard deals card with tap-to-Telegram)
 
 **Phase 3 — voice & alarm** ← current
@@ -167,7 +169,7 @@ Work in this order. Keep each step small and working end-to-end before moving on
 - [x] `notes` (Telegram /note /notes /note_del; voice later)
 
 **Phase 4 — AI-assisted & the rest**
-- [ ] `core/ai.py` wrapper
+- [x] `core/ai.py` wrapper
 - [ ] `email`, `news`, `films`, `books`
 - [x] `birthdays`
 - [ ] `sports`, `biedronka`, `music`

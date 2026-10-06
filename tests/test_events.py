@@ -1,4 +1,3 @@
-import json
 from datetime import UTC, date, datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -16,7 +15,7 @@ FIXTURES = Path(__file__).parent / "fixtures" / "events"
 NOW = datetime(2026, 10, 6, 10, tzinfo=UTC)
 TODAY = date(2026, 10, 6)
 TZ = ZoneInfo("Europe/Warsaw")
-CFG = EventsConfig(cities=["Wrocław"], keywords=[".net", "hackathon"], exclude=["hr", "startup"])
+CFG = EventsConfig(cities=["Wrocław"], keywords=[".net"], exclude=["hr", "startup"])
 
 
 def load(name: str) -> str:
@@ -66,41 +65,6 @@ def test_parse_meetup():
         collector.parse_meetup("<html>blocked</html>", TZ)
 
 
-def test_parse_devpost():
-    events = collector.parse_devpost(json.loads(load("devpost.json")))
-    assert len(events) == 40
-    e = events[0]
-    assert (e.title, e.kind, e.online, e.city) == (
-        "Build, Ship, Shape: Amazon Developer Hackathon", "hackathon", True, ""
-    )  # fmt: skip
-    assert (e.starts, e.ends) == (date(2026, 8, 31), date(2026, 10, 23))
-    assert e.topics.startswith("Machine Learning/AI, Open Ended")
-    assert any(not e.online and e.city for e in events)  # in person somewhere
-
-
-def test_devpost_days():
-    days = collector.devpost_days
-    assert days("Oct 06 - 12, 2026") == (date(2026, 10, 6), date(2026, 10, 12))
-    assert days("Dec 31, 2026") == (date(2026, 12, 31), date(2026, 12, 31))
-    assert days("Dec 15 - Jan 10, 2027") == (date(2026, 12, 15), date(2027, 1, 10))
-    assert days("Dec 15, 2026 - Jan 10, 2027") == (date(2026, 12, 15), date(2027, 1, 10))
-
-
-def test_parse_mlh():
-    events = collector.parse_mlh(load("mlh.html"), TZ)
-    e = events[0]
-    assert (e.id, e.title, e.city, e.online) == (
-        "mlh:hacknc-0e", "HackNC", "Chapel Hill, North Carolina", False
-    )  # fmt: skip
-    assert (e.starts, e.ends, e.url) == (
-        date(2026, 10, 9),
-        date(2026, 10, 11),
-        "https://hacknc.com/",
-    )
-    with pytest.raises(ValueError):
-        collector.parse_mlh("<html></html>", TZ)
-
-
 def test_matches():
     assert service.matches(event(title="Wrocław Data Community", topics="IT, bazy danych"), CFG)
     assert service.matches(event(city="Wroclaw"), CFG)  # diacritics ignored
@@ -108,7 +72,9 @@ def test_matches():
     assert not service.matches(event(city="Warszawa", topics="IT, Java"), CFG)
     online = dict(city="", online=True)
     assert service.matches(event(**online), CFG)  # .NET in topics
-    assert service.matches(event(**online, title="GrowUp", kind="hackathon", topics="IT"), CFG)
+    hack = dict(title="GrowUp", kind="hackathon", topics="IT, .NET")
+    assert not service.matches(event(**online, **hack), CFG)  # no online hackathons
+    assert service.matches(event(**hack, online=True), CFG)  # ...unless also in Wrocław
     assert not service.matches(event(**online, title="AI Book Club", topics="AI/ML"), CFG)
     assert not service.matches(event(**online), CFG.model_copy(update={"online": False}))
 

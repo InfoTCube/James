@@ -57,6 +57,20 @@ class SentNotification(Base):
     sent_at: Mapped[datetime] = mapped_column(UTCDateTime)
 
 
+class AiCall(Base):
+    """Every call to Claude through core/ai.py: usage monitoring, and the cache (by `key`)."""
+
+    __tablename__ = "ai_calls"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    module: Mapped[str] = mapped_column(String(50), index=True)
+    key: Mapped[str] = mapped_column(String(64), index=True)  # sha256 of prompt + data + model
+    started_at: Mapped[datetime] = mapped_column(UTCDateTime, index=True)
+    seconds: Mapped[float]
+    result: Mapped[str | None] = mapped_column(Text)  # None: failed
+    error: Mapped[str | None] = mapped_column(Text)
+
+
 def make_engine(path: Path) -> Engine:
     """Create an engine with WAL + foreign keys, and create all tables."""
     path.parent.mkdir(parents=True, exist_ok=True)

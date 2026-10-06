@@ -58,12 +58,12 @@ jobs:
   max_office_days: 1
   remote: true
 
-# IT events and hackathons (Meetup, Crossweb, Devpost, MLH), checked daily; new matches go to
-# Telegram. Every event in one of `cities` matches; online ones only with a `keywords` word in the
-# title, kind (meetup, conference, hackathon, webinar...) or topics. Nothing with an `exclude` word.
-# Use Polish city names. Empty `cities` and `online: false` turns events off.
+# IT events and hackathons (Meetup, Crossweb), checked daily; new matches go to Telegram.
+# Every event in one of `cities` matches (hackathons too); online ones only with a `keywords` word
+# in the title, kind (meetup, conference, webinar...) or topics, and never online-only hackathons.
+# Nothing with an `exclude` word. Use Polish city names. Empty `cities` and `online: false` = off.
 events:
   cities: [Wrocław]
   online: true
-  keywords: [.net, c#, hackathon]
-  exclude: [hr, startup, ux, lean, marketing, sales]
+  keywords: [.net, c#]
+  exclude: [hr, ux, lean, marketing, sales]

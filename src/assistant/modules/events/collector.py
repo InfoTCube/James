@@ -107,68 +107,6 @@ def parse_meetup(html: str, tz: ZoneInfo) -> list[Event]:
     return events
 
 
-def devpost_days(s: str) -> tuple[date, date]:
-    """ "Aug 31 - Oct 23, 2026", "Oct 06 - 12, 2026", "Dec 31, 2026", "Dec 15, 2026 - Jan 10,
-    2027" → (first, last day)."""
-    left, _, right = s.partition(" - ")
-    right = right or left
-    if right[0].isdigit():  # "12, 2026": same month as the start
-        right = f"{left[:3]} {right}"
-    end = datetime.strptime(right, "%b %d, %Y").date()
-    start = datetime.strptime(left if "," in left else f"{left}, {end.year}", "%b %d, %Y").date()
-    return (start.replace(year=start.year - 1) if start > end else start), end
-
-
-def parse_devpost(data: dict) -> list[Event]:
-    events = []
-    for h in data["hackathons"]:
-        place = h["displayed_location"]
-        starts, ends = devpost_days(h["submission_period_dates"])
-        online = place["icon"] == "globe" or "online" in fold(place["location"])
-        events.append(
-            Event(
-                id=f"devpost:{h['id']}",
-                source="devpost",
-                title=h["title"].strip(),
-                url=h["url"],
-                kind="hackathon",
-                topics=", ".join(t["name"] for t in h["themes"]),
-                city="" if place["icon"] == "globe" else place["location"].strip(),
-                online=online,
-                starts=starts,
-                ends=ends,
-                at=None,  # dates only
-                free=None,
-            )
-        )
-    return events
-
-
-def parse_mlh(html: str, tz: ZoneInfo) -> list[Event]:
-    m = re.search(r'<script data-page="app" type="application/json">(.*?)</script>', html, re.S)
-    if not m:
-        raise ValueError("mlh: no page data (layout changed?)")
-    events = []
-    for e in json.loads(m[1])["props"]["upcomingEvents"]:
-        events.append(
-            Event(
-                id=f"mlh:{e['slug']}",
-                source="mlh",
-                title=e["name"],
-                url=e["websiteUrl"] or f"https://www.mlh.com{e['url']}",
-                kind="hackathon",
-                topics="",
-                city=(e["location"] or "").strip(),
-                online="physical" not in e["formatType"],  # "hybrid_physical" is in person
-                starts=datetime.fromisoformat(e["startsAt"]).astimezone(tz).date(),
-                ends=datetime.fromisoformat(e["endsAt"]).astimezone(tz).date(),
-                at=None,  # startsAt times are placeholders ("01:11:11")
-                free=None,
-            )
-        )
-    return events
-
-
 # --- fetchers ---
 
 
@@ -196,38 +134,18 @@ def fetch_crossweb(cfg: EventsConfig, today: date, tz: ZoneInfo) -> list[Event]:
     ]
 
 
-def fetch_devpost(cfg: EventsConfig, today: date, tz: ZoneInfo) -> list[Event]:
-    events = []
-    for page in range(1, 11):  # ~175 open + upcoming, 40 a page
-        data = get(
-            "https://devpost.com/api/hackathons",
-            **{"status[]": ["upcoming", "open"], "per_page": 40, "page": page},
-        ).json()
-        events += parse_devpost(data)
-        if len(data["hackathons"]) < 40:
-            break
-    return events
-
-
-def fetch_mlh(cfg: EventsConfig, today: date, tz: ZoneInfo) -> list[Event]:
-    season = today.year + (today.month >= 7)  # the 2027 season starts in summer 2026
-    return parse_mlh(get(f"https://www.mlh.com/seasons/{season}/events").text, tz)
-
-
 Fetch = Callable[[EventsConfig, date, ZoneInfo], list[Event]]
 # order matters: of an event on several sites, the first one's entry is kept (Meetup has times)
 SOURCES: dict[str, tuple[str, Fetch]] = {
     "meetup": ("Meetup", fetch_meetup),
     "crossweb": ("Crossweb", fetch_crossweb),
-    "devpost": ("Devpost", fetch_devpost),
-    "mlh": ("MLH", fetch_mlh),
 }
 
 
 def save_new(session: Session, events: list[Event], cfg: EventsConfig, today: date) -> list[Event]:
     """Store matching events not started yet and not seen before, on any site (by dedupe key);
     return them. Duplicates aren't stored: the first site's entry stands for the event.
-    Already running when first seen (Devpost lists hackathons open for months) = too late."""
+    Already running when first seen = too late."""
     now, new, seen = utcnow(), [], set()
     for e in events:
         if e.starts < today or not service.matches(e, cfg):

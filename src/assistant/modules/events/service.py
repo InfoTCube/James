@@ -17,12 +17,18 @@ def in_cities(event: Event, cfg: EventsConfig) -> bool:
 
 def matches(event: Event, cfg: EventsConfig) -> bool:
     """True if the event is worth an alert under `cfg`: in one of `cities`, or online with one
-    of `keywords`; never with an `exclude` word (see the events section in config.yaml)."""
+    of `keywords` (but no online hackathons); never with an `exclude` word (see the events
+    section in config.yaml)."""
     about = f"{event.title} {event.kind} {event.topics}"
     if any(has_word(about, x) for x in cfg.exclude):
         return False
-    return in_cities(event, cfg) or (
-        cfg.online and event.online and any(has_word(about, k) for k in cfg.keywords)
+    if in_cities(event, cfg):
+        return True
+    return (
+        cfg.online
+        and event.online
+        and event.kind != "hackathon"  # the user doesn't want online-only ones
+        and any(has_word(about, k) for k in cfg.keywords)
     )
 
 
