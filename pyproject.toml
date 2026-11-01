@@ -9,11 +9,13 @@ dependencies = [
     "faster-whisper>=1.2.1",
     "httpx>=0.28.1",
     "jinja2>=3.1.6",
+    "opencv-python-headless>=4.5",
     "openwakeword>=0.6",
     "piper-tts>=1.8.0",
     "pydantic>=2.13.5",
     "python-telegram-bot>=22.8",
     "pyyaml>=6.0.3",
+    "rapidocr-onnxruntime>=1.4",
     "sounddevice>=0.5.6",
     "sqlalchemy>=2.1.1",
     "tzdata>=2026.4",
@@ -42,4 +44,5 @@ dev = [
 
 [tool.uv]
 # openwakeword wants tflite-runtime on Linux, which has no Python 3.12 wheels; we use its ONNX backend
-exclude-dependencies = ["tflite-runtime"]
+# rapidocr wants opencv-python, which needs a display library; we use the headless build instead
+exclude-dependencies = ["tflite-runtime", "opencv-python"]

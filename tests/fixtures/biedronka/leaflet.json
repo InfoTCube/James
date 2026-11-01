@@ -1,0 +1,26 @@
+{
+ "images_desktop": [
+  {
+   "page": 0,
+   "images": [
+    "",
+    "https://images.biedronka.cloud/api/v1/cdn-cgi/r2/leaflet-prod/images/2026_ROK/2026_FOOD/2026_FOOD_T45/2026_FOOD_T45A/2026_FOOD_T45A_PODSTAWA/2026_FOOD_T45_A_PODSTAWA_P01_ikxe56xchd.png"
+   ]
+  },
+  {
+   "page": 1,
+   "images": [
+    "https://images.biedronka.cloud/api/v1/cdn-cgi/r2/leaflet-prod/images/2026_ROK/2026_FOOD/2026_FOOD_T45/2026_FOOD_T45A/T44A_Folder_INS_169x275_ONLINE_WYPRZEDAZ_INOUT.png",
+    "https://images.biedronka.cloud/api/v1/cdn-cgi/r2/leaflet-prod/images/2026_ROK/2026_FOOD/2026_FOOD_T45/2026_FOOD_T45A/T45A_Folder_INS_169x275_ONLINE-_MLEKO.png"
+   ]
+  },
+  {
+   "page": 2,
+   "images": [
+    "https://images.biedronka.cloud/api/v1/cdn-cgi/r2/leaflet-prod/images/2026_ROK/2026_FOOD/2026_FOOD_T45/2026_FOOD_T45A/2026_FOOD_T45A_LADA/2026_FOOD_T45_A_LADA_P02_ikxe56xchd.png",
+    "https://images.biedronka.cloud/api/v1/cdn-cgi/r2/leaflet-prod/images/2026_ROK/2026_FOOD/2026_FOOD_T45/2026_FOOD_T45A/2026_FOOD_T45A_LADA/2026_FOOD_T45_A_LADA_P03_ikxe56xchd.png"
+   ]
+  }
+ ],
+ "format": "rectangle"
+}
