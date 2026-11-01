@@ -25,10 +25,14 @@ def format_connection(c: service.Connection, tz: ZoneInfo) -> str:
     elif c.delay_min == 0:
         live = " (on time)"
     arrival = ("~" if c.delay_min else "") + f"{c.expected_arrival.astimezone(tz):%H:%M}"
-    return (
+    text = (
         f"{icon} {c.line} → {c.headsign} from {c.from_stop} at "
         f"{c.departs.astimezone(tz):%H:%M}{live} (arrives {c.to_stop} {arrival})"
     )
+    if c.then:
+        risk = " ⚠️ may miss the change" if c.misses_transfer else ""
+        text += f", then {format_connection(c.then, tz)}{risk}"
+    return text
 
 
 def effective_leave_by(trip: service.Trip) -> datetime | None:

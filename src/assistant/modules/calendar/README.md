@@ -11,8 +11,8 @@
   with spaces.
 - **Service:** `day_events`, `events_between`, `outdoor_events` (today's timed events with a
   location, fed to weather's clothing advice), `next_event_with_location` (for mpk).
-- **Write:** `client.add_event(title, start, end, location=None)` creates an event, for the bot and
-  voice later.
+- **Write:** `client.add_event(title, start, end, location=None)` creates an event (dates instead of
+  datetimes: all day). Voice uses it: "add dentist to my calendar tomorrow at 3 pm".
 - **Widget:** `GET /widgets/calendar` shows the rest of today and tomorrow. Marked stale after 1 h
   without a successful run.
 

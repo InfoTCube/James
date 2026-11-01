@@ -1,7 +1,7 @@
 """Google Calendar API over plain httpx. The only place this module talks to Google."""
 
 import os
-from datetime import datetime
+from datetime import date, datetime
 
 import httpx
 
@@ -62,18 +62,19 @@ def list_events(start: datetime, end: datetime) -> list[dict]:
 
 def add_event(
     title: str,
-    start: datetime,
-    end: datetime,
+    start: datetime | date,
+    end: datetime | date,
     location: str | None = None,
     calendar_id: str = "primary",
 ) -> dict:
-    """Create an event in Google Calendar. Returns the created event.
-    It shows up on the dashboard after the next collector run."""
-    body = {
-        "summary": title,
-        "start": {"dateTime": start.isoformat()},
-        "end": {"dateTime": end.isoformat()},
-    }
+    """Create an event in Google Calendar. Returns the created event. Dates instead of datetimes
+    make it all day (`end` is the day after). It shows up on the dashboard after the next
+    collector run."""
+
+    def when(t: datetime | date) -> dict:
+        return {"dateTime": t.isoformat()} if isinstance(t, datetime) else {"date": t.isoformat()}
+
+    body = {"summary": title, "start": when(start), "end": when(end)}
     if location:
         body["location"] = location
     with _client() as client:

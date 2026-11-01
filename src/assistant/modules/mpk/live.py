@@ -13,11 +13,12 @@ def add_live_delays(
     """Fill in delay_min from live vehicle positions (best effort, never raises).
     Each caller keeps its own tracker and must call this regularly (e.g. every minute):
     direction of travel needs two readings."""
-    trams = {c.line for c in options if c.is_tram}
-    buses = {c.line for c in options if not c.is_tram}
+    rides = [*options, *(c.then for c in options if c.then)]
+    trams = {c.line for c in rides if c.is_tram}
+    buses = {c.line for c in rides if not c.is_tram}
     vehicles = service.parse_positions(client.vehicle_positions(trams, buses))
     tracker.update(vehicles, now)
-    for c in options:
+    for c in rides:
         stops = service.trip_stops_until(session, c.trip_id, c.from_seq)
         if stops:
             midnight = c.departs - timedelta(seconds=stops[-1][2])

@@ -4,7 +4,7 @@ from datetime import timedelta
 from html import escape
 from pathlib import Path
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Query, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -31,6 +31,7 @@ def mpk_widget(request: Request):
             return HTMLResponse("")  # no trip right now: the card disappears
         if trip.options:
             add_live_delays(session, trip.options, now, TRACKER)
+        early = service.early_minutes(service.early_rules(session), trip.leg.title)
     return templates.TemplateResponse(
         request,
         "widget.html",
@@ -42,8 +43,20 @@ def mpk_widget(request: Request):
             "late_min": trip.late_min,
             "tz": config.tz,
             "stale": is_stale(engine, "mpk", timedelta(days=2)),
+            "early": early if trip.leg.arrive_by else 0,
+            "starts": trip.leg.arrive_by and trip.leg.arrive_by + timedelta(minutes=early),
         },
     )
+
+
+@router.post("/api/mpk/early")
+def leave_earlier(request: Request, title: str = Query(max_length=200), add: int = 5):
+    """The card's "Leave 5 min earlier" (add=5) and reset (add=-current) buttons: changes the
+    "arrive early" rule for events called `title`, then shows the card again."""
+    with Session(get_engine()) as session, session.begin():
+        now = service.early_minutes(service.early_rules(session), title)
+        service.set_early(session, title, now + add)
+    return mpk_widget(request)
 
 
 @router.get("/widgets/mpk/strip")
@@ -59,6 +72,7 @@ def mpk_strip():
     vehicle = f"{'🚋' if c.is_tram else '🚌'} {c.line} at {c.departs.astimezone(tz):%H:%M}"
     if c.delay_min:
         vehicle += f" ~{c.delay_min:+d} min"
+    change = f", change at {c.to_stop} to {c.then.line}" if c.then else ""
     if trip.late_min:
         leave = f"{trip.leave_by.astimezone(tz):%H:%M}"
         head = f"~{trip.late_min} min late for {trip.leg.title}: leave by {leave}"
@@ -67,7 +81,8 @@ def mpk_strip():
     else:
         head = "Going home"
     return HTMLResponse(
-        f"<b>{escape(head)}</b><span>{escape(vehicle)} from {escape(c.from_stop)}</span>"
+        f"<b>{escape(head)}</b><span>{escape(vehicle)} from {escape(c.from_stop)}"
+        f"{escape(change)}</span>"
     )
 
 

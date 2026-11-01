@@ -1,0 +1,258 @@
+{
+ "data": {
+  "popularTitles": {
+   "edges": [
+    {
+     "node": {
+      "id": "tm1265001",
+      "objectId": 1265001,
+      "objectType": "MOVIE",
+      "content": {
+       "title": "Spider-Man: Brand New Day",
+       "originalReleaseYear": 2026,
+       "shortDescription": "Fighting crime full-time as Spider-Man in a world that doesn't remember him—and the pressure of seeing his old friends move on without him—sparks a change in Peter Parker he may not have the power to control. But that transformation might also be the only thing that can stop a shocking new threat to the city and those he loves - a powerful villain no one can even see.",
+       "fullPath": "/pl/film/untitled-spider-man-sequel",
+       "scoring": {
+        "imdbScore": 7.9,
+        "imdbVotes": 371783,
+        "tmdbScore": 8.478
+       },
+       "genres": [
+        {
+         "shortName": "act"
+        },
+        {
+         "shortName": "scf"
+        }
+       ]
+      },
+      "offers": [
+       {
+        "monetizationType": "FLATRATE",
+        "package": {
+         "clearName": "Polsat Box Go",
+         "shortName": "pbg"
+        }
+       },
+       {
+        "monetizationType": "FLATRATE",
+        "package": {
+         "clearName": "Polsat Box Go",
+         "shortName": "pbg"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "node": {
+      "id": "tm358",
+      "objectId": 358,
+      "objectType": "MOVIE",
+      "content": {
+       "title": "Avatar: Fire and Ash",
+       "originalReleaseYear": 2025,
+       "shortDescription": "In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by the ruthless Varang. Jake's family must fight for their survival and the future of Pandora in a conflict that pushes them to their emotional and physical limits.",
+       "fullPath": "/pl/film/avatar-3",
+       "scoring": {
+        "imdbScore": 7.2,
+        "imdbVotes": 216925,
+        "tmdbScore": 7.647
+       },
+       "genres": [
+        {
+         "shortName": "act"
+        },
+        {
+         "shortName": "drm"
+        },
+        {
+         "shortName": "fnt"
+        },
+        {
+         "shortName": "scf"
+        }
+       ]
+      },
+      "offers": [
+       {
+        "monetizationType": "FLATRATE",
+        "package": {
+         "clearName": "Disney Plus",
+         "shortName": "dnp"
+        }
+       },
+       {
+        "monetizationType": "FLATRATE",
+        "package": {
+         "clearName": "Disney Plus",
+         "shortName": "dnp"
+        }
+       },
+       {
+        "monetizationType": "FLATRATE",
+        "package": {
+         "clearName": "Disney Plus",
+         "shortName": "dnp"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "node": {
+      "id": "tm1486587",
+      "objectId": 1486587,
+      "objectType": "MOVIE",
+      "content": {
+       "title": "Project Hail Mary",
+       "originalReleaseYear": 2026,
+       "shortDescription": "Science teacher Ryland Grace wakes up on a spaceship light years from home with no recollection of who he is or how he got there. As his memory returns, he begins to uncover his mission: solve the riddle of the mysterious substance causing the sun to die out. He must call on his scientific knowledge and unorthodox ideas to save everything on Earth from extinction.",
+       "fullPath": "/pl/film/projekt-hail-mary",
+       "scoring": {
+        "imdbScore": 8.2,
+        "imdbVotes": 590666,
+        "tmdbScore": 8.633
+       },
+       "genres": [
+        {
+         "shortName": "cmy"
+        },
+        {
+         "shortName": "scf"
+        }
+       ]
+      },
+      "offers": [
+       {
+        "monetizationType": "FLATRATE",
+        "package": {
+         "clearName": "Amazon Prime Video",
+         "shortName": "prv"
+        }
+       },
+       {
+        "monetizationType": "FLATRATE",
+        "package": {
+         "clearName": "Amazon Prime Video",
+         "shortName": "prv"
+        }
+       },
+       {
+        "monetizationType": "FLATRATE",
+        "package": {
+         "clearName": "Amazon Prime Video",
+         "shortName": "prv"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "node": {
+      "id": "tm1576989",
+      "objectId": 1576989,
+      "objectType": "MOVIE",
+      "content": {
+       "title": "Marty Supreme",
+       "originalReleaseYear": 2025,
+       "shortDescription": "Marty Mauser, a young man with a dream no one respects, goes to hell and back in pursuit of greatness.",
+       "fullPath": "/pl/film/marty-supreme",
+       "scoring": {
+        "imdbScore": 7.5,
+        "imdbVotes": 227559,
+        "tmdbScore": 7.367
+       },
+       "genres": [
+        {
+         "shortName": "cmy"
+        },
+        {
+         "shortName": "drm"
+        },
+        {
+         "shortName": "trl"
+        },
+        {
+         "shortName": "spt"
+        }
+       ]
+      },
+      "offers": [
+       {
+        "monetizationType": "FLATRATE",
+        "package": {
+         "clearName": "Amazon Prime Video",
+         "shortName": "prv"
+        }
+       },
+       {
+        "monetizationType": "FLATRATE",
+        "package": {
+         "clearName": "Amazon Prime Video",
+         "shortName": "prv"
+        }
+       },
+       {
+        "monetizationType": "FLATRATE",
+        "package": {
+         "clearName": "Polsat Box Go",
+         "shortName": "pbg"
+        }
+       },
+       {
+        "monetizationType": "FLATRATE",
+        "package": {
+         "clearName": "Polsat Box Go",
+         "shortName": "pbg"
+        }
+       }
+      ]
+     }
+    },
+    {
+     "node": {
+      "id": "tm1928868",
+      "objectId": 1928868,
+      "objectType": "MOVIE",
+      "content": {
+       "title": "The Invite",
+       "originalReleaseYear": 2026,
+       "shortDescription": "Joe and Angela's marriage is on the rocks. When they invite their enigmatic upstairs neighbors over for dinner, the evening takes an unexpected turn.",
+       "fullPath": "/pl/film/zaproszenie-2026",
+       "scoring": {
+        "imdbScore": 7.4,
+        "imdbVotes": 95117,
+        "tmdbScore": 7.211
+       },
+       "genres": [
+        {
+         "shortName": "cmy"
+        },
+        {
+         "shortName": "drm"
+        }
+       ]
+      },
+      "offers": [
+       {
+        "monetizationType": "FLATRATE",
+        "package": {
+         "clearName": "Polsat Box Go",
+         "shortName": "pbg"
+        }
+       },
+       {
+        "monetizationType": "FLATRATE",
+        "package": {
+         "clearName": "Polsat Box Go",
+         "shortName": "pbg"
+        }
+       }
+      ]
+     }
+    }
+   ]
+  }
+ }
+}

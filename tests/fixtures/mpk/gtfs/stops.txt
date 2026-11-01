@@ -4,3 +4,4 @@ stop_id,stop_code,stop_name,stop_lat,stop_lon
 3,3,Kościuszki,51.104,17.034
 4,4,PL. GRUNWALDZKI,51.111,17.060
 5,5,most Grunwaldzki,51.110,17.050
+6,6,Biegasa,51.120,17.080

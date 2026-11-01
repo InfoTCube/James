@@ -1,0 +1,26 @@
+{
+ "data": {
+  "packages": [
+   {
+    "clearName": "Netflix",
+    "shortName": "nfx"
+   },
+   {
+    "clearName": "Amazon Prime Video",
+    "shortName": "prv"
+   },
+   {
+    "clearName": "Disney Plus",
+    "shortName": "dnp"
+   },
+   {
+    "clearName": "HBO Max",
+    "shortName": "mxx"
+   },
+   {
+    "clearName": "Polsat Box Go",
+    "shortName": "pbg"
+   }
+  ]
+ }
+}

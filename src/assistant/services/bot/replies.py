@@ -1,20 +1,23 @@
 """Reply texts for bot commands. Plain functions over the DB, no Telegram here."""
 
-from datetime import datetime, timedelta
+from datetime import date, datetime, time, timedelta
 
 from sqlalchemy.orm import Session
 
 from assistant.core.config import Config
 from assistant.modules.alarm import service as alarm
 from assistant.modules.birthdays import service as birthdays
+from assistant.modules.books import service as books
 from assistant.modules.calendar import service as calendar
 from assistant.modules.events import service as events
+from assistant.modules.films import service as films
 from assistant.modules.flights import service as flights
 from assistant.modules.jobs import service as jobs
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.alerts import format_connection
 from assistant.modules.news import service as news
 from assistant.modules.notes import service as notes
+from assistant.modules.sports import service as sports
 from assistant.modules.weather import service as weather
 
 
@@ -35,7 +38,7 @@ def reply_next(session: Session, now: datetime, config: Config, args: list[str] 
             lines.append(f"You'll be ~{trip.late_min} min late.")
         if trip.leave_by:
             lines.append(f"Leave by {trip.leave_by.astimezone(tz):%H:%M}")
-        lines += [format_connection(c, tz) for c in trip.options] or ["No direct connection found"]
+        lines += [format_connection(c, tz) for c in trip.options] or ["No connection found"]
         return "\n".join(lines)
 
     event = calendar.next_event_with_location(session, now, tz)
@@ -48,12 +51,42 @@ def reply_next(session: Session, now: datetime, config: Config, args: list[str] 
     )
 
 
+EARLY_USAGE = "Usage: /early Siatkówka 15 (minutes; 0 removes it), /early 15 for your next event"
+
+
+def reply_early(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/early Siatkówka 15: arrive 15 min early for events called Siatkówka (0 removes it);
+    /early 15: for your next event; /early: the rules."""
+    if not args:
+        rules = mpk.early_rules(session)
+        if not rules:
+            return f"Arriving on time for everything.\n{EARLY_USAGE}"
+        return "\n".join(f"{r.title}: {r.minutes} min early" for r in rules)
+    if not args[-1].isdigit():
+        return EARLY_USAGE
+    minutes, title = min(int(args[-1]), mpk.MAX_EARLY), " ".join(args[:-1])
+    if not title:
+        event = calendar.next_event_with_location(session, now, config.tz)
+        if event is None:
+            return "No upcoming event with a location. Name it: /early Siatkówka 15"
+        title = event.title
+    title = mpk.set_early(session, title, minutes)
+    if not minutes:
+        return f"{title}: arriving on time again."
+    return f"⏪ Leaving {minutes} min earlier for {title} from now on."
+
+
 def reply_today(session: Session, now: datetime, config: Config, args: list[str] = ()) -> str:
     """/today: today's events."""
+    return reply_day(session, now.astimezone(config.tz).date(), config, "today")
+
+
+def reply_day(session: Session, day: date, config: Config, label: str) -> str:
+    """Events on `day` ("Nothing in the calendar {label}." if none)."""
     tz = config.tz
-    events = calendar.day_events(session, now, tz)
+    events = calendar.day_events(session, datetime.combine(day, time(12), tz), tz)
     if not events:
-        return "Nothing in the calendar today."
+        return f"Nothing in the calendar {label}."
     lines = []
     for e in events:
         when = (
@@ -199,6 +232,73 @@ def reply_news(session: Session, now: datetime, config: Config, args: list[str])
         parts.append("Latest:" if d else "📰 Latest headlines (no digest yet):")
         parts += [f"{i.title} ({i.feed})\n{i.link}" for i in latest]
     return "\n\n".join(parts) or "No news yet: the first fetch is within the hour."
+
+
+def reply_films(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/films: this week's film suggestions."""
+    shown = films.suggestions(session)
+    if not shown:
+        return "No film suggestions yet: the first fetch runs when the worker starts."
+    return "\n\n".join(films.format_film(f) for f in shown)
+
+
+def reply_books(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/books: this month's book suggestions."""
+    shown = books.suggestions(session)
+    if not shown:
+        return "No book suggestions yet. They need books.subjects in config.yaml."
+    return "\n\n".join(books.format_book(b) for b in shown)
+
+
+def reply_watched(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/watched Inception: mark a film as watched; /watched: the list."""
+    if args:
+        title = " ".join(args)
+        films.mark_watched(session, title, now)
+        return f"✓ Watched: {title}. I won't suggest it, and it'll shape future picks."
+    rows = films.watched(session)
+    if not rows:
+        return "No films marked yet. Usage: /watched Inception"
+    return "\n".join(["🎬 Watched:", *(r.title for r in rows[:50])])
+
+
+def reply_unwatched(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/unwatched Inception: undo /watched."""
+    if not args:
+        return "Usage: /unwatched Inception"
+    title = " ".join(args)
+    return f"Removed {title}." if films.unmark_watched(session, title) else f"{title} isn't marked."
+
+
+def reply_read(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/read Atomic Habits: mark a book as read; /read: the list."""
+    if args:
+        title = " ".join(args)
+        books.mark_read(session, title, now)
+        return f"✓ Read: {title}. I won't suggest it, and it'll shape future picks."
+    rows = books.read_books(session)
+    if not rows:
+        return "No books marked yet. Usage: /read Atomic Habits"
+    return "\n".join(["📚 Read:", *(r.title for r in rows[:50])])
+
+
+def reply_unread(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/unread Atomic Habits: undo /read."""
+    if not args:
+        return "Usage: /unread Atomic Habits"
+    title = " ".join(args)
+    return f"Removed {title}." if books.unmark_read(session, title) else f"{title} isn't marked."
+
+
+def reply_sports(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/sports: next matches and recent scores of your teams and leagues."""
+    if not config.sports.teams and not config.sports.leagues:
+        return "Sports is off: add teams or leagues under sports in config.yaml."
+    lines = [sports.format_match(m, config.tz) for m in sports.upcoming(session, now)[:30]]
+    scores = [sports.format_match(m, config.tz) for m in sports.results(session, now)[:15]]
+    if scores:
+        lines += ["Scores:", *scores]
+    return "\n".join(lines) or "No matches in the next 14 days, and no scores from the last 7."
 
 
 def reply_flight_add(session: Session, now: datetime, config: Config, args: list[str]) -> str:

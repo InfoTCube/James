@@ -15,6 +15,7 @@ from assistant.core.db import make_engine
 from assistant.modules.calendar.service import Event
 from assistant.modules.mpk import collector as mpk_collector
 from assistant.modules.mpk import service
+from assistant.modules.mpk.alerts import format_connection
 from assistant.modules.mpk.collector import effective_date, import_feed, pick_current
 from assistant.modules.mpk.models import MpkGeocode, MpkServiceDate
 
@@ -271,3 +272,54 @@ def test_late_trip_shows_connections_arriving_up_to_20_min_late(db, monkeypatch)
         ("16", at(1, 9, 53), at(1, 10, 0))
     ]
     assert late.leave_by == at(1, 9, 48)
+
+
+def test_trip_with_a_change_when_there_is_no_direct_one(db):
+    with Session(db) as s:
+        assert service.connections(s, HOME, VB, at(1, 10, 10), not_before=at(1, 9), tz=TZ) == []
+        [c] = service.journeys(s, HOME, VB, at(1, 10, 10), not_before=at(1, 9), tz=TZ)
+        # bus 145 reaches PL. GRUNWALDZKI at 09:47: 2 min for the 09:49 tram 7 is too tight
+        assert (c.line, c.from_stop, c.departs, c.to_stop) == (
+            "16", "Kościuszki", at(1, 9, 33), "PL. GRUNWALDZKI",
+        )  # fmt: skip
+        assert (c.then.line, c.then.departs, c.last.arrives) == ("7", at(1, 9, 49), at(1, 9, 58))
+        assert not c.misses_transfer
+        assert "then 🚋 7 → KOSZAROWA from PL. GRUNWALDZKI at 09:49" in format_connection(c, TZ)
+        c.delay_min = 8  # 09:42 + 8: the tram 7 has gone
+        assert c.misses_transfer and "may miss the change" in format_connection(c, TZ)
+        # the change has to fit before the deadline
+        assert service.journeys(s, HOME, VB, at(1, 9, 55), not_before=at(1, 9), tz=TZ) == []
+
+
+def test_change_only_offered_when_clearly_better_than_direct(db, monkeypatch):
+    def direct(departs, arrives):
+        c = service.Connection("1", True, "X", "A", "B", departs, arrives)
+        monkeypatch.setattr(service, "connections", lambda *a, **k: [c])
+        return c
+
+    with Session(db) as s:
+        direct(at(1, 9, 30), at(1, 10))  # about as good as the change: no reason to change
+        options = service.journeys(s, HOME, VB, at(1, 10, 10), not_before=at(1, 9), tz=TZ)
+        assert [c.line for c in options] == ["1"]
+        direct(at(1, 9), at(1, 9, 20))  # would mean leaving half an hour earlier
+        options = service.journeys(s, HOME, VB, at(1, 10, 10), not_before=at(1, 9), tz=TZ)
+        assert [c.line for c in options] == ["16", "1"]  # latest arrival first
+
+
+def test_arrive_early_rules_move_the_trip(db, monkeypatch):
+    from assistant.core.config import Config
+
+    config = Config(location={"latitude": 51.1, "longitude": 17.0}, places=PLACES)
+    event = Event("Siatkówka 🏐", at(6, 17, 10), at(6, 19), "Politechnika")
+    monkeypatch.setattr(service.calendar, "events_between", lambda *a, **k: [event])
+    with Session(db) as s, s.begin():
+        assert service.set_early(s, "Siatkówka 🏐", 15) == "Siatkówka"  # emoji dropped
+        s.flush()
+        rules = service.early_rules(s)
+        assert service.early_minutes(rules, "SIATKOWKA 🏐") == 15  # case/diacritics ignored
+        assert service.early_minutes(rules, "Praca") == 0
+        [leg, _home] = service.legs_between(s, at(6, 0), at(7, 0), config)
+        assert leg.arrive_by == at(6, 16, 55)
+        service.set_early(s, "siatkówka", 0)  # removes it
+        s.flush()
+        assert service.early_rules(s) == []

@@ -1,0 +1,12 @@
+<section class="widget books{% if stale %} stale{% endif %}">
+  <h2>Books this month{% if stale %} <small class="badge">stale</small>{% endif %} · tap one to get its link on Telegram</h2>
+  {% for b in books %}
+  <button type="button" class="event"
+          hx-post="/api/books/send/{{ b.id }}" hx-target="find .sent" hx-swap="innerHTML">
+    <span class="when">{{ "%.1f" | format(b.rating) }}</span>
+    <span>{{ b.title }}{% if b.year %} ({{ b.year }}){% endif %}<small>{{ b.author }}</small>
+      {% if b.why %}<small>{{ b.why }}</small>{% endif %}<small class="sent" aria-live="polite"></small></span>
+  </button>
+  <button type="button" class="chip" hx-post="/api/books/read/{{ b.id }}" hx-target="closest .slot">✓ Read it</button>
+  {% endfor %}
+</section>

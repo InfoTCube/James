@@ -153,6 +153,13 @@
     }
     button.event:active { background: var(--panel); }
     button.event:focus-visible { outline: 2px solid var(--sky); }
+    .early { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5em; margin: 0.4em 0 0.8em; }
+    .chip {  /* a small button on a card: big enough for a finger */
+      min-height: 2.2em; padding: 0.3em 1em; border: 2px solid var(--scroll); border-radius: 1.1em;
+      background: none; color: var(--paper); font: inherit; font-size: 0.75em; cursor: pointer;
+    }
+    .chip:active { background: var(--panel); }
+    .chip:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
     .sent { color: var(--sky); }
     .sent:empty { display: none; }
     .event.best > span:last-child { font-weight: 500; }
@@ -160,7 +167,51 @@
     .live { color: var(--sky); }
     .late { color: var(--amber); }
 
-    @media (prefers-reduced-motion: reduce) { .slot, .slot.on { transition: none; } #bell { animation: none; } }
+    /* voice: takes over the screen while you talk to it ("hey jarvis") */
+    #voice {
+      position: fixed; inset: 0; z-index: 11; display: grid; grid-template-rows: 1fr auto 1fr;
+      justify-items: center; gap: var(--gap); padding: var(--gap) 10vw; text-align: center;
+      background: radial-gradient(circle at 50% 30%, #213749, var(--night) 65%);
+      opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+    }
+    #voice.on { opacity: 1; visibility: visible; transition: opacity 0.25s ease; }
+    #orb { --level: 0; position: relative; width: min(30vh, 30vw); aspect-ratio: 1; align-self: end; }
+    #orb > * { position: absolute; inset: 20%; border-radius: 50%; }
+    #orb .core {  /* grows and glows with your voice */
+      background: radial-gradient(circle at 35% 30%, #e3f1fa, var(--sky) 45%, #3d6f93);
+      box-shadow: 0 0 calc(2em + 5em * var(--level)) rgb(143 185 214 / 0.5);
+      transform: scale(calc(0.8 + 0.5 * var(--level)));
+      transition: transform 0.1s linear, box-shadow 0.1s linear;
+    }
+    #orb .ring { border: 2px solid var(--sky); opacity: 0; }
+    #voice.listening .ring { animation: ripple 2.4s ease-out infinite; }
+    #orb .ring:nth-child(2) { animation-delay: 0.8s; }
+    #orb .ring:nth-child(3) { animation-delay: 1.6s; }
+    @keyframes ripple { from { transform: scale(0.9); opacity: 0.7; } to { transform: scale(2); opacity: 0; } }
+    #orb .arc { inset: 8%; border: 3px solid transparent; border-top-color: var(--paper); opacity: 0; }
+    #voice.thinking .arc { opacity: 1; animation: spin 0.9s linear infinite; }
+    #voice.thinking .core { animation: breathe 1.2s ease-in-out infinite alternate; }
+    #voice.speaking .core { animation: talk 0.45s ease-in-out infinite alternate; }
+    @keyframes spin { to { transform: rotate(1turn); } }
+    @keyframes breathe { from { transform: scale(0.72); } to { transform: scale(0.85); } }
+    @keyframes talk { from { transform: scale(0.82); } to { transform: scale(0.95); } }
+    #voice-status { color: var(--slate); font-size: 0.9em; min-height: 1.3em; letter-spacing: 0.05em; }
+    #voice-heard { max-width: 30em; font-size: 2em; line-height: 1.25; transition: font-size 0.3s, color 0.3s; }
+    #voice.listening #voice-heard:empty::before { content: "Say something…"; color: var(--slate); }
+    #voice.listening #voice-heard::after {  /* the words are still coming */
+      content: ""; display: inline-block; width: 0.08em; height: 1em; margin-left: 0.1em;
+      vertical-align: -0.12em; background: var(--sky); animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+    #voice.speaking #voice-heard { font-size: 1.1em; color: var(--slate); }
+    #voice-reply { max-width: 34em; max-height: 100%; overflow: hidden; font-size: 1.5em; align-self: start; }
+    #voice-reply p { margin: 0.3em 0; color: var(--slate); transition: color 0.3s; }
+    #voice-reply p.read, #voice-reply p.reading { color: var(--paper); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .slot, .slot.on { transition: none; } #bell { animation: none; }
+      #voice .ring, #voice .arc, #voice .core { animation: none !important; }
+    }
     @media (max-width: 700px) {  /* phone: stack rail above the stage */
       body { grid-template-columns: 1fr; overflow: auto; }
       #rail { border-right: 0; border-bottom: 1px solid var(--panel); }
@@ -188,6 +239,9 @@
       <div class="slot scrolls" data-name="Events" data-every="5" hx-get="/widgets/events" hx-trigger="load, every 30m"></div>
       <div class="slot scrolls" data-name="News" data-every="3" hx-get="/widgets/news" hx-trigger="load, every 15m"></div>
       <div class="slot scrolls" data-name="Flights" data-every="5" hx-get="/widgets/flights" hx-trigger="load, every 15m"></div>
+      <div class="slot scrolls" data-name="Films" data-every="10" hx-get="/widgets/films" hx-trigger="load, every 60m"></div>
+      <div class="slot scrolls" data-name="Books" data-every="10" hx-get="/widgets/books" hx-trigger="load, every 60m"></div>
+      <div class="slot scrolls" data-name="Sports" data-every="5" hx-get="/widgets/sports" hx-trigger="load, every 30m"></div>
     </div>
     <div id="strip" hx-get="/widgets/mpk/strip" hx-trigger="load, every 1m"></div>
   </main>
@@ -214,6 +268,17 @@
       <div id="briefing-close">Closes by itself after reading.
         <button type="button" class="close" id="close-briefing">Close</button></div>
     </div>
+  </div>
+  <div id="voice" aria-live="polite">
+    <div id="orb" aria-hidden="true">
+      <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+      <div class="arc"></div><div class="core"></div>
+    </div>
+    <div>
+      <div id="voice-status"></div>
+      <div id="voice-heard"></div>
+    </div>
+    <div id="voice-reply"></div>
   </div>
   <script>
     const TZ = "Europe/Warsaw", ROTATE_MS = 8000, HOLD_MS = 60000;
@@ -405,12 +470,42 @@
     document.getElementById("close-leave").addEventListener("click", () => { hush(); leave.hidden = true; });
     pollLeave(); setInterval(pollLeave, 15000);
 
+    // --- voice: full screen while you talk to it; states come live from the voice service ---
+    const voice = document.getElementById("voice"), orb = document.getElementById("orb");
+    const voiceReply = document.getElementById("voice-reply");
+    const STATUS = { listening: "Listening…", thinking: "Thinking…", speaking: "" };
+    let voiceHide = null, replyShown = null;
+    function showVoice(v) {
+      clearTimeout(voiceHide);
+      if (v.state === "idle") {  // the answer stays a moment, then back to the dashboard
+        voiceHide = setTimeout(() => voice.classList.remove("on"), 2500);
+        return;
+      }
+      if (!voice.classList.contains("on")) hush();  // stop reading our own things aloud
+      voice.className = "on " + v.state;
+      document.getElementById("voice-status").textContent = STATUS[v.state];
+      document.getElementById("voice-heard").textContent = v.text;
+      orb.style.setProperty("--level", v.state === "listening" ? v.level : 0);
+      const key = v.reply.join("\n");
+      if (key !== replyShown) {
+        replyShown = key;
+        voiceReply.replaceChildren(...v.reply.map(line => {
+          const p = document.createElement("p"); p.textContent = line; return p;
+        }));
+      }
+      [...voiceReply.children].forEach((p, i) => {
+        p.classList.toggle("read", i < v.line); p.classList.toggle("reading", i === v.line);
+      });
+      voiceReply.children[v.line]?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+    new EventSource("/api/voice/events").onmessage = e => showVoice(JSON.parse(e.data));  // reconnects by itself
+
     // After a deploy the server's version changes: reload to get the new page (kiosk has no F5).
     // Not while ringing or showing the briefing, so an update never interrupts an alarm.
     setInterval(async () => {
       try {
         const { version } = await (await fetch("/api/health")).json();
-        if (version !== "{{ version }}" && alarm.state === "idle") location.reload();
+        if (version !== "{{ version }}" && alarm.state === "idle" && !voice.classList.contains("on")) location.reload();
       } catch (e) { /* server restarting: try again next minute */ }
     }, 60000);
   </script>

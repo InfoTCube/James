@@ -1,4 +1,4 @@
-"""Notes: save, search, delete. Used by the bot now and voice later. No network here."""
+"""Notes: save, search, delete. Used by the bot and voice. No network here."""
 
 from datetime import datetime
 

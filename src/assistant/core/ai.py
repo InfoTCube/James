@@ -88,6 +88,18 @@ def at_night(now: datetime) -> bool:
     return NIGHT[0] <= now.astimezone(load_config().tz).time() < NIGHT[1]
 
 
+def parse_picks(answer: str, known: set[str], limit: int) -> dict[str, str]:
+    """Answer lines "id | reason" → {id: reason}, first `limit`. Ids not in `known` (invented or
+    mangled) are dropped."""
+    picks: dict[str, str] = {}
+    for line in answer.splitlines():
+        item, sep, why = line.partition("|")
+        item = item.strip(" •-*`")
+        if sep and item in known and item not in picks and len(picks) < limit:
+            picks[item] = why.strip()
+    return picks
+
+
 def ask(
     module: str,
     prompt: str,

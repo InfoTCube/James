@@ -17,11 +17,21 @@
 - **Matching** (`service.resolve`): a place alias or keyword, then a stop name inside the text,
   then a fuzzy match on stop names. Case and Polish diacritics are ignored. A matched stop that
   belongs to a place resolves to the place.
-- **Connections** (`service.connections`): direct trips only, latest arrival first. For each trip
-  it boards at the last home stop and gets off at the first destination stop. Trips after
-  midnight that belong to the previous service day aren't considered.
+- **Connections** (`service.journeys`): direct trips (`connections`), latest arrival first. For
+  each trip it boards at the last home stop and gets off at the first destination stop. Trips
+  after midnight that belong to the previous service day aren't considered.
+- **Transfers** (`service.transfers`): one change, at stops with the same name, with at least
+  3 min to change. A trip with a change is only offered if no direct trip leaves and arrives
+  within 15 min of it (`TRANSFER_SAVES`). Live delays cover both vehicles, and the option warns
+  "may miss the change" when they say you won't make it.
 - **Widget:** `GET /widgets/mpk` shows the next event with a location starting within 2 h
   (`LOOKAHEAD` in `routes.py`): leave-by time and 3 options. Marked stale after 2 days without a successful run.
+- **Arrive early** (`mpk_early` table, `service.set_early` / `early_minutes`): per event title
+  (whole words, case/diacritics ignored, so "Siatkówka" covers "Siatkówka 🏐" every week). The
+  planner treats such events as starting that much earlier, so leave-by, the "leave now" alert,
+  the briefing and the automatic alarm all move. Set from Telegram (`/early Siatkówka 15`,
+  `/early 15` = next event, `/early` lists, `0` removes), voice ("leave 15 minutes earlier for
+  …", "stop leaving early for …") and the card's "Leave 5 min earlier" / ✕ buttons.
 - **Expired timetable:** each file covers ~2 weeks. If no newer one arrives in time, trips after
   the last covered day use the services that normally run on that weekday (`calendar.txt` without
   holiday exceptions), and the card warns "Timetable ended DD.MM".
@@ -34,4 +44,5 @@
   delay = now − schedule at its position (interpolated between stops). Plausible range −2..+20
   min; the closest to on-time wins. The first estimate appears on the second refresh. The open
   data vehicle table is only an hourly snapshot, so it's unusable.
-- **Not yet:** transfers. Live delays are only computed while the dashboard card is visible.
+- **Not yet:** two or more changes, or walking between differently named stops. Live delays are
+  only computed while the dashboard card is visible.
