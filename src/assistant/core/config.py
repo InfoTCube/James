@@ -103,6 +103,17 @@ class NewsConfig(BaseModel):
     feeds: dict[str, str] = {}  # name → feed URL; empty = news off
 
 
+class ListeningConfig(BaseModel):
+    """Voice service: wake word and the sound device (mic + speaker)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    wake_word: str = "hey_jarvis"  # built-in openWakeWord model, or a .onnx next to config.yaml
+    wake_threshold: float = 0.5  # 0–1: higher = fewer false wakes, more missed ones
+    silence_level: int = 500  # mic loudness (RMS, 0–32767) below which you've stopped talking
+    device: str | None = None  # sound device name (or part of it); None = system default
+
+
 class Config(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -116,6 +127,7 @@ class Config(BaseModel):
     news: NewsConfig = Field(default_factory=NewsConfig)
     voice: str = "en_GB-alan-medium"  # Piper voice for reading aloud (core/tts.py)
     voice_pl: str = "pl_PL-darkman-medium"  # ...and for Polish names in it
+    listening: ListeningConfig = Field(default_factory=ListeningConfig)
 
     @model_validator(mode="after")
     def _rule_places_exist(self) -> "Config":

@@ -23,6 +23,7 @@ from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.routes import router as mpk_router
 from assistant.modules.news.routes import router as news_router
 from assistant.modules.weather.routes import router as weather_router
+from assistant.services.voice.routes import router as voice_router
 
 templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
 # Changes on every (re)start, i.e. every deploy: open dashboards see it and reload themselves.
@@ -37,6 +38,7 @@ app.include_router(jobs_router)
 app.include_router(events_router)
 app.include_router(flights_router)
 app.include_router(news_router)
+app.include_router(voice_router)
 
 # get the voice (~60 MB, once) ready before the first alarm needs it
 for _voice in (load_config().voice, load_config().voice_pl):

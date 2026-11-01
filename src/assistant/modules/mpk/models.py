@@ -82,3 +82,14 @@ class MpkGeocode(Base):
     lat: Mapped[float | None]
     lon: Mapped[float | None]
     looked_up_at: Mapped[datetime] = mapped_column(UTCDateTime)
+
+
+class MpkEarly(Base):
+    """Arrive this many minutes early for events whose title contains `title` (whole words,
+    case/diacritics ignored). Set from voice, Telegram (/early) and the dashboard card."""
+
+    __tablename__ = "mpk_early"
+
+    key: Mapped[str] = mapped_column(primary_key=True)  # fold(title)
+    title: Mapped[str]
+    minutes: Mapped[int]

@@ -2,8 +2,15 @@
   <h2>{% if leg.arrive_by %}Getting there{% else %}Going home{% endif %}{% if stale %} <small class="badge">stale</small>{% endif %}</h2>
   <p>
     {% if leg.origin %}{{ leg.origin.label }}{% else %}?{% endif %} →
-    {% if leg.arrive_by %}{{ leg.title }} <small>{{ leg.arrive_by.astimezone(tz).strftime("%H:%M") }}{% if leg.dest %} · {{ leg.dest.label }}{% endif %}</small>{% else %}home{% endif %}
+    {% if leg.arrive_by %}{{ leg.title }} <small>{{ starts.astimezone(tz).strftime("%H:%M") }}{% if leg.dest %} · {{ leg.dest.label }}{% endif %}</small>{% else %}home{% endif %}
   </p>
+  {% if leg.arrive_by %}
+  <p class="early">
+    {% if early %}<small>Arriving {{ early }} min early ({{ leg.arrive_by.astimezone(tz).strftime("%H:%M") }})</small>{% endif %}
+    <button type="button" class="chip" hx-post="/api/mpk/early?title={{ leg.title | urlencode }}&add=5" hx-target="closest .slot">Leave 5 min earlier</button>
+    {% if early %}<button type="button" class="chip" aria-label="Arrive on time again" hx-post="/api/mpk/early?title={{ leg.title | urlencode }}&add=-{{ early }}" hx-target="closest .slot">✕</button>{% endif %}
+  </p>
+  {% endif %}
   {% if timetable_end %}
   <p class="extra">Timetable ended {{ timetable_end.strftime("%d.%m") }}: times follow last week’s schedule</p>
   {% endif %}

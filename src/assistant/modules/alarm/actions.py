@@ -1,5 +1,5 @@
 """Alarm actions with side effects (Telegram). Used by the worker (ringing, timeouts), the
-dashboard's Stop/Snooze buttons, the bot's Telegram buttons, and later voice."""
+dashboard's Stop/Snooze buttons, the bot's Telegram buttons, and voice ("stop", "snooze")."""
 
 from datetime import datetime
 

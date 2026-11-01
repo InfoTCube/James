@@ -1,6 +1,6 @@
 """Reply texts for bot commands. Plain functions over the DB, no Telegram here."""
 
-from datetime import datetime, timedelta
+from datetime import date, datetime, time, timedelta
 
 from sqlalchemy.orm import Session
 
@@ -48,12 +48,42 @@ def reply_next(session: Session, now: datetime, config: Config, args: list[str] 
     )
 
 
+EARLY_USAGE = "Usage: /early Siatkówka 15 (minutes; 0 removes it), /early 15 for your next event"
+
+
+def reply_early(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/early Siatkówka 15: arrive 15 min early for events called Siatkówka (0 removes it);
+    /early 15: for your next event; /early: the rules."""
+    if not args:
+        rules = mpk.early_rules(session)
+        if not rules:
+            return f"Arriving on time for everything.\n{EARLY_USAGE}"
+        return "\n".join(f"{r.title}: {r.minutes} min early" for r in rules)
+    if not args[-1].isdigit():
+        return EARLY_USAGE
+    minutes, title = min(int(args[-1]), mpk.MAX_EARLY), " ".join(args[:-1])
+    if not title:
+        event = calendar.next_event_with_location(session, now, config.tz)
+        if event is None:
+            return "No upcoming event with a location. Name it: /early Siatkówka 15"
+        title = event.title
+    title = mpk.set_early(session, title, minutes)
+    if not minutes:
+        return f"{title}: arriving on time again."
+    return f"⏪ Leaving {minutes} min earlier for {title} from now on."
+
+
 def reply_today(session: Session, now: datetime, config: Config, args: list[str] = ()) -> str:
     """/today: today's events."""
+    return reply_day(session, now.astimezone(config.tz).date(), config, "today")
+
+
+def reply_day(session: Session, day: date, config: Config, label: str) -> str:
+    """Events on `day` ("Nothing in the calendar {label}." if none)."""
     tz = config.tz
-    events = calendar.day_events(session, now, tz)
+    events = calendar.day_events(session, datetime.combine(day, time(12), tz), tz)
     if not events:
-        return "Nothing in the calendar today."
+        return f"Nothing in the calendar {label}."
     lines = []
     for e in events:
         when = (

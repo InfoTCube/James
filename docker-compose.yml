@@ -18,6 +18,13 @@ services:
     <<: *app
     command: python -m assistant.services.bot
     restart: on-failure  # exits cleanly (stays stopped) while TELEGRAM_BOT_TOKEN isn't set
+  voice:
+    <<: *app
+    command: python -m assistant.services.voice
+    environment: { ASSISTANT_API_URL: "http://api:8000" }  # live state for the dashboard
+    devices: ["/dev/snd:/dev/snd"]  # the USB speakerphone (ALSA)
+    group_add: [audio]
+    profiles: [voice]  # needs a Linux host with a sound card: docker compose --profile voice up
 
 volumes:
   data:

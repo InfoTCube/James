@@ -271,3 +271,22 @@ def test_late_trip_shows_connections_arriving_up_to_20_min_late(db, monkeypatch)
         ("16", at(1, 9, 53), at(1, 10, 0))
     ]
     assert late.leave_by == at(1, 9, 48)
+
+
+def test_arrive_early_rules_move_the_trip(db, monkeypatch):
+    from assistant.core.config import Config
+
+    config = Config(location={"latitude": 51.1, "longitude": 17.0}, places=PLACES)
+    event = Event("Siatkówka 🏐", at(6, 17, 10), at(6, 19), "Politechnika")
+    monkeypatch.setattr(service.calendar, "events_between", lambda *a, **k: [event])
+    with Session(db) as s, s.begin():
+        assert service.set_early(s, "Siatkówka 🏐", 15) == "Siatkówka"  # emoji dropped
+        s.flush()
+        rules = service.early_rules(s)
+        assert service.early_minutes(rules, "SIATKOWKA 🏐") == 15  # case/diacritics ignored
+        assert service.early_minutes(rules, "Praca") == 0
+        [leg, _home] = service.legs_between(s, at(6, 0), at(7, 0), config)
+        assert leg.arrive_by == at(6, 16, 55)
+        service.set_early(s, "siatkówka", 0)  # removes it
+        s.flush()
+        assert service.early_rules(s) == []

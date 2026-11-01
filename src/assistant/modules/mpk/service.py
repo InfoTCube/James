@@ -11,9 +11,15 @@ from zoneinfo import ZoneInfo
 from sqlalchemy import func, select, text
 from sqlalchemy.orm import Session
 
-from assistant.core.config import Config, Place, fold
+from assistant.core.config import Config, Place, fold, has_word
 from assistant.modules.calendar import service as calendar
-from assistant.modules.mpk.models import MpkGeocode, MpkServiceDate, MpkServiceWeekday, MpkStop
+from assistant.modules.mpk.models import (
+    MpkEarly,
+    MpkGeocode,
+    MpkServiceDate,
+    MpkServiceWeekday,
+    MpkStop,
+)
 
 DEFAULT_WALK = 5  # minutes, for stops matched by name rather than a configured place
 STOP_RADIUS = 400  # m: stops considered near a looked-up address
@@ -385,16 +391,48 @@ def _home(config: Config) -> Target:
     return Target("home", config.places["home"].stops, config.places["home"].walk_minutes)
 
 
+MAX_EARLY = 120  # minutes
+
+
+def early_rules(session: Session) -> list[MpkEarly]:
+    """The "arrive early" rules, by title."""
+    return list(session.scalars(select(MpkEarly).order_by(MpkEarly.title)))
+
+
+def early_minutes(rules: list[MpkEarly], title: str) -> int:
+    """How many minutes early to arrive for an event called `title` (the biggest matching rule;
+    a rule matches titles containing its words: "Siatkówka" matches "Siatkówka 🏐")."""
+    return max((r.minutes for r in rules if has_word(title, r.title)), default=0)
+
+
+def set_early(session: Session, title: str, minutes: int) -> str:
+    """Arrive `minutes` early (0 removes the rule, at most MAX_EARLY) for events called
+    `title`. Emoji etc. are dropped from the title: the name as stored, e.g. "Siatkówka"."""
+    title = "".join(c for c in title if c.isalnum() or c in " .#+-&'").strip()
+    rule = session.get(MpkEarly, fold(title))
+    if minutes <= 0:
+        if rule:
+            session.delete(rule)
+    elif rule:
+        rule.minutes = min(minutes, MAX_EARLY)
+    else:
+        session.add(MpkEarly(key=fold(title), title=title, minutes=min(minutes, MAX_EARLY)))
+    return title
+
+
 def legs_between(session: Session, start: datetime, end: datetime, config: Config) -> list[Leg]:
-    """Trips planned for the located events in [start, end)."""
+    """Trips planned for the located events in [start, end). An event with an "arrive early"
+    rule is planned as starting that much earlier (leave-by, alerts and the alarm follow)."""
     events = calendar.events_between(session, start, end, config.tz)
+    rules = early_rules(session)
     targets: dict[str, Target | None] = {}
     located = []
     for e in events:
         if e.location and not e.all_day:
             if e.location not in targets:
                 targets[e.location] = find_target(session, e.location, config.places)
-            located.append((e.title, e.start, e.end, targets[e.location]))
+            early = timedelta(minutes=early_minutes(rules, e.title))
+            located.append((e.title, e.start - early, e.end, targets[e.location]))
     return plan_legs(located, _home(config))
 
 

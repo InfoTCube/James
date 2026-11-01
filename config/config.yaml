@@ -43,6 +43,20 @@ voice: en_GB-alan-medium
 # Polish names (stops, streets, people) are read by this Polish voice. Also: pl_PL-gosia-medium (female)
 voice_pl: pl_PL-darkman-medium
 
+# Voice control (voice service): say the wake word, wait for the beep, then ask.
+# wake_word: a built-in openWakeWord model (hey_jarvis, alexa, hey_mycroft, hey_rhasspy), or a
+# trained .onnx file in this folder. "Hey James" has to be trained (once, ~1 h, free): open
+# https://colab.research.google.com/drive/1q1oe2zOyZp7UsB3jJiQ1IFn8z5YfjwEb, set target_word to
+# "hey james", Runtime → Run all, download the .onnx and save it here as hey_james.onnx.
+# Then set wake_word: hey_james.onnx (a missing file falls back to hey_jarvis).
+# Wakes by itself (TV, talk)? Raise wake_threshold. Cuts you off mid-sentence? Lower silence_level;
+# never stops listening? Raise it (the log shows each request's loudness).
+# device: part of the sound device's name (e.g. "Jabra"), or leave unset for the default.
+listening:
+  wake_word: hey_jarvis
+  wake_threshold: 0.5
+  silence_level: 500
+
 # Job offers (justjoin.it, nofluffjobs, pracuj.pl), checked every 4 h; new matches go to Telegram.
 # An offer matches if its title or skills contain a keyword (whole word, case/diacritics ignored),
 # its title has no `exclude` word, its level is in `seniority` (empty = any), and it's

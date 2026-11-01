@@ -63,13 +63,13 @@ Monorepo. **Each feature is a module folder; containers are grouped by runtime r
 │       ├── api/            # FastAPI: JSON endpoints + dashboard (Jinja2 + htmx)
 │       ├── worker/         # APScheduler: runs every module's collector on its schedule
 │       ├── bot/            # Telegram bot
-│       └── voice/          # later: openWakeWord → whisper → intents → Piper
+│       └── voice/          # openWakeWord → faster-whisper → intents.py (rules, AI fallback) → Piper
 ├── data/                   # runtime data: SQLite db, caches, GTFS files (gitignored, Docker volume)
 └── tests/
     └── fixtures/           # recorded API/HTML responses — tests never hit the network
 ```
 
-Containers (docker-compose services): `api`, `worker`, `bot`, later `voice`. All share the `data` named volume and one SQLite database (WAL mode). Never bind-mount the DB from a Windows/macOS host folder: Docker Desktop's file sharing breaks SQLite locking (random "unable to open database file"). Local `uv run` uses `./data` — a separate dev database.
+Containers (docker-compose services): `api`, `worker`, `bot`, `voice` (compose profile `voice`: it needs `/dev/snd`, which Docker Desktop doesn't have). All share the `data` named volume and one SQLite database (WAL mode). Never bind-mount the DB from a Windows/macOS host folder: Docker Desktop's file sharing breaks SQLite locking (random "unable to open database file"). Local `uv run` uses `./data` — a separate dev database.
 
 ### Module contract
 
@@ -95,7 +95,7 @@ Rules:
 - httpx for HTTP; selectolax or BeautifulSoup for scraping
 - python-telegram-bot for the bot
 - Speech: Piper TTS in `core/tts.py` (dashboard reads the briefing and "leave now" aloud; English voice + Polish voice for Polish names; voices in `config.yaml`, downloaded to `data/voices`)
-- Voice (later): openWakeWord, whisper.cpp or faster-whisper (`base.en`), Piper TTS
+- Voice: openWakeWord (ONNX; `tflite-runtime` is excluded in `pyproject.toml`, no 3.12 wheels), faster-whisper (`base.en`, int8 CPU), sounddevice, Piper TTS. New spoken commands: add a regex + handler to `INTENTS` in `services/voice/intents.py`, reusing `bot/replies.py`
 - Docker Compose for running everything
 
 Prefer well-known libraries; ask before adding a large or unusual dependency.
@@ -121,7 +121,7 @@ Allowed AI uses: email summary, news summary, film/book selection, optional job 
 ## Conventions
 
 - All datetimes timezone-aware; store UTC, display `Europe/Warsaw`.
-- Configuration in `config/config.yaml`, validated with pydantic on startup; secrets only in `.env`. Settings changed from Telegram (flight watches) live in the DB instead.
+- Configuration in `config/config.yaml`, validated with pydantic on startup; secrets only in `.env`. Settings changed from Telegram/voice/dashboard (flight watches, "arrive early" rules) live in the DB instead.
 - Place names: user refers to places by aliases (`home`, `uni`, `work`, `vb`) defined in `places` in config, mapped to GTFS stop **names** (stable across timetable versions, unlike IDs). Free text (calendar locations, later chat/voice) goes through `mpk.service.resolve()`: alias/keyword → stop name in text → fuzzy match. Compare text with `core.config.fold()` (case + Polish diacritics).
 - Calendar events without a location get one from `location_rules` in config (e.g. work → office only on office days). User-editable; later the bot may edit them.
 - Scrapers: identify with a sensible User-Agent, respect rate limits, cache responses, keep request frequency low. Isolate parsing so breakage is easy to fix, and cover it with fixture-based tests.
@@ -140,6 +140,8 @@ docker compose up --build        # run the whole system (data in the `data` name
 docker compose exec worker python -m assistant.services.worker --run-once weather  # against live data
 uv run python -m assistant.services.api                          # dashboard on :8000
 uv run --env-file .env python -m assistant.services.bot          # Telegram bot
+uv run --env-file .env python -m assistant.services.voice        # voice: "hey jarvis", beep, ask
+docker compose --profile voice up --build                        # incl. voice (Linux host + mic)
 ```
 
 Adding a module: implement the `Collector` protocol from `core/collector.py` (`run(session)` runs in one
@@ -165,7 +167,8 @@ Work in this order. Keep each step small and working end-to-end before moving on
 
 **Phase 3 — voice & alarm** ← current
 - [x] `alarm` + morning briefing (Telegram for now; sound + speech with voice)
-- [ ] `voice` service with intent matcher; AI fallback
+- [x] `voice` service with intent matcher; AI fallback
+- [ ] "Hey James" wake word: train the openWakeWord model (Colab steps in `config.yaml` above `listening:`), save as `config/hey_james.onnx`, set `wake_word: hey_james.onnx`. Using `hey_jarvis` until then
 - [x] `notes` (Telegram /note /notes /note_del; voice later)
 
 **Phase 4 — AI-assisted & the rest**

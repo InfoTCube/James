@@ -18,10 +18,11 @@
   normal browser, click the dashboard once (it shows a hint while sound is blocked).
 - **Briefing** (`service.briefing`): weather and what to wear, next departure with the tram,
   today's events. Also on demand via `/briefing`.
-- **API for the bot now and voice later:** `parse_time("7:30", now, tz)`,
+- **API for the bot and voice:** `parse_time("7:30", now, tz)`,
   `add_alarm(session, at, label)`, `upcoming_alarms(session, now)`,
   `cancel_alarm(session, id)`, `due_alarms(session, now)`. Bot: `/alarm 7:30 [label]`,
   `/alarms`, `/alarm_off 3`.
 - **Actions** (`actions.py`: `ring`, `stop`, `snooze`) are shared by the worker, the dashboard
-  buttons, the Telegram buttons and later voice ("stop", "snooze").
-- **Not yet:** nicer speech with Piper (voice service), and choosing the sound.
+  buttons, the Telegram buttons and voice ("stop", "snooze" after the wake word). Voice also
+  sets ("wake me up at 7:30") and cancels ("cancel the 7:30 alarm", "cancel all alarms") alarms.
+- **Not yet:** choosing the sound.
