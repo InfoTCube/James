@@ -159,6 +159,25 @@ def test_cancel_alarm(session):
     assert alarm.upcoming_alarms(session, NOW) == []
 
 
+def test_films_books_and_sports_intents():
+    from assistant.services.voice import intents
+
+    def handler(text):
+        return intents._find(text)[0]
+
+    assert handler("any good movies this week") is intents._films
+    assert handler("what film should I watch") is intents._films
+    assert handler("recommend some books") is intents._books
+    assert handler("what should I read") is intents._books
+    assert handler("when is the next match") is intents._sports
+    assert handler("what are the football scores") is intents._sports
+    assert handler("when is my next tram") is not intents._sports
+    assert handler("I've watched Inception") is intents._marked_film
+    assert handler("I have seen The Matrix") is intents._marked_film
+    assert handler("I've read Atomic Habits") is intents._marked_book
+    assert handler("I already read Atomic Habits") is intents._marked_book
+
+
 def test_voice_state_endpoint():
     from fastapi import FastAPI
     from fastapi.testclient import TestClient

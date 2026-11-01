@@ -24,6 +24,7 @@ from assistant.modules.calendar import service as calendar
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.alerts import format_connection
 from assistant.modules.news import service as news
+from assistant.modules.sports import service as sports
 from assistant.services.bot import replies
 
 log = logging.getLogger(__name__)
@@ -305,16 +306,39 @@ def _news(session: Session, now: datetime, config: Config, m: re.Match) -> str:
     return "\n".join(i.title for i in news.latest(session, now, limit=5)) or "No news yet."
 
 
+def _sports(session: Session, now: datetime, config: Config, m: re.Match) -> str:
+    """Your teams' next matches and latest scores: a whole league is too long to read out."""
+    names = sports.followed_names(session, config.sports.teams)
+
+    def mine(matches: list) -> list:
+        return [x for x in matches if sports.is_followed(x, names)]
+
+    shown = mine(sports.upcoming(session, now))[:4] + mine(sports.results(session, now))[:3]
+    if not shown:
+        return "No matches of your teams coming up, and no recent scores."
+    return "\n".join(sports.format_match(x, config.tz) for x in shown)
+
+
+def _marked_film(session: Session, now: datetime, config: Config, m: re.Match) -> str:
+    return replies.reply_watched(session, now, config, [m["title"].strip(" .,!?")])
+
+
+def _marked_book(session: Session, now: datetime, config: Config, m: re.Match) -> str:
+    return replies.reply_read(session, now, config, [m["title"].strip(" .,!?")])
+
+
 def _help(session: Session, now: datetime, config: Config, m: re.Match) -> str:
     return (
         "Ask me about the weather, your next tram, today's plans, the news, birthdays, jobs, "
-        "events or flights. Say wake me up at 7:30, cancel the alarm, take a note, add dentist to "
-        "my calendar tomorrow at 3 pm, or stop and snooze."
+        "events, flights, films, books or sports. Say wake me up at 7:30, cancel the alarm, take "
+        "a note, add dentist to my calendar tomorrow at 3 pm, or stop and snooze."
     )
 
 
 # First match wins, so the specific ones go first.
 INTENTS: list[tuple[str, Handler]] = [
+    (r"^i(?:'?ve| have)?(?: already)? (?:watched|seen) (?P<title>.+)", _marked_film),
+    (r"^i(?:'?ve| have)?(?: already)? read (?P<title>.+)", _marked_book),
     (
         r"\b(cancel|delete|remove|turn off|switch off|disable)\b(?P<rest>.*\balarms?\b.*)",
         _cancel_alarm,
@@ -353,6 +377,7 @@ INTENTS: list[tuple[str, Handler]] = [
         r"\b(weather|wear|jacket|coat|umbrella|rain\w*|cold|warm|temperature|forecast)\b",
         _reply(replies.reply_weather),
     ),
+    (r"\b(match|matches|scores?|sports?|football)\b", _sports),  # before "next": not a trip
     (r"\b(tram|bus|leave|departures?|trip|next)\b", _reply(replies.reply_next)),
     (
         r"\b(today|tomorrow|calendar|schedule|plans?|agenda)\b|\bwhat do i have\b"
@@ -365,12 +390,17 @@ INTENTS: list[tuple[str, Handler]] = [
     (r"\b(jobs?|job offers)\b", _jobs := _reply(replies.reply_jobs)),
     (r"\b(events?|meetups?|hackathons?)\b", _events := _reply(replies.reply_events)),
     (r"\b(flights?|fly|plane)\b", _reply(replies.reply_flights)),
+    (r"\b(films?|movies?)\b", _films := _reply(replies.reply_films)),
+    (
+        r"\bbooks\b|\bbook (suggestion|recommendation)s?\b|\b(should i|to) read\b",
+        _books := _reply(replies.reply_books),
+    ),
     (r"\b(help|what can you do)\b", _help),
 ]
 COMPILED = [(re.compile(p, re.IGNORECASE), h) for p, h in INTENTS]
 # replies made of headlines and titles: each line is all English or all Polish, so it's read by
 # one voice (tts.synthesize_line); our own sentences switch voice for Polish names instead
-ONE_LANGUAGE = {_news, _jobs, _events}
+ONE_LANGUAGE = {_news, _jobs, _events, _films, _books}
 
 
 def _find(text: str) -> tuple[Handler, re.Match] | None:

@@ -1,0 +1,14 @@
+<section class="widget sports{% if stale %} stale{% endif %}">
+  <h2>Sports{% if stale %} <small class="badge">stale</small>{% endif %}</h2>
+  {% if upcoming %}
+  <ul class="digest">
+    {% for line, mine in upcoming %}<li>{% if mine %}<b>{{ line }}</b>{% else %}{{ line }}{% endif %}</li>{% endfor %}
+  </ul>
+  {% endif %}
+  {% if results %}
+  <h2>Scores</h2>
+  <ul class="digest">
+    {% for line, mine in results %}<li>{% if mine %}<b>{{ line }}</b>{% else %}{{ line }}{% endif %}</li>{% endfor %}
+  </ul>
+  {% endif %}
+</section>

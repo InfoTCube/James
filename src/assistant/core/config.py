@@ -103,6 +103,38 @@ class NewsConfig(BaseModel):
     feeds: dict[str, str] = {}  # name → feed URL; empty = news off
 
 
+class FilmsConfig(BaseModel):
+    """Weekly film suggestions."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    taste: str = ""  # free text for the AI, e.g. "smart sci-fi, slow thrillers, no horror"
+    providers: list[str] = []  # streaming services as JustWatch names them; empty = any in Poland
+    min_rating: float = 7.0  # IMDb
+    min_votes: int = 5000  # IMDb
+
+
+class BooksConfig(BaseModel):
+    """Monthly book suggestions."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    subjects: list[str] = []  # Open Library subjects, e.g. [science fiction]; empty = books off
+    taste: str = ""  # free text for the AI
+    languages: list[str] = ["eng", "pol"]  # has an edition in one of these; empty = any
+    since_year: int = 2000  # first published this year or later
+    min_ratings: int = 5  # fewer people rated it: too little to go on
+
+
+class SportsConfig(BaseModel):
+    """Football and volleyball teams and leagues to follow. Both empty = sports off."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    teams: list[str] = []  # as TheSportsDB finds them, e.g. [Śląsk Wrocław]
+    leagues: dict[str, int] = {}  # your name → TheSportsDB league id, e.g. {PlusLiga: 5619}
+
+
 class ListeningConfig(BaseModel):
     """Voice service: wake word and the sound device (mic + speaker)."""
 
@@ -125,6 +157,9 @@ class Config(BaseModel):
     jobs: JobsConfig = Field(default_factory=JobsConfig)
     events: EventsConfig = Field(default_factory=EventsConfig)
     news: NewsConfig = Field(default_factory=NewsConfig)
+    films: FilmsConfig = Field(default_factory=FilmsConfig)
+    books: BooksConfig = Field(default_factory=BooksConfig)
+    sports: SportsConfig = Field(default_factory=SportsConfig)
     voice: str = "en_GB-alan-medium"  # Piper voice for reading aloud (core/tts.py)
     voice_pl: str = "pl_PL-darkman-medium"  # ...and for Polish names in it
     listening: ListeningConfig = Field(default_factory=ListeningConfig)

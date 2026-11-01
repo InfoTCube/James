@@ -27,9 +27,9 @@ Most features are scheduled data fetching + filtering rules. **Default to determ
 | `email` | Summary of important emails | Gmail API; rules filter first | Summary only |
 | `birthdays` | Upcoming birthdays + reminders | Google Calendar contact birthdays (via `calendar`) | No |
 | `jobs` | Interesting job offers | justjoin.it, nofluffjobs, pracuj.pl | Optional ranking |
-| `films` | Weekly film suggestions | TMDB API (incl. PL streaming availability) | Selection |
-| `books` | Monthly book suggestions | Open Library / Google Books | Selection |
-| `sports` | Football/volleyball matches for chosen teams/leagues + scores | api-sports.io (free tiers) | No |
+| `films` | Weekly film suggestions | JustWatch (unofficial, no key; PL streaming availability) | Selection |
+| `books` | Monthly book suggestions | Open Library | Selection |
+| `sports` | Football/volleyball matches for chosen teams/leagues + scores | TheSportsDB (public key, no signup) | No |
 | `news` | News digest (written overnight; raw headlines without AI) | RSS/Atom feeds from config | Summary |
 | `biedronka` | Promotions on products the user actually buys | Biedronka website/leaflet (scraping) | Maybe for leaflet parsing |
 | `notes` | Store and search notes | Local (SQLite and/or Markdown files) | No |
@@ -157,7 +157,7 @@ Work in this order. Keep each step small and working end-to-end before moving on
 - [x] Project skeleton: uv project, `core/` (config, db, logging, collector_runs), worker, api with empty dashboard, docker-compose, `.env.example`, `config/config.yaml`
 - [x] `weather` module: Open-Meteo collector + clothing rules + dashboard widget (first module — proves the whole pattern, no API keys needed)
 - [x] `calendar` module: Google Calendar API (read + `add_event`), widget, feeds weather advice
-- [x] `mpk` module: GTFS import, departures for aliases, link with next calendar event + live delay estimates (transfers later)
+- [x] `mpk` module: GTFS import, departures for aliases, link with next calendar event + live delay estimates + trips with one change
 
 **Phase 2 — alerts**
 - [x] Telegram bot + `core/notifier`: /next /today /weather /help, "leave now" alert 5 min before leave-by
@@ -174,9 +174,12 @@ Work in this order. Keep each step small and working end-to-end before moving on
 **Phase 4 — AI-assisted & the rest**
 - [x] `core/ai.py` wrapper
 - [x] `news` (RSS/Atom hourly; AI digest overnight; dashboard card, /news, top 3 in the morning briefing)
-- [ ] `email`, `films`, `books`
+- [ ] `email`
+- [x] `films` (JustWatch, PL subscription streaming; AI picks 3 a week; dashboard card, /films, voice)
+- [x] `books` (Open Library; AI picks 3 a month; dashboard card, /books, voice)
 - [x] `birthdays`
-- [ ] `sports`, `biedronka`, `music`
+- [x] `sports` (TheSportsDB; teams and whole leagues, scores; dashboard card, /sports, voice)
+- [ ] `biedronka`, `music`
 
 ## How to work in this repo
 

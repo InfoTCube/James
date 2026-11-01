@@ -93,3 +93,35 @@ news:
     World: https://feeds.bbci.co.uk/news/world/rss.xml
     Hacker News: https://hnrss.org/frontpage
     .NET: https://devblogs.microsoft.com/dotnet/feed/
+
+# Film suggestions, weekly: well-rated films on subscription streaming in Poland (JustWatch), from
+# which AI picks 3. `taste` is free text for the AI, e.g. "smart sci-fi, slow thrillers, no horror".
+# `providers`: services you pay for, as JustWatch names them, e.g. [Netflix, HBO Max, Disney Plus,
+# Amazon Prime Video]; empty = any. `min_rating` and `min_votes` are IMDb's.
+films:
+  taste: ""
+  providers: []
+  min_rating: 7.0
+  min_votes: 5000
+
+# Book suggestions, monthly: best rated books on these Open Library subjects, from which AI picks 3.
+# Empty `subjects` turns books off. `languages`: has an edition in one of these (ISO 639-2 codes).
+books:
+  subjects: [computer science, physics, popular science, self-help techniques, personal finance, catholic church, fiction]
+  taste: >-
+    Technology and programming. Physics, and popular science around physics. Motivational and
+    habit books like Atomic Habits. Personal finance and personal growth. Genuinely Catholic books
+    on faith and spirituality, not novels that merely mention the Church. Now and then a top
+    general novel. Pick from different areas. Happy reading in English or Polish.
+  languages: [eng, pol]
+  since_year: 1
+  min_ratings: 5
+
+# Football and volleyball to follow, checked every 3 h. Both empty = sports off.
+# teams: next match and scores, by name. Poland Volleyball is the men's national team.
+# leagues: every match, by your name → TheSportsDB league id (see modules/sports/README.md).
+sports:
+  teams: [Lech Poznań, Barcelona, Bogdanka LUK Lublin, Poland Volleyball]
+  leagues:
+    PlusLiga: 5619
+    CEV Champions League: 5616

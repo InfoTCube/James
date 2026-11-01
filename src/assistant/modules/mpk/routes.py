@@ -72,6 +72,7 @@ def mpk_strip():
     vehicle = f"{'🚋' if c.is_tram else '🚌'} {c.line} at {c.departs.astimezone(tz):%H:%M}"
     if c.delay_min:
         vehicle += f" ~{c.delay_min:+d} min"
+    change = f", change at {c.to_stop} to {c.then.line}" if c.then else ""
     if trip.late_min:
         leave = f"{trip.leave_by.astimezone(tz):%H:%M}"
         head = f"~{trip.late_min} min late for {trip.leg.title}: leave by {leave}"
@@ -80,7 +81,8 @@ def mpk_strip():
     else:
         head = "Going home"
     return HTMLResponse(
-        f"<b>{escape(head)}</b><span>{escape(vehicle)} from {escape(c.from_stop)}</span>"
+        f"<b>{escape(head)}</b><span>{escape(vehicle)} from {escape(c.from_stop)}"
+        f"{escape(change)}</span>"
     )
 
 

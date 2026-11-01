@@ -7,14 +7,17 @@ from sqlalchemy.orm import Session
 from assistant.core.config import Config
 from assistant.modules.alarm import service as alarm
 from assistant.modules.birthdays import service as birthdays
+from assistant.modules.books import service as books
 from assistant.modules.calendar import service as calendar
 from assistant.modules.events import service as events
+from assistant.modules.films import service as films
 from assistant.modules.flights import service as flights
 from assistant.modules.jobs import service as jobs
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.alerts import format_connection
 from assistant.modules.news import service as news
 from assistant.modules.notes import service as notes
+from assistant.modules.sports import service as sports
 from assistant.modules.weather import service as weather
 
 
@@ -35,7 +38,7 @@ def reply_next(session: Session, now: datetime, config: Config, args: list[str] 
             lines.append(f"You'll be ~{trip.late_min} min late.")
         if trip.leave_by:
             lines.append(f"Leave by {trip.leave_by.astimezone(tz):%H:%M}")
-        lines += [format_connection(c, tz) for c in trip.options] or ["No direct connection found"]
+        lines += [format_connection(c, tz) for c in trip.options] or ["No connection found"]
         return "\n".join(lines)
 
     event = calendar.next_event_with_location(session, now, tz)
@@ -229,6 +232,73 @@ def reply_news(session: Session, now: datetime, config: Config, args: list[str])
         parts.append("Latest:" if d else "📰 Latest headlines (no digest yet):")
         parts += [f"{i.title} ({i.feed})\n{i.link}" for i in latest]
     return "\n\n".join(parts) or "No news yet: the first fetch is within the hour."
+
+
+def reply_films(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/films: this week's film suggestions."""
+    shown = films.suggestions(session)
+    if not shown:
+        return "No film suggestions yet: the first fetch runs when the worker starts."
+    return "\n\n".join(films.format_film(f) for f in shown)
+
+
+def reply_books(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/books: this month's book suggestions."""
+    shown = books.suggestions(session)
+    if not shown:
+        return "No book suggestions yet. They need books.subjects in config.yaml."
+    return "\n\n".join(books.format_book(b) for b in shown)
+
+
+def reply_watched(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/watched Inception: mark a film as watched; /watched: the list."""
+    if args:
+        title = " ".join(args)
+        films.mark_watched(session, title, now)
+        return f"✓ Watched: {title}. I won't suggest it, and it'll shape future picks."
+    rows = films.watched(session)
+    if not rows:
+        return "No films marked yet. Usage: /watched Inception"
+    return "\n".join(["🎬 Watched:", *(r.title for r in rows[:50])])
+
+
+def reply_unwatched(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/unwatched Inception: undo /watched."""
+    if not args:
+        return "Usage: /unwatched Inception"
+    title = " ".join(args)
+    return f"Removed {title}." if films.unmark_watched(session, title) else f"{title} isn't marked."
+
+
+def reply_read(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/read Atomic Habits: mark a book as read; /read: the list."""
+    if args:
+        title = " ".join(args)
+        books.mark_read(session, title, now)
+        return f"✓ Read: {title}. I won't suggest it, and it'll shape future picks."
+    rows = books.read_books(session)
+    if not rows:
+        return "No books marked yet. Usage: /read Atomic Habits"
+    return "\n".join(["📚 Read:", *(r.title for r in rows[:50])])
+
+
+def reply_unread(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/unread Atomic Habits: undo /read."""
+    if not args:
+        return "Usage: /unread Atomic Habits"
+    title = " ".join(args)
+    return f"Removed {title}." if books.unmark_read(session, title) else f"{title} isn't marked."
+
+
+def reply_sports(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/sports: next matches and recent scores of your teams and leagues."""
+    if not config.sports.teams and not config.sports.leagues:
+        return "Sports is off: add teams or leagues under sports in config.yaml."
+    lines = [sports.format_match(m, config.tz) for m in sports.upcoming(session, now)[:30]]
+    scores = [sports.format_match(m, config.tz) for m in sports.results(session, now)[:15]]
+    if scores:
+        lines += ["Scores:", *scores]
+    return "\n".join(lines) or "No matches in the next 14 days, and no scores from the last 7."
 
 
 def reply_flight_add(session: Session, now: datetime, config: Config, args: list[str]) -> str:

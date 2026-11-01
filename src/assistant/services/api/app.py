@@ -15,13 +15,16 @@ from assistant.core.config import fold, load_config
 from assistant.core.db import CollectorRun, get_engine
 from assistant.modules.alarm.routes import router as alarm_router
 from assistant.modules.birthdays.routes import router as birthdays_router
+from assistant.modules.books.routes import router as books_router
 from assistant.modules.calendar.routes import router as calendar_router
 from assistant.modules.events.routes import router as events_router
+from assistant.modules.films.routes import router as films_router
 from assistant.modules.flights.routes import router as flights_router
 from assistant.modules.jobs.routes import router as jobs_router
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.routes import router as mpk_router
 from assistant.modules.news.routes import router as news_router
+from assistant.modules.sports.routes import router as sports_router
 from assistant.modules.weather.routes import router as weather_router
 from assistant.services.voice.routes import router as voice_router
 
@@ -38,6 +41,9 @@ app.include_router(jobs_router)
 app.include_router(events_router)
 app.include_router(flights_router)
 app.include_router(news_router)
+app.include_router(films_router)
+app.include_router(books_router)
+app.include_router(sports_router)
 app.include_router(voice_router)
 
 # get the voice (~60 MB, once) ready before the first alarm needs it

@@ -19,7 +19,7 @@
   {% elif not leg.origin %}
   <p class="extra">No stop found for the previous event’s location</p>
   {% elif not options %}
-  <p class="extra">{% if leg.arrive_by %}No direct connection gets you there on time{% else %}No direct connection in the next 2 hours{% endif %}</p>
+  <p class="extra">{% if leg.arrive_by %}No connection gets you there on time{% else %}No connection in the next 2 hours{% endif %}</p>
   {% else %}
   {% if late_min %}
   <p class="advice late">You'll be ~{{ late_min }} min late. Leave by {{ leave_by.astimezone(tz).strftime("%H:%M") }}</p>
@@ -32,7 +32,11 @@
     <span>{{ "🚋" if c.is_tram else "🚌" }} <b>{{ c.line }}</b> → {{ c.headsign }}<br>
       <small>{{ c.from_stop }} → {{ c.to_stop }}
         {% if c.delay_min %}<span class="late">~{{ c.expected_arrival.astimezone(tz).strftime("%H:%M") }}</span>
-        {%- else %}{{ c.arrives.astimezone(tz).strftime("%H:%M") }}{% endif %}</small></span>
+        {%- else %}{{ c.arrives.astimezone(tz).strftime("%H:%M") }}{% endif %}</small>
+      {%- if c.then %}<br>{{ "🚋" if c.then.is_tram else "🚌" }} <b>{{ c.then.line }}</b> → {{ c.then.headsign }}{% if c.misses_transfer %} <small class="late">may miss the change</small>{% endif %}<br>
+      <small>{{ c.then.departs.astimezone(tz).strftime("%H:%M") }} {{ c.then.from_stop }} → {{ c.then.to_stop }}
+        {% if c.then.delay_min %}<span class="late">~{{ c.then.expected_arrival.astimezone(tz).strftime("%H:%M") }}</span>
+        {%- else %}{{ c.then.arrives.astimezone(tz).strftime("%H:%M") }}{% endif %}</small>{% endif %}</span>
   </div>
   {% endfor %}
   {% endif %}

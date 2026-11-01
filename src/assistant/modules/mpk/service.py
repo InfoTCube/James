@@ -51,12 +51,26 @@ class Connection:
     trip_id: str = ""
     from_seq: int = 0
     delay_min: int | None = None  # live estimate; None = unknown
+    then: "Connection | None" = None  # the second vehicle, if this trip has a change
 
     @property
     def expected_arrival(self) -> datetime:
         """Arrival with the live delay estimate added (the timetable time if there's none).
         ponytail: assumes the delay stays the same for the rest of the trip."""
         return self.arrives + timedelta(minutes=self.delay_min or 0)
+
+    @property
+    def last(self) -> "Connection":
+        """The vehicle that reaches the destination."""
+        return self.then or self
+
+    @property
+    def misses_transfer(self) -> bool:
+        """Live delays say this vehicle reaches the change after the next one has left."""
+        if self.then is None:
+            return False
+        leaves = self.then.departs + timedelta(minutes=self.then.delay_min or 0)
+        return self.expected_arrival > leaves
 
 
 def resolve(location: str, places: dict[str, Place], stop_names: list[str]) -> Target | None:
@@ -195,6 +209,54 @@ def _names_sql(prefix: str, names: list[str]) -> tuple[str, dict]:
     return ", ".join(f":{k}" for k in keys), keys
 
 
+def _rides(
+    session: Session,
+    services: list[str],
+    earliest: int,
+    latest: int,
+    from_stops: list[str] | None = None,
+    to_stops: list[str] | None = None,
+) -> list:
+    """Every ride (board at one stop, get off at a later one of the same trip) on `services`
+    between the two times (seconds after midnight), limited to the given stop names."""
+    o_sql, o_keys = _names_sql("o", from_stops or [])
+    d_sql, d_keys = _names_sql("d", to_stops or [])
+    s_sql, s_keys = _names_sql("s", services)
+    from_filter = f"AND sa.name IN ({o_sql})" if from_stops else ""
+    to_filter = f"AND sb.name IN ({d_sql})" if to_stops else ""
+    return session.execute(
+        text(f"""
+            SELECT a.trip_id, a.seq AS from_seq, a.dep, b.arr, r.short_name, r.route_type,
+                   t.headsign,
+                   sa.name AS from_stop, sb.name AS to_stop
+            FROM mpk_stop_times a
+            JOIN mpk_stops sa ON sa.stop_id = a.stop_id {from_filter}
+            JOIN mpk_stop_times b ON b.trip_id = a.trip_id AND b.seq > a.seq
+            JOIN mpk_stops sb ON sb.stop_id = b.stop_id {to_filter}
+            JOIN mpk_trips t ON t.trip_id = a.trip_id
+                               AND t.service_id IN ({s_sql})
+            JOIN mpk_routes r ON r.route_id = t.route_id
+            WHERE a.dep >= :earliest AND b.arr <= :latest
+        """),  # noqa: S608  names are bound parameters, only placeholders are formatted
+        {**o_keys, **d_keys, **s_keys, "earliest": earliest, "latest": latest},
+    ).all()
+
+
+def _connection(r, midnight: datetime, then: Connection | None = None) -> Connection:
+    return Connection(
+        line=r.short_name,
+        is_tram=r.route_type == 0,
+        headsign=r.headsign,
+        from_stop=r.from_stop,
+        to_stop=r.to_stop,
+        departs=midnight + timedelta(seconds=r.dep),
+        arrives=midnight + timedelta(seconds=r.arr),
+        trip_id=r.trip_id,
+        from_seq=r.from_seq,
+        then=then,
+    )
+
+
 def connections(
     session: Session,
     origin: Target,
@@ -209,39 +271,21 @@ def connections(
     and reach the dest stop by `arrive_by`, one row per trip. latest_first: latest arrivals
     first (you have a deadline); otherwise earliest departures first (going home).
 
-    ponytail: direct trips only, same service day only (no after-midnight trips of the
-    previous day). Add transfers (e.g. RAPTOR) if a common trip needs a change.
+    ponytail: same service day only (no after-midnight trips of the previous day).
     """
     day = not_before.astimezone(tz).date()
     midnight = datetime.combine(day, time.min, tz)
     services = services_on(session, day)
     if not services:
         return []
-    o_sql, o_keys = _names_sql("o", origin.stops)
-    d_sql, d_keys = _names_sql("d", dest.stops)
-    s_sql, s_keys = _names_sql("s", services)
-    rows = session.execute(
-        text(f"""
-            SELECT a.trip_id, a.seq AS from_seq, a.dep, b.arr, r.short_name, r.route_type,
-                   t.headsign,
-                   sa.name AS from_stop, sb.name AS to_stop
-            FROM mpk_stop_times a
-            JOIN mpk_stops sa ON sa.stop_id = a.stop_id AND sa.name IN ({o_sql})
-            JOIN mpk_stop_times b ON b.trip_id = a.trip_id AND b.seq > a.seq
-            JOIN mpk_stops sb ON sb.stop_id = b.stop_id AND sb.name IN ({d_sql})
-            JOIN mpk_trips t ON t.trip_id = a.trip_id
-                               AND t.service_id IN ({s_sql})
-            JOIN mpk_routes r ON r.route_id = t.route_id
-            WHERE a.dep >= :earliest AND b.arr <= :latest
-        """),  # noqa: S608  names are bound parameters, only placeholders are formatted
-        {
-            **o_keys,
-            **d_keys,
-            **s_keys,
-            "earliest": int((not_before - midnight).total_seconds()),
-            "latest": int((arrive_by - midnight).total_seconds()),
-        },
-    ).all()
+    rows = _rides(
+        session,
+        services,
+        int((not_before - midnight).total_seconds()),
+        int((arrive_by - midnight).total_seconds()),
+        from_stops=origin.stops,
+        to_stops=dest.stops,
+    )
 
     best: dict[str, tuple] = {}  # per trip: board as late as possible, get off as early
     for r in rows:
@@ -252,20 +296,82 @@ def connections(
         ordered = sorted(best.values(), key=lambda r: (r.arr, r.dep), reverse=True)[:limit]
     else:
         ordered = sorted(best.values(), key=lambda r: (r.dep, r.arr))[:limit]
-    return [
-        Connection(
-            line=r.short_name,
-            is_tram=r.route_type == 0,
-            headsign=r.headsign,
-            from_stop=r.from_stop,
-            to_stop=r.to_stop,
-            departs=midnight + timedelta(seconds=r.dep),
-            arrives=midnight + timedelta(seconds=r.arr),
-            trip_id=r.trip_id,
-            from_seq=r.from_seq,
-        )
-        for r in ordered
+    return [_connection(r, midnight) for r in ordered]
+
+
+MIN_TRANSFER = 180  # seconds to get off, find the platform and board
+TRANSFER_SAVES = timedelta(minutes=15)  # a change must beat every direct trip by this much
+
+
+def transfers(
+    session: Session,
+    origin: Target,
+    dest: Target,
+    arrive_by: datetime,
+    not_before: datetime,
+    tz: ZoneInfo,
+) -> list[Connection]:
+    """Trips with one change, within the same limits as `connections`, latest departure first.
+    Only the sensible ones: nothing else leaves later and arrives at least as early.
+
+    ponytail: one change, at stops with the same name. Pl. Grunwaldzki → most Grunwaldzki on
+    foot isn't considered; add a walk between nearby stops if a real trip needs it.
+    """
+    day = not_before.astimezone(tz).date()
+    midnight = datetime.combine(day, time.min, tz)
+    services = services_on(session, day)
+    if not services:
+        return []
+    earliest = int((not_before - midnight).total_seconds())
+    latest = int((arrive_by - midnight).total_seconds())
+    ends = {*origin.stops, *dest.stops}  # changing here would just be a direct trip
+    onward: dict[str, list] = {}
+    for b in _rides(session, services, earliest, latest, to_stops=dest.stops):
+        if b.from_stop not in ends:
+            onward.setdefault(b.from_stop, []).append(b)
+    pairs = [
+        (a, b)
+        for a in _rides(session, services, earliest, latest, from_stops=origin.stops)
+        if a.to_stop not in ends
+        for b in onward.get(a.to_stop, ())
+        if b.dep - a.arr >= MIN_TRANSFER and b.short_name != a.short_name
     ]
+    # latest departure first; same times: the longest wait, so the change is safest
+    pairs.sort(key=lambda p: (-p[0].dep, p[1].arr, p[0].arr - p[1].dep))
+    found, soonest = [], math.inf
+    for a, b in pairs:
+        if b.arr < soonest:
+            soonest = b.arr
+            found.append(_connection(a, midnight, then=_connection(b, midnight)))
+    return found
+
+
+def journeys(
+    session: Session,
+    origin: Target,
+    dest: Target,
+    arrive_by: datetime,
+    not_before: datetime,
+    tz: ZoneInfo,
+    limit: int = 3,
+    latest_first: bool = True,
+) -> list[Connection]:
+    """Like `connections`, plus trips with a change where there's no direct trip about as good
+    (one that leaves and arrives within TRANSFER_SAVES of it, or better)."""
+    direct = connections(session, origin, dest, arrive_by, not_before, tz, limit, latest_first)
+    changes = [
+        t
+        for t in transfers(session, origin, dest, arrive_by, not_before, tz)
+        if not any(
+            d.departs >= t.departs - TRANSFER_SAVES and d.arrives <= t.last.arrives + TRANSFER_SAVES
+            for d in direct
+        )
+    ]
+    if latest_first:
+        key = lambda c: (-c.last.arrives.timestamp(), -c.departs.timestamp())  # noqa: E731
+    else:
+        key = lambda c: (c.departs, c.last.arrives)  # noqa: E731
+    return sorted([*direct, *changes], key=key)[:limit]
 
 
 # --- live delays -------------------------------------------------------------------------------
@@ -457,7 +563,7 @@ def current_trip(session: Session, now: datetime, config: Config) -> Trip | None
             arrive_by = leg.arrive_by - timedelta(minutes=leg.dest.walk_minutes)
         else:
             arrive_by = not_before + HOME_WINDOW
-        options = connections(
+        options = journeys(
             session,
             leg.origin,
             leg.dest,
@@ -468,7 +574,7 @@ def current_trip(session: Session, now: datetime, config: Config) -> Trip | None
         )
         late_min = None
         if not options and leg.arrive_by:  # you'll be late: earliest arrivals, up to 20 min late
-            options = connections(
+            options = journeys(
                 session,
                 leg.origin,
                 leg.dest,
@@ -477,10 +583,10 @@ def current_trip(session: Session, now: datetime, config: Config) -> Trip | None
                 tz=config.tz,
                 latest_first=False,
             )
-            options.sort(key=lambda c: c.arrives)
+            options.sort(key=lambda c: c.last.arrives)
             if options:
                 walk = timedelta(minutes=leg.dest.walk_minutes)
-                late = options[0].arrives + walk - leg.arrive_by
+                late = options[0].last.arrives + walk - leg.arrive_by
                 late_min = max(1, round(late.total_seconds() / 60))
         if options and leg.arrive_by:
             leave_by = options[0].departs - timedelta(minutes=leg.origin.walk_minutes)
@@ -524,7 +630,7 @@ def first_departure(
     if leg is None:
         return None
     if leg.dest:
-        options = connections(
+        options = journeys(
             session,
             leg.origin,
             leg.dest,
