@@ -16,6 +16,7 @@ from assistant.modules.jobs.collector import JobsCollector
 from assistant.modules.mpk.alerts import LeaveNowAlert
 from assistant.modules.mpk.collector import GeocodeCollector, MpkCollector
 from assistant.modules.news.collector import NewsCollector, NewsDigestCollector
+from assistant.modules.parcels.collector import ParcelsCollector
 from assistant.modules.sports.collector import SportsCollector
 from assistant.modules.weather.collector import WeatherCollector
 
@@ -38,4 +39,5 @@ COLLECTORS: list[Collector] = [
     SportsCollector(),
     BiedronkaCollector(),
     BackupCollector(),
+    ParcelsCollector(),
 ]

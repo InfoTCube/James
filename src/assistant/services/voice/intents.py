@@ -403,6 +403,7 @@ INTENTS: list[tuple[str, Handler]] = [
     ),
     (r"\b(match|matches|scores?|sports?|football)\b", _sports),  # before "next": not a trip
     (r"\b(promotions?|promos?|biedronka|on sale)\b", _reply(replies.reply_promos)),
+    (r"\b(parcels?|packages?|deliver(y|ies)|inpost)\b", _reply(replies.reply_track)),
     (r"\b(tram|bus|leave|departures?|trip|next)\b", _reply(replies.reply_next)),
     (
         r"\b(today|tomorrow|calendar|schedule|plans?|agenda)\b|\bwhat do i have\b"

@@ -53,7 +53,9 @@ from assistant.services.bot.replies import (
     reply_status,
     reply_stop,
     reply_today,
+    reply_track,
     reply_unread,
+    reply_untrack,
     reply_unwatched,
     reply_watched,
     reply_weather,
@@ -94,6 +96,8 @@ COMMANDS = {
     "pause": (reply_pause, "Pause the music"),
     "skip": (reply_skip, "Next track"),
     "stop": (reply_stop, "Stop the music"),
+    "track": (reply_track, "Track an InPost parcel: /track <number> [name]; alone: the list"),
+    "untrack": (reply_untrack, "Stop tracking a parcel: /untrack headphones"),
     "status": (reply_status, "Failing collectors, AI calls used, free disk"),
 }
 

@@ -1,5 +1,6 @@
 """Reply texts for bot commands. Plain functions over the DB, no Telegram here."""
 
+import re
 import shutil
 from datetime import date, datetime, time, timedelta
 
@@ -24,6 +25,8 @@ from assistant.modules.music import client as music_client
 from assistant.modules.music import service as music
 from assistant.modules.news import service as news
 from assistant.modules.notes import service as notes
+from assistant.modules.parcels import service as parcels
+from assistant.modules.parcels.collector import ParcelsCollector
 from assistant.modules.sports import service as sports
 from assistant.modules.weather import service as weather
 
@@ -456,3 +459,35 @@ def reply_skip(session: Session, now: datetime, config: Config, args: list[str])
 def reply_stop(session: Session, now: datetime, config: Config, args: list[str]) -> str:
     """/stop: stop the music and clear the queue."""
     return "⏹️ Stopped" if music.stop(session) else "Nothing playing."
+
+
+def reply_track(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/track 620000011234567890123456 [headphones]: track an InPost parcel; /track: the list."""
+    text = " ".join(args)
+    numbers = parcels.find_numbers(text)
+    if not numbers:
+        if args:
+            return "Usage: /track <24-digit InPost number> [name]"
+        tracked = parcels.parcels(session)
+        if not tracked:
+            return "No parcels tracked. Usage: /track <24-digit InPost number> [name]"
+        return "\n".join(parcels.format_parcel(p, config.tz) for p in tracked)
+    label = text
+    for n in numbers:  # the name is what's left after the number(s)
+        label = re.sub(r"[ -]?".join(n), "", label)
+    label = " ".join(label.split()) if len(numbers) == 1 else ""
+    added = [parcels.add(session, n, label, now) for n in numbers]
+    session.flush()
+    try:
+        ParcelsCollector().check(session, alert=False)
+    except Exception:  # InPost down: the collector checks again in 20 min
+        pass
+    return "\n".join(parcels.format_parcel(p, config.tz) for p in added)
+
+
+def reply_untrack(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/untrack headphones (or the last digits of its number): stop tracking it."""
+    if not args:
+        return "Usage: /untrack <name or last digits>"
+    p = parcels.remove(session, " ".join(args))
+    return f"🗑️ Stopped tracking {parcels.name(p)}" if p else "No such parcel."

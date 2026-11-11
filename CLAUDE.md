@@ -34,6 +34,9 @@ Most features are scheduled data fetching + filtering rules. **Default to determ
 | `biedronka` | Promotions on products the user actually buys | Biedronka leaflets (images, read by local OCR) | No |
 | `notes` | Store and search notes | Local (SQLite and/or Markdown files) | No |
 | `flights` | Good flight deals from WRO for date windows and prices set from Telegram, checked ~2×/day | Ryanair + Wizz Air fare endpoints (unofficial) | No |
+| `parcels` | InPost parcel tracking + alerts (later: numbers caught from emails) | InPost ShipX public tracking API | No |
+| `shopping` | Shopping list, items on Biedronka promotion flagged | Local (later Google Tasks) | No |
+| `backup` | Nightly SQLite copy, last 7 kept | Local | No |
 | `alarm` | Alarms, tied to a morning briefing | Scheduler + audio | No |
 | `music` | Play/find music (search + its YouTube Mix as radio), no ads | YouTube via yt-dlp; audio stream played by the dashboard | No |
 | `events` | Hackathons & IT events (in your cities; online ones by keyword, no online hackathons) | Crossweb.pl, Meetup | No — keyword filters |
@@ -174,7 +177,7 @@ Work in this order. Keep each step small and working end-to-end before moving on
 **Phase 4 — AI-assisted & the rest**
 - [x] `core/ai.py` wrapper
 - [x] `news` (RSS/Atom hourly; AI digest overnight; dashboard card, /news, top 3 in the morning briefing)
-- [ ] `email`
+- [ ] `email` (also: InPost tracking numbers from emails → `parcels`, via `parcels.service.find_numbers`)
 - [x] `films` (JustWatch, PL subscription streaming; AI picks 3 a week; dashboard card, /films, voice)
 - [x] `books` (Open Library; AI picks 3 a month; dashboard card, /books, voice)
 - [x] `birthdays`
@@ -182,6 +185,11 @@ Work in this order. Keep each step small and working end-to-end before moving on
 - [x] `biedronka` (food leaflets by local OCR; /buy, /promos, alerts, dashboard card, voice)
 - [x] `music` (YouTube via yt-dlp, no ads; /play /pause /skip /stop, voice, played by the dashboard)
 - [x] `/status` (failing collectors, AI calls used, free disk; also on `/debug`)
+- [x] Air quality in `weather` (Open-Meteo CAMS; card, briefing, smog alert)
+- [x] Screen black at night (`screen` in config)
+- [x] `backup` (nightly, last 7)
+- [x] `parcels` (InPost; /track /untrack, alerts, card, voice)
+- [ ] `shopping` list
 
 ## How to work in this repo
 
