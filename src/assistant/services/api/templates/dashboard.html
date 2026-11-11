@@ -32,7 +32,7 @@
     /* left rail: always visible */
     #rail {
       display: flex; flex-direction: column; gap: calc(var(--gap) / 2);
-      padding: var(--gap); border-right: 1px solid var(--panel);
+      padding: var(--gap); border-right: 1px solid var(--panel); min-height: 0;
     }
     #clock {
       font: 300 clamp(56px, min(11vw, 19.5vh), 230px)/0.85 var(--numbers);
@@ -43,7 +43,11 @@
     #temp { font: 500 2.2em/1 var(--numbers); color: var(--sky); min-height: 1em; }
     #next-alarm { font: 500 1.6em/1 var(--numbers); }
     #next-alarm span { color: var(--slate); font: 400 0.6em var(--text); margin-left: 0.3em; }
-    #cards { margin: auto 0 0; padding: 0; list-style: none; color: var(--slate); font-size: 0.8em; }
+    #cards {  /* scrolls on its own when there are more cards than fit */
+      margin: auto 0 0; padding: 0; list-style: none; color: var(--slate); font-size: 0.8em;
+      min-height: 0; overflow-y: auto; position: relative; scrollbar-width: thin;
+      scrollbar-color: var(--panel) transparent; overscroll-behavior: contain;
+    }
     #cards button {  /* tap a card's name to show it (touch screen: big enough to hit) */
       display: block; width: 100%; min-height: 2.2em; padding: 0.25em 0 0.25em 0.9em;
       border: 0; border-left: 3px solid transparent; background: none; color: inherit;
@@ -333,6 +337,20 @@
         li.append(button);
         return li;
       }));
+      revealCurrent();
+    }
+
+    // Keep the shown card's name visible in the rail: scroll to it when it's off screen, unless
+    // you're browsing the list yourself (touched or scrolled it in the last 10 s).
+    let browsingUntil = 0;
+    const browsing = () => { browsingUntil = Date.now() + 10000; };
+    ["pointerdown", "wheel", "touchmove"].forEach(e => list.addEventListener(e, browsing, { passive: true }));
+    function revealCurrent() {
+      const li = list.querySelector("button.on")?.parentElement;
+      if (!li || Date.now() < browsingUntil) return;
+      const top = li.offsetTop, bottom = top + li.offsetHeight;
+      if (top >= list.scrollTop && bottom <= list.scrollTop + list.clientHeight) return;
+      list.scrollTo({ top: top - (list.clientHeight - li.offsetHeight) / 2, behavior: "smooth" });
     }
 
     tick(); setInterval(tick, 1000);
