@@ -120,6 +120,12 @@ def reply_weather(session: Session, now: datetime, config: Config, args: list[st
     if advice:
         lines.append(f"👕 {advice.layers}")
         lines += advice.extras
+    air = weather.air_now(session, now)
+    if air:
+        lines.append(
+            weather.get_air_advice(session, now, tz)
+            or f"Air {weather.aqi_label(air.aqi)} · PM2.5 {air.pm2_5:.0f} µg/m³"
+        )
     return "\n".join(lines)
 
 

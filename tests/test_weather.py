@@ -123,3 +123,30 @@ def test_advice_uses_only_outdoor_hours(tmp_path):
     with Session(engine) as s:
         advice = get_clothing_advice(s, local(7), TZ, events=classes)
     assert advice.layers == "Warm jacket"  # 09:00 hour at 6°, not the -5° while inside
+
+
+def test_air_quality_parse_advice_and_alert(tmp_path, monkeypatch):
+    from assistant.modules.weather import collector, service
+
+    air = collector.parse_air(
+        json.loads(Path("tests/fixtures/weather/air.json").read_text(encoding="utf-8"))
+    )
+    assert [a.aqi for a in air] == [53, 54, 55, 85, 52]  # the hour without an AQI is skipped
+    assert [service.aqi_label(x) for x in (10, 20, 59, 60, 85, 140)] == [
+        "good", "fair", "moderate", "poor", "very poor", "extremely poor"
+    ]  # fmt: skip
+
+    sent = []
+    monkeypatch.setattr(collector, "notify", lambda s, text, key: sent.append((text, key)))
+    start = air[0].time
+    with Session(make_engine(tmp_path / "db.sqlite")) as s:
+        s.add_all(air)
+        s.flush()
+        assert service.air_now(s, start + timedelta(minutes=30)).aqi == 53
+        assert service.get_air_advice(s, start, TZ) == (
+            "😷 Air very poor around 05:00 (PM2.5 38 µg/m³): keep windows shut, skip running "
+            "outside, wear a mask (FFP2) outside."
+        )
+        collector.alert_smog(s, start)
+        assert sent[0][1] == "smog:2026-11-11"
+        assert service.get_air_advice(s, start + timedelta(hours=6), TZ) is None  # it passed

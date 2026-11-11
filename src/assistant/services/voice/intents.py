@@ -397,7 +397,8 @@ INTENTS: list[tuple[str, Handler]] = [
     ),
     (r"\b(briefing|good morning)\b", _reply(replies.reply_briefing)),
     (
-        r"\b(weather|wear|jacket|coat|umbrella|rain\w*|cold|warm|temperature|forecast)\b",
+        r"\b(weather|wear|jacket|coat|umbrella|rain\w*|cold|warm|temperature|forecast"
+        r"|air|smog|pollution)\b",
         _reply(replies.reply_weather),
     ),
     (r"\b(match|matches|scores?|sports?|football)\b", _sports),  # before "next": not a trip

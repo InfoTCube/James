@@ -25,6 +25,8 @@ def weather_widget(request: Request):
         hours = service.get_hours(session, now - timedelta(hours=1), now + timedelta(hours=24))
         events = calendar.outdoor_events(session, now, tz)
         advice = service.get_clothing_advice(session, now, tz, events)
+        air = service.air_now(session, now)
+        air_advice = service.get_air_advice(session, now, tz)
     return templates.TemplateResponse(
         request,
         "widget.html",
@@ -32,6 +34,9 @@ def weather_widget(request: Request):
             "now": hours[0] if hours else None,
             "strip": hours[3::3][:6],  # every 3h, next ~18h
             "advice": advice,
+            "air": air,
+            "air_label": service.aqi_label(air.aqi) if air else None,
+            "air_advice": air_advice,
             "stale": is_stale(engine, "weather", timedelta(hours=3)),
             "tz": tz,
             "describe": service.describe,

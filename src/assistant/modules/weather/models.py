@@ -15,3 +15,14 @@ class WeatherHourly(Base):
     precip_mm: Mapped[float]
     wind_kmh: Mapped[float]
     code: Mapped[int]  # WMO weather code
+
+
+class WeatherAir(Base):
+    """Hourly air quality forecast (Open-Meteo, CAMS Europe)."""
+
+    __tablename__ = "weather_air"
+
+    time: Mapped[datetime] = mapped_column(UTCDateTime, primary_key=True)
+    pm2_5: Mapped[float]  # µg/m³
+    pm10: Mapped[float]  # µg/m³
+    aqi: Mapped[int]  # European AQI: 0–20 good … 80–100 very poor, 100+ extremely poor

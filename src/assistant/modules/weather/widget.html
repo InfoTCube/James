@@ -21,6 +21,8 @@
   <p class="advice">{{ advice.layers }}</p>
   {% for e in advice.extras %}<p class="extra">{{ e }}</p>{% endfor %}
   {% endif %}
+  {% if air_advice %}<p class="extra">{{ air_advice }}</p>
+  {% elif air %}<p class="extra">Air {{ air_label }} · PM2.5 {{ "%.0f"|format(air.pm2_5) }} µg/m³</p>{% endif %}
   {% else %}
   <p>No forecast yet.</p>
   {% endif %}
