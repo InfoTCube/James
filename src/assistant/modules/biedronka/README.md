@@ -18,6 +18,14 @@
 - **Matching** (`service.find_on_page`): done on read, so a new product is found in pages already
   read. Each big price is paired with the nearest line naming the product, then the nearest
   discount and old price. New offers go to Telegram in one message.
+- **AI check** (`biedronka_check`, 05:50, after the night's reading): the offers Claude hasn't
+  seen go in **one** call, each with the OCR words around its price. It answers ok / wrong (another
+  product, e.g. egg pasta for `jaja`, or a neighbour's price) / the right price. Verdicts are kept
+  in `biedronka_checks`, so an offer is sent once. Wrong ones are hidden everywhere, corrected
+  prices replace the read one (discount and old price dropped, they came from the wrong spot).
+  The Telegram alert goes out after the check; if Claude fails at night it goes out unchecked,
+  and a daytime worker start waits for the night. Unchecked offers (e.g. a product added today)
+  show as read until then.
 - **Shown:** dashboard card (every 3rd round, tap an offer to get its page on Telegram), `/promos`,
   voice ("anything on promotion?").
 - **Fragility:** high. OCR misreads Polish letters ("Masto" for "Masło"), and the price pairing is

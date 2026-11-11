@@ -31,7 +31,7 @@ Most features are scheduled data fetching + filtering rules. **Default to determ
 | `books` | Monthly book suggestions | Open Library | Selection |
 | `sports` | Football/volleyball matches for chosen teams/leagues + scores | TheSportsDB (public key, no signup) | No |
 | `news` | News digest (written overnight; raw headlines without AI) | RSS/Atom feeds from config | Summary |
-| `biedronka` | Promotions on products the user actually buys | Biedronka leaflets (images, read by local OCR) | No |
+| `biedronka` | Promotions on products the user actually buys | Biedronka leaflets (images, read by local OCR) | Nightly check of the matches |
 | `notes` | Store and search notes | Local (SQLite and/or Markdown files) | No |
 | `flights` | Good flight deals from WRO for date windows and prices set from Telegram, checked ~2×/day | Ryanair + Wizz Air fare endpoints (unofficial) | No |
 | `parcels` | InPost parcel tracking + alerts (later: numbers caught from emails) | InPost ShipX public tracking API | No |
@@ -119,7 +119,7 @@ Auth: `CLAUDE_CODE_OAUTH_TOKEN` environment variable (generated once with `claud
 
 Usage: `ai.ask(module, prompt, data, model="haiku")` → answer text or `None`. **Claude is only called 01:00–06:00 local time** (`ai.NIGHT`), so AI work doesn't use the Pro quota while the user does: schedule AI collectors in that window, and make them retry next night if they got `None` (the worker also runs every collector at startup, often in the daytime). Only what can't wait (voice fallback) passes `anytime=True`. Call it before writing in your collector's transaction (it records the call in its own). Calls are logged in the `ai_calls` table (also the cache); at most `MAX_CALLS_PER_DAY` (30) real calls per day. The CLI flags (no tools/MCP/settings, one-line system prompt) keep overhead ~600 input tokens per call; `--bare` can't be used because it ignores OAuth.
 
-Allowed AI uses: email summary, news summary, film/book selection, optional job ranking, voice fallback for requests the intent matcher doesn't understand. Anything else: ask first. The Pro quota is shared with the user's normal Claude usage — keep calls few and batched (daily/weekly jobs, not per-item loops).
+Allowed AI uses: email summary, news summary, film/book selection, optional job ranking, the nightly check of Biedronka offers (wrong product / neighbour's price, one call), voice fallback for requests the intent matcher doesn't understand. Anything else: ask first. The Pro quota is shared with the user's normal Claude usage — keep calls few and batched (daily/weekly jobs, not per-item loops).
 
 ## Conventions
 

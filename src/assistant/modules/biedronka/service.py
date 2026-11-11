@@ -3,6 +3,7 @@
 Matching happens on read, so a product you add is found in leaflets that were already read.
 """
 
+import hashlib
 import json
 import math
 import re
@@ -15,7 +16,7 @@ from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from assistant.core.config import fold
-from assistant.modules.biedronka.models import BiedronkaPage, BiedronkaProduct
+from assistant.modules.biedronka.models import BiedronkaCheck, BiedronkaPage, BiedronkaProduct
 
 # Of the page's width: a price this close to a line naming the product belongs to it. Further for
 # a line with a size ("…, 200 g"), which is the product's name rather than words on its packaging.
@@ -26,6 +27,7 @@ SIZE = re.compile(r"\d\s*(g|kg|ml|l|szt)\b", re.I)
 WHOLE_PRICE = re.compile(r"^\d{3,4}$")  # printed big without a comma: "299" is 2,99 zł
 COMMA_PRICE = re.compile(r"^\d{1,3},\d{2}$")
 DISCOUNT = re.compile(r"(\d{1,2})\s*%\s*TAN", re.I)
+CONTEXT = 12  # lines around a price shown to the AI check
 
 
 @dataclass
@@ -38,6 +40,8 @@ class Offer:
     valid_to: date | None
     page_id: int
     image: str
+    context: str = ""  # OCR text printed around the price, for the AI check
+    checked: bool = False  # Claude has seen it (wrong ones aren't returned at all)
 
 
 def add_products(session: Session, names: list[str], now: datetime) -> list[str]:
@@ -106,6 +110,11 @@ def find_on_page(lines: list[list], product: str) -> list[dict]:
     def dist(a: list, b: list) -> float:
         return math.hypot(a[0] - b[0], a[1] - b[1])
 
+    def around(spot: list) -> str:
+        """The CONTEXT lines printed nearest to `spot`, top to bottom."""
+        near = sorted(lines, key=lambda ln: dist(spot, ln))[:CONTEXT]
+        return " / ".join(ln[3] for ln in sorted(near, key=lambda ln: (ln[1], ln[0])))
+
     found = [ln for ln in lines if line_matches(ln[3], product)]
     prices = [(ln, p) for ln in lines if (p := _price(ln[3], ln[2], tall)) is not None]
     offers: dict[float | str, dict] = {}
@@ -116,7 +125,7 @@ def find_on_page(lines: list[list], product: str) -> list[dict]:
         if not close:
             if sized:  # a named product with a price OCR missed
                 offers.setdefault(name[3], {"text": name[3], "price": None, "old_price": None,
-                                            "discount": None})  # fmt: skip
+                                            "discount": None, "context": around(name)})  # fmt: skip
             continue
         _, spot, price = min(close, key=lambda c: c[0])
         if price in offers:
@@ -134,6 +143,7 @@ def find_on_page(lines: list[list], product: str) -> list[dict]:
             "price": price,
             "old_price": float(old) if old else None,
             "discount": int(min(discounts, key=lambda d: d[0])[1][1]) if discounts else None,
+            "context": around(spot),
         }
     return list(offers.values())
 
@@ -158,7 +168,51 @@ def offers(session: Session, today: date) -> list[Offer]:
                     Offer(product=product, valid_to=page.valid_to, page_id=page.id,
                           image=page.image, **o),
                 )  # fmt: skip
-    return sorted(found.values(), key=lambda o: (fold(o.product), o.price is None, o.price or 0))
+    checks = {c.key: c for c in session.scalars(select(BiedronkaCheck))}
+    shown = []
+    for o in found.values():
+        c = checks.get(offer_key(o))
+        if c and not c.ok:
+            continue
+        if c and c.price is not None and c.price != o.price:  # paired with a neighbour's price
+            o.price, o.old_price, o.discount = c.price, None, None
+        o.checked = c is not None
+        shown.append(o)
+    return sorted(shown, key=lambda o: (fold(o.product), o.price is None, o.price or 0))
+
+
+def offer_key(o: Offer) -> str:
+    """Identifies an offer across runs (same page, product, price as read, words)."""
+    raw = json.dumps([o.product, o.image, o.price, o.text], ensure_ascii=False)
+    return hashlib.sha1(raw.encode()).hexdigest()
+
+
+def check_input(todo: list[Offer]) -> str:
+    """The offers for the AI check, one per line: id | wanted | matched words | price | nearby."""
+    rows = []
+    for i, o in enumerate(todo, 1):
+        price = f"{o.price:.2f} zł".replace(".", ",") if o.price is not None else "no price"
+        rows.append(f"{i} | {o.product} | {o.text} | {price} | {o.context}")
+    return "\n".join(rows)
+
+
+def parse_checks(answer: str, todo: list[Offer]) -> dict[str, tuple[bool, float | None]]:
+    """Answer lines "id | ok", "id | wrong", "id | price 6,99" → {offer_key: (ok, price)}.
+    Lines that don't parse are left out: those offers stay unchecked."""
+    verdicts = {}
+    for line in answer.splitlines():
+        num, sep, verdict = line.partition("|")
+        num, verdict = num.strip(" •-*`"), fold(verdict.strip(" .`"))
+        if not sep or not num.isdigit() or not 1 <= int(num) <= len(todo):
+            continue
+        o = todo[int(num) - 1]
+        if verdict == "ok":
+            verdicts[offer_key(o)] = (True, None)
+        elif verdict == "wrong":
+            verdicts[offer_key(o)] = (False, None)
+        elif m := re.fullmatch(r"price\s+(\d{1,3})[,.](\d{2})(\s*zl)?", verdict):
+            verdicts[offer_key(o)] = (True, float(f"{m[1]}.{m[2]}"))
+    return verdicts
 
 
 def format_offer(o: Offer) -> str:

@@ -133,9 +133,14 @@ def env(tmp_path, monkeypatch):
         def __init__(self):
             self.engine, self.fetched, self.sent, self.ocr = engine, fetched, sent, ocr
 
-        def run(self):
+        def run(self, answer=None):
+            """A night: read the pages, then the AI check (`answer`; None: the call failed)."""
+            monkeypatch.setattr(collector.ai, "ask", lambda *a, **k: answer)
+            monkeypatch.setattr(collector.ai, "at_night", lambda now: True)
             with Session(engine) as s, s.begin():
                 collector.BiedronkaCollector().run(s)
+            with Session(engine) as s, s.begin():
+                collector.BiedronkaCheckCollector().run(s)
 
         def buy(self, *names):
             with Session(engine) as s, s.begin():
@@ -246,3 +251,47 @@ def test_widget_and_tap(env, monkeypatch):
     monkeypatch.setattr(routes, "notify", lambda s, text: sent.append(text) or True)
     assert client.post(f"/api/biedronka/send/{page_id}").text == "✓ sent to Telegram"
     assert sent[0].startswith("🐞 masło") and "https://images.biedronka.cloud" in sent[0]
+
+
+def test_ai_check_hides_wrong_offers_fixes_prices_and_runs_once(env, monkeypatch):
+    env.buy("masło")
+    with Session(env.engine) as s, s.begin():  # read pages without the check
+        monkeypatch.setattr(collector.ai, "ask", lambda *a, **k: None)
+        collector.BiedronkaCollector().run(s)
+    with Session(env.engine) as s:
+        todo = service.offers(s, TODAY)
+    assert len(todo) >= 2 and not any(o.checked for o in todo)
+    data = service.check_input(todo)
+    assert data.startswith(f"1 | masło | {todo[0].text} | ") and todo[0].context in data
+
+    asked = []
+
+    def ask(module, prompt, data):
+        asked.append(data)
+        rest = "\n".join(f"{i} | ok" for i in range(3, len(todo) + 1))
+        return f"1 | wrong\n2 | Price 1,49 zł\nsure, here you go\n{rest}\n99 | ok"
+
+    env.sent.clear()
+    monkeypatch.setattr(collector.ai, "ask", ask)
+    with Session(env.engine) as s, s.begin():
+        collector.BiedronkaCheckCollector().run(s)
+    with Session(env.engine) as s:
+        shown = service.offers(s, TODAY)
+    assert todo[0].text not in [o.text for o in shown if o.image == todo[0].image]
+    fixed = next(o for o in shown if o.image == todo[1].image and o.text == todo[1].text)
+    assert (fixed.price, fixed.discount, fixed.checked) == (1.49, None, True)
+    assert len(env.sent) == 1 and "1,49 zł" in env.sent[0]
+
+    with Session(env.engine) as s, s.begin():  # checked offers aren't sent again
+        collector.BiedronkaCheckCollector().run(s)
+    assert len(asked) == 1
+
+
+def test_ai_check_waits_for_the_night(env, monkeypatch):
+    env.buy("masło")
+    with Session(env.engine) as s, s.begin():
+        monkeypatch.setattr(collector.ai, "ask", lambda *a, **k: None)
+        monkeypatch.setattr(collector.ai, "at_night", lambda now: False)
+        collector.BiedronkaCollector().run(s)
+        collector.BiedronkaCheckCollector().run(s)
+    assert env.sent == []  # daytime start: no unchecked alert, the night run does it

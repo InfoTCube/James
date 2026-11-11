@@ -5,7 +5,7 @@ import assistant.modules.notes.models  # noqa: F401
 from assistant.core.collector import Collector
 from assistant.modules.alarm.collector import AlarmPlanner, AlarmRinger
 from assistant.modules.backup.collector import BackupCollector
-from assistant.modules.biedronka.collector import BiedronkaCollector
+from assistant.modules.biedronka.collector import BiedronkaCheckCollector, BiedronkaCollector
 from assistant.modules.birthdays.collector import BirthdayReminder
 from assistant.modules.books.collector import BooksCollector
 from assistant.modules.calendar.collector import CalendarCollector
@@ -38,6 +38,7 @@ COLLECTORS: list[Collector] = [
     BooksCollector(),
     SportsCollector(),
     BiedronkaCollector(),
+    BiedronkaCheckCollector(),
     BackupCollector(),
     ParcelsCollector(),
 ]
