@@ -112,6 +112,8 @@
     .close:focus-visible { outline: 3px solid var(--paper); outline-offset: 3px; }
     #leave .close { margin: 1.2em 0 0; }
     #sound-hint { color: var(--amber); font-size: 0.7em; }
+    #night { position: fixed; inset: 0; z-index: 50; background: #000; cursor: none; }
+    #night[hidden] { display: none; }
     #leave[hidden] { display: none; }
     #leave {
       position: fixed; inset: 0; z-index: 9; display: grid; align-content: center;
@@ -220,6 +222,7 @@
   </style>
 </head>
 <body>
+  <div id="night" hidden></div>
   <aside id="rail">
     <div id="clock"></div>
     <div id="date"></div>
@@ -500,6 +503,21 @@
       voiceReply.children[v.line]?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
     new EventSource("/api/voice/events").onmessage = e => showVoice(JSON.parse(e.data));  // reconnects by itself
+
+    // --- night: black between screen.dark_from and dark_until (config.yaml), unless something is
+    // happening; a tap shows the dashboard for a minute ---
+    // ponytail: black pixels, the backlight stays on; on the mini PC add `xset dpms force off`
+    // from the host if the glow or power matters
+    const night = document.getElementById("night"), OFF = "{{ screen_off }}", ON = "{{ screen_on }}";
+    let awakeUntil = 0;
+    const isNight = t => !!OFF && (OFF < ON ? t >= OFF && t < ON : t >= OFF || t < ON);
+    function updateNight() {
+      const t = new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: TZ });
+      const busy = !overlay.hidden || !leave.hidden || voice.classList.contains("on") || Date.now() < awakeUntil;
+      night.hidden = !isNight(t) || busy;
+    }
+    night.addEventListener("click", () => { awakeUntil = Date.now() + 60000; updateNight(); });
+    updateNight(); setInterval(updateNight, 1000);
 
     // --- music: plays the queue set by /play (YouTube audio, no player so no ads); quiet while
     // the alarm, a briefing, "leave now" or the voice service talks ---

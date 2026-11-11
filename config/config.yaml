@@ -43,6 +43,11 @@ voice: en_GB-alan-medium
 # Polish names (stops, streets, people) are read by this Polish voice. Also: pl_PL-gosia-medium (female)
 voice_pl: pl_PL-darkman-medium
 
+# Dashboard goes black at night. An alarm, "leave now", voice or a tap wakes it (a tap: 1 minute).
+screen:
+  dark_from: "23:00"  # null: never
+  dark_until: "07:00"
+
 # Voice control (voice service): say the wake word, wait for the beep, then ask.
 # wake_word: a built-in openWakeWord model (hey_jarvis, alexa, hey_mycroft, hey_rhasspy), or a
 # trained .onnx file in this folder. "Hey James" has to be trained (once, ~1 h, free): open

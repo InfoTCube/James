@@ -70,7 +70,13 @@ def health() -> dict:
 
 @app.get("/")
 def dashboard(request: Request):
-    return templates.TemplateResponse(request, "dashboard.html", {"version": VERSION})
+    screen = load_config().screen
+    off = screen.dark_from.strftime("%H:%M") if screen.dark_from else ""
+    return templates.TemplateResponse(
+        request,
+        "dashboard.html",
+        {"version": VERSION, "screen_off": off, "screen_on": screen.dark_until.strftime("%H:%M")},
+    )
 
 
 @app.get("/debug")
