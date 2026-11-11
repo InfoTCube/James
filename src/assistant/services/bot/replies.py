@@ -27,6 +27,7 @@ from assistant.modules.news import service as news
 from assistant.modules.notes import service as notes
 from assistant.modules.parcels import service as parcels
 from assistant.modules.parcels.collector import ParcelsCollector
+from assistant.modules.shopping import service as shopping
 from assistant.modules.sports import service as sports
 from assistant.modules.weather import service as weather
 
@@ -491,3 +492,25 @@ def reply_untrack(session: Session, now: datetime, config: Config, args: list[st
         return "Usage: /untrack <name or last digits>"
     p = parcels.remove(session, " ".join(args))
     return f"🗑️ Stopped tracking {parcels.name(p)}" if p else "No such parcel."
+
+
+def reply_list(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/list mleko, chleb: add to the shopping list; /list: the list (🐞 = on promotion)."""
+    lines = []
+    if args:
+        added = shopping.add(session, " ".join(args).split(","), now)
+        lines.append("🛒 Added: " + ", ".join(added) if added else "🛒 Already on the list.")
+        return "\n".join(lines + shopping.format_list(session, now.astimezone(config.tz).date()))
+    lines = shopping.format_list(session, now.astimezone(config.tz).date())
+    return "🛒 Shopping list:\n" + "\n".join(lines) if lines else "🛒 The list is empty."
+
+
+def reply_got(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/got mleko (or its number): tick it off; /got all: empty the list."""
+    if not args:
+        return "Usage: /got mleko, /got 3 or /got all"
+    if args == ["all"]:
+        return f"🛒 Cleared {shopping.clear(session)} items."
+    gone = [i.text for ref in " ".join(args).split(",") if (i := shopping.remove(session, ref))]
+    left = len(shopping.items(session))
+    return f"✅ {', '.join(gone)} ({left} left)" if gone else "Not on the list."

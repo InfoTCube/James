@@ -237,6 +237,21 @@ def _play(session: Session, now: datetime, config: Config, m: re.Match) -> str:
     return replies.reply_play(session, now, config, [what])
 
 
+def _shop_add(session: Session, now: datetime, config: Config, m: re.Match) -> str:
+    """ "add milk and bread to my shopping list"."""
+    items = re.split(r",\s*|\s+and\s+", m["items"])
+    reply = replies.reply_list(session, now, config, [", ".join(items)])
+    return reply.splitlines()[0]  # "Added: milk, bread", not the whole list read aloud
+
+
+def _shop_remove(session: Session, now: datetime, config: Config, m: re.Match) -> str:
+    return replies.reply_got(session, now, config, [m["item"]])
+
+
+def _shop_clear(session: Session, now: datetime, config: Config, m: re.Match) -> str:
+    return replies.reply_got(session, now, config, ["all"])
+
+
 def _now_playing(session: Session, now: datetime, config: Config, m: re.Match) -> str:
     current = music.now_playing(session)
     return f"This is {current.title}." if current else "Nothing is playing."
@@ -385,6 +400,19 @@ INTENTS: list[tuple[str, Handler]] = [
         r"\b(stop|don'?t|no longer|cancel)\b.*\bearl(y|ier)\b(?: (?:for|to|at) (?P<title>.+))?"
         r"|\b(arrive|be there|leave) on time\b(?: (?:for|to|at) (?P<title2>.+))?",
         _arrive_on_time,
+    ),
+    (
+        r"\b(add|put)\b (?P<items>.+?) (to|on) (my |the )?(shopping )?list\b",
+        _shop_add,
+    ),
+    (
+        r"\b(remove|take|cross|tick)\b( off)? (?P<item>.+?) (from|off) (my |the )?(shopping )?list",
+        _shop_remove,
+    ),
+    (r"\b(clear|empty)\b.*\bshopping list\b|\b(clear|empty) (my |the )?list\b", _shop_clear),
+    (
+        r"\bshopping\b|\bwhat do i (need to )?buy\b|\bwhat'?s on (my|the) list\b",
+        _reply(replies.reply_list),
     ),
     (
         r"^(please )?(add|put|create|schedule|make|new)\b"

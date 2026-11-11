@@ -189,7 +189,7 @@ Work in this order. Keep each step small and working end-to-end before moving on
 - [x] Screen black at night (`screen` in config)
 - [x] `backup` (nightly, last 7)
 - [x] `parcels` (InPost; /track /untrack, alerts, card, voice)
-- [ ] `shopping` list
+- [x] `shopping` list (/list /got, voice, card, Biedronka promos flagged; Google Tasks sync with `email`)
 
 ## How to work in this repo
 
