@@ -29,6 +29,7 @@ from assistant.modules.parcels import service as parcels
 from assistant.modules.parcels.collector import ParcelsCollector
 from assistant.modules.shopping import service as shopping
 from assistant.modules.sports import service as sports
+from assistant.modules.timers import service as timers
 from assistant.modules.weather import service as weather
 
 
@@ -514,3 +515,29 @@ def reply_got(session: Session, now: datetime, config: Config, args: list[str]) 
     gone = [i.text for ref in " ".join(args).split(",") if (i := shopping.remove(session, ref))]
     left = len(shopping.items(session))
     return f"✅ {', '.join(gone)} ({left} left)" if gone else "Not on the list."
+
+
+TIMER_USAGE = "Usage: /timer 10m pasta, /timer 1h30m, /timer 90s"
+
+
+def reply_timer(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/timer 10m [label]: start a timer (the dashboard rings it); alone: the running ones."""
+    if not args:
+        shown = timers.ringing(session, now) + timers.running(session, now)
+        if not shown:
+            return "No timers running. " + TIMER_USAGE
+        return "\n".join("⏲️ " + timers.describe(t, now) for t in shown)
+    length, label = timers.parse(" ".join(args))
+    if length is None:
+        return TIMER_USAGE
+    t = timers.add(session, length, label, now)
+    name = f"{t.label} timer" if t.label else "Timer"
+    return f"⏲️ {name} set for {timers.left(t, now)}."
+
+
+def reply_timer_off(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/timer_off [label]: stop the ringing timers, else cancel running ones (that one / all)."""
+    gone = timers.stop(session, now, " ".join(args))
+    if not gone:
+        return "No timer to stop."
+    return "⏲️ Stopped: " + ", ".join(t.label or "timer" for t in gone)

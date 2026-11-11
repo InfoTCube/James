@@ -26,6 +26,7 @@ from assistant.modules.mpk.alerts import format_connection
 from assistant.modules.music import service as music
 from assistant.modules.news import service as news
 from assistant.modules.sports import service as sports
+from assistant.modules.timers import service as timers
 from assistant.services.bot import replies
 
 log = logging.getLogger(__name__)
@@ -219,6 +220,9 @@ def _add_event(session: Session, now: datetime, config: Config, m: re.Match) -> 
 def _alarm_action(session: Session, now: datetime, config: Config, m: re.Match) -> str:
     ringing = alarm.ringing_alarm(session, now)
     if ringing is None:
+        if m[1].lower() == "stop" and timers.ringing(session, now):
+            timers.stop(session, now)  # only the ringing ones
+            return "OK."
         if m[1].lower() == "stop" and music.stop(session):
             return "OK."
         return "Nothing is ringing."
@@ -235,6 +239,21 @@ def _play(session: Session, now: datetime, config: Config, m: re.Match) -> str:
     if re.fullmatch(r"(some |the )?(music|it|again|it again)?", what, re.IGNORECASE):
         return replies.reply_play(session, now, config, [])
     return replies.reply_play(session, now, config, [what])
+
+
+def _timer_set(session: Session, now: datetime, config: Config, m: re.Match) -> str:
+    """ "set a timer for 10 minutes (for the pasta)", "pasta timer 8 minutes"."""
+    if timers.parse_duration(m.string) is None:
+        return "For how long? Say for example: set a timer for 10 minutes."
+    return replies.reply_timer(session, now, config, [m.string])
+
+
+def _timer_list(session: Session, now: datetime, config: Config, m: re.Match) -> str:
+    return replies.reply_timer(session, now, config, [])
+
+
+def _timer_off(session: Session, now: datetime, config: Config, m: re.Match) -> str:
+    return replies.reply_timer_off(session, now, config, [m["which"]])
 
 
 def _shop_add(session: Session, now: datetime, config: Config, m: re.Match) -> str:
@@ -379,6 +398,9 @@ INTENTS: list[tuple[str, Handler]] = [
         _cancel_alarm,
     ),
     (r"^(stop|snooze|i'?m up)( it| that| the alarm| ringing)?$", _alarm_action),
+    (r"\b(cancel|stop|delete|remove|turn off|switch off)\b(?P<which>.*?)\btimers?\b", _timer_off),
+    (r"\b(how (much|long)|time)\b.*\b(left|remaining)\b|\btimers\b\??$", _timer_list),
+    (r"\btimer\b", _timer_set),
     (r"^(please )?play\b(?P<what>.*)", _play),
     (r"\b(stop|turn off|switch off)\b.*\b(music|song|playing)\b", _reply(replies.reply_stop)),
     (r"\b(pause|hold)\b.*\b(music|song)\b|^pause( it)?$", _reply(replies.reply_pause)),
