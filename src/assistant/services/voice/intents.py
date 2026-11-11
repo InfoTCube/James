@@ -33,9 +33,12 @@ log = logging.getLogger(__name__)
 Handler = Callable[[Session, datetime, Config, re.Match], str]
 
 AI_PROMPT = (
-    "The input is a spoken request to a home assistant that its commands didn't cover. Answer in "
-    "at most two short sentences, plain text to be read aloud. If it needs the user's own data "
-    "(calendar, alarms, transport, notes) or an action, say you can't do that by voice yet."
+    "The input is context about the user (time, their places in Wrocław, today's and tomorrow's "
+    "calendar), then a spoken question to their home assistant that its commands didn't cover. "
+    "Answer in at most three short sentences, plain text to be read aloud. Use the context: e.g. "
+    "for food or things to do, think where the user will be then and suggest specific places "
+    "near there from what you know of Wrocław (they may have changed: say so briefly). If it "
+    "needs data you weren't given or an action, say you can't do that by voice yet."
 )
 SORRY = "Sorry, I didn't get that."
 NUMBERS = {w: i for i, w in enumerate(
@@ -406,9 +409,15 @@ INTENTS: list[tuple[str, Handler]] = [
     (r"\b(parcels?|packages?|deliver(y|ies)|inpost)\b", _reply(replies.reply_track)),
     (r"\b(tram|bus|leave|departures?|trip|next)\b", _reply(replies.reply_next)),
     (
-        r"\b(today|tomorrow|calendar|schedule|plans?|agenda)\b|\bwhat do i have\b"
-        r"|\bdo i have anything\b|\bwhat('s| is) on\b|\bwhat am i doing\b|\bam i (busy|free)\b"
-        rf"|\b({'|'.join(WEEKDAYS)})\b",  # a day named and nothing else matched: its calendar
+        r"\b(calendar|schedule|plans?|agenda)\b|\bwhat do i have\b"
+        r"|\bdo i have anything\b|\bwhat('s| is) on\b|\bwhat am i doing\b|\bam i (busy|free)\b",
+        _agenda,
+    ),
+    (  # a day named and nothing else matched: its calendar, unless it asks something else
+        # ("where can I eat lunch tomorrow" goes to Claude)
+        r"^(?!.*\b(where|why|how|who|which|can|could|should|recommend|suggest|eat|lunch"
+        r"|dinner|breakfast|restaurant|cook|buy|weather)\b)"
+        rf".*\b(today|tomorrow|{'|'.join(WEEKDAYS)})\b",
         _agenda,
     ),
     (r"\bbirthdays?\b", _reply(replies.reply_birthdays)),
@@ -450,7 +459,32 @@ def answer(text: str, now: datetime, config: Config) -> tuple[str, bool]:
         handler, m = found
         with Session(get_engine()) as session, session.begin():  # e.g. a new alarm is saved
             return handler(session, now, config, m), handler in ONE_LANGUAGE
-    return ai.ask("voice", AI_PROMPT, text, anytime=True) or SORRY, False  # outside a transaction
+    with Session(get_engine()) as session:
+        context = ai_context(session, now, config)
+    data = f"{context}\n\nQuestion: {text}"
+    return ai.ask("voice", AI_PROMPT, data, anytime=True) or SORRY, False  # outside a transaction
+
+
+def ai_context(session: Session, now: datetime, config: Config) -> str:
+    """What Claude knows besides the question: the time, the user's places, today's and
+    tomorrow's events (with where they are), so "where can I eat lunch tomorrow" has an answer."""
+    local = now.astimezone(config.tz)
+    lines = [f"Now: {local:%A %d %B %Y, %H:%M}, Wrocław, Poland."]
+    for alias, place in config.places.items():
+        known = ", ".join(place.keywords) or place.stops[0]
+        lines.append(f"The user's place '{alias}': {known} (nearest stop: {place.stops[0]})")
+    for label, day in (("Today", local), ("Tomorrow", local + timedelta(days=1))):
+        events = calendar.day_events(session, day, config.tz, config.location_rules)
+        for e in events:
+            when = (
+                "all day"
+                if e.all_day
+                else (f"{e.start.astimezone(config.tz):%H:%M}–{e.end.astimezone(config.tz):%H:%M}")
+            )
+            lines.append(f"{label} {when}: {e.title}" + (f" at {e.location}" if e.location else ""))
+        if not events:
+            lines.append(f"{label}: nothing in the calendar (at home or free).")
+    return "\n".join(lines)
 
 
 def spoken(text: str, max_lines: int = 8) -> list[str]:
