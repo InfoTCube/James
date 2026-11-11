@@ -4,6 +4,7 @@ import assistant.modules.music.models  # noqa: F401  no collectors, but their ta
 import assistant.modules.notes.models  # noqa: F401
 from assistant.core.collector import Collector
 from assistant.modules.alarm.collector import AlarmPlanner, AlarmRinger
+from assistant.modules.backup.collector import BackupCollector
 from assistant.modules.biedronka.collector import BiedronkaCollector
 from assistant.modules.birthdays.collector import BirthdayReminder
 from assistant.modules.books.collector import BooksCollector
@@ -36,4 +37,5 @@ COLLECTORS: list[Collector] = [
     BooksCollector(),
     SportsCollector(),
     BiedronkaCollector(),
+    BackupCollector(),
 ]

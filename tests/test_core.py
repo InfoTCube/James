@@ -72,3 +72,20 @@ def test_status_reports_failures_ai_calls_and_disk(tmp_path, monkeypatch):
         "AI calls in 24 h: 0/30",
         "⚠️ Disk free: 1.5 GB",
     ]
+
+
+def test_backup_copies_and_keeps_the_newest(tmp_path):
+    import sqlite3
+
+    from assistant.modules.backup.collector import backup
+
+    db = tmp_path / "a.db"
+    with sqlite3.connect(db) as c:
+        c.execute("CREATE TABLE t (x)")
+        c.execute("INSERT INTO t VALUES (42)")
+    for day in range(1, 5):
+        copy = backup(db, tmp_path / "backups", f"assistant-2026-11-0{day}.db", keep=2)
+    names = sorted(p.name for p in (tmp_path / "backups").iterdir())
+    assert names == ["assistant-2026-11-03.db", "assistant-2026-11-04.db"]
+    with sqlite3.connect(copy) as c:
+        assert c.execute("SELECT x FROM t").fetchone() == (42,)
