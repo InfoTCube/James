@@ -17,7 +17,7 @@ from assistant.modules.flights.collector import FlightsCollector
 from assistant.modules.jobs.collector import JobsCollector
 from assistant.modules.meals.collector import MealsCollector
 from assistant.modules.mpk.alerts import LeaveNowAlert
-from assistant.modules.mpk.collector import GeocodeCollector, MpkCollector
+from assistant.modules.mpk.collector import DisruptionsCollector, GeocodeCollector, MpkCollector
 from assistant.modules.news.collector import NewsCollector, NewsDigestCollector
 from assistant.modules.parcels.collector import ParcelsCollector
 from assistant.modules.sports.collector import SportsCollector
@@ -28,6 +28,7 @@ COLLECTORS: list[Collector] = [
     CalendarCollector(),
     MpkCollector(),
     GeocodeCollector(),
+    DisruptionsCollector(),
     LeaveNowAlert(),
     AlarmPlanner(),
     AlarmRinger(),

@@ -23,7 +23,7 @@ Most features are scheduled data fetching + filtering rules. **Default to determ
 |---|---|---|---|
 | `weather` | Forecast + clothing advice covering the whole day out (e.g. take a jacket if returning late and it gets cold) | Open-Meteo (free, no key) + calendar end times | No — rules |
 | `calendar` | Events + notifications; add events (bot/voice) | Google Calendar API (OAuth, `calendar.events` scope) | No |
-| `mpk` | Tram/bus departures to the next calendar event's location | Wrocław open data GTFS (open-data.cui.wroclaw.pl) + live vehicle positions (mpk.wroc.pl, delay estimates) | No |
+| `mpk` | Tram/bus departures to the next calendar event's location, warnings for planned changes on its lines | Wrocław open data GTFS (open-data.cui.wroclaw.pl) + live vehicle positions and planned changes (mpk.wroc.pl) | No |
 | `email` | Summary of important emails | Gmail API; rules filter first | Summary only |
 | `birthdays` | Upcoming birthdays + reminders | Google Calendar contact birthdays (via `calendar`) | No |
 | `jobs` | Interesting job offers | justjoin.it, nofluffjobs, pracuj.pl | Optional ranking |
@@ -194,7 +194,7 @@ Work in this order. Keep each step small and working end-to-end before moving on
 - [x] `timers` (voice + /timer, dashboard rings)
 - [x] Biedronka price history (lowest in 8 weeks)
 - [x] `meals` (weekly AI dinner ideas from the promos)
-- [ ] MPK disruptions
+- [x] MPK disruptions (planned changes from mpk.wroc.pl, warnings on your trips)
 - [x] `shopping` list (/list /got, voice, card, Biedronka promos flagged; Google Tasks sync with `email`)
 
 ## How to work in this repo

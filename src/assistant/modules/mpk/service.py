@@ -3,7 +3,7 @@
 import difflib
 import math
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, datetime, time, timedelta
 from itertools import pairwise
 from zoneinfo import ZoneInfo
@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session
 from assistant.core.config import Config, Place, fold, has_word
 from assistant.modules.calendar import service as calendar
 from assistant.modules.mpk.models import (
+    MpkDisruption,
     MpkEarly,
     MpkGeocode,
     MpkServiceDate,
@@ -491,6 +492,32 @@ class Trip:
     leave_by: datetime | None  # for trips with a deadline: last moment to leave the origin
     timetable_end: date | None  # set when the timetable has run out (times are a fallback)
     late_min: int | None = None  # nothing on time: minutes late with the first option
+    disruptions: list[str] = field(default_factory=list)  # MPK changes on its lines, formatted
+
+
+def connection_lines(options: list[Connection]) -> set[str]:
+    """Every line in these connections, the one after a change included."""
+    lines = set()
+    for c in options:
+        while c:
+            lines.add(c.line)
+            c = c.then
+    return lines
+
+
+def disruptions_for(session: Session, lines: set[str], day: date) -> list[str]:
+    """MPK's planned changes on `day` touching any of `lines`, e.g.
+    "⚠️ 144: remont torowiska na ul. Łokietka (until 30.11) https://mpk.wroc.pl/…"."""
+    if not lines:
+        return []
+    q = select(MpkDisruption).where(MpkDisruption.valid_from <= day, MpkDisruption.valid_to >= day)
+    found = []
+    for d in session.scalars(q.order_by(MpkDisruption.valid_to)):
+        hit = [ln for ln in d.lines.split() if ln in lines]
+        if hit:
+            title = re.sub(r"^\d{1,2}\.\d{1,2}\.\d{4}\s*r?\.?\s*-\s*", "", d.title)
+            found.append(f"⚠️ {', '.join(hit)}: {title} (until {d.valid_to:%d.%m}) {d.url}")
+    return found
 
 
 def _home(config: Config) -> Target:
@@ -594,7 +621,9 @@ def current_trip(session: Session, now: datetime, config: Config) -> Trip | None
         late_min = None
     end = timetable_end(session)
     expired = end if end and end < now.astimezone(config.tz).date() else None
-    return Trip(leg, options, leave_by, expired, late_min)
+    day = now.astimezone(config.tz).date()
+    changes = disruptions_for(session, connection_lines(options), day)
+    return Trip(leg, options, leave_by, expired, late_min, changes)
 
 
 FALLBACK_TRAVEL = timedelta(minutes=45)  # no connection found: assume this much door to door

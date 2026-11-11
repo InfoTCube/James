@@ -52,7 +52,7 @@ def reply_next(session: Session, now: datetime, config: Config, args: list[str] 
         if trip.leave_by:
             lines.append(f"Leave by {trip.leave_by.astimezone(tz):%H:%M}")
         lines += [format_connection(c, tz) for c in trip.options] or ["No connection found"]
-        return "\n".join(lines)
+        return "\n".join(lines + trip.disruptions)
 
     event = calendar.next_event_with_location(session, now, tz)
     if event is None:

@@ -93,3 +93,17 @@ class MpkEarly(Base):
     key: Mapped[str] = mapped_column(primary_key=True)  # fold(title)
     title: Mapped[str]
     minutes: Mapped[int]
+
+
+class MpkDisruption(Base):
+    """A planned change MPK announces (roadworks, detours, moved stops), with its lines.
+    Replaced on every run from mpk.wroc.pl's "zmiany w komunikacji" pages."""
+
+    __tablename__ = "mpk_disruptions"
+
+    id: Mapped[int] = mapped_column(primary_key=True)  # MPK's announcement number
+    title: Mapped[str]
+    url: Mapped[str]
+    lines: Mapped[str]  # space-separated line names, e.g. "144 240 N"
+    valid_from: Mapped[date]
+    valid_to: Mapped[date]

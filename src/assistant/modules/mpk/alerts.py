@@ -65,6 +65,7 @@ def leave_now_message(
     ]
     if len(trip.options) > 1:
         lines.append("or " + format_connection(trip.options[1], tz))
+    lines += trip.disruptions
     return f"leave:{leg.title}:{leg.arrive_by.isoformat()}", "\n".join(lines)
 
 
