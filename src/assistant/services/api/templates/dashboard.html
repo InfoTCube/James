@@ -87,6 +87,18 @@
     #strip b { font: 600 1.5em/1 var(--numbers); }
 
     /* alarm: takes over the whole screen */
+    #timer[hidden], #timers:empty { display: none; }
+    #timer {
+      position: fixed; inset: 0; z-index: 11; display: grid; place-items: center; align-content: center;
+      gap: var(--gap); background: var(--amber); color: var(--night); text-align: center;
+    }
+    #timer-label { font: 300 clamp(60px, 13vh, 180px)/0.9 var(--numbers); }
+    #timer button {
+      font: 600 1.4em var(--text); padding: 0.5em 2em; border: 0; border-radius: 0.3em;
+      background: var(--night); color: var(--amber); cursor: pointer;
+    }
+    #timers { font: 500 1.3em/1.2 var(--numbers); color: var(--amber); }
+    #timers span { color: var(--slate); font: 400 0.65em var(--text); margin-left: 0.3em; }
     #alarm[hidden] { display: none; }
     #alarm { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; }
     #alarm.ringing { background: var(--amber); color: var(--night); }
@@ -232,6 +244,7 @@
     <div id="date"></div>
     <div id="temp" hx-get="/widgets/weather/now" hx-trigger="load, every 10m"></div>
     <div id="next-alarm" hx-get="/widgets/alarm/next" hx-trigger="load, every 1m"></div>
+    <div id="timers"></div>
     <ul id="cards"></ul>
     <div id="sound-hint" hidden>Click anywhere once to allow the alarm sound</div>
   </aside>
@@ -251,6 +264,7 @@
       <div class="slot scrolls" data-name="Films" data-every="10" hx-get="/widgets/films" hx-trigger="load, every 60m"></div>
       <div class="slot scrolls" data-name="Books" data-every="10" hx-get="/widgets/books" hx-trigger="load, every 60m"></div>
       <div class="slot scrolls" data-name="Sports" data-every="5" hx-get="/widgets/sports" hx-trigger="load, every 30m"></div>
+      <div class="slot scrolls" data-name="Dinner ideas" data-every="5" hx-get="/widgets/meals" hx-trigger="load, every 60m"></div>
       <div class="slot scrolls" data-name="Biedronka" data-every="3" hx-get="/widgets/biedronka" hx-trigger="load, every 30m"></div>
     </div>
     <div id="strip" hx-get="/widgets/mpk/strip" hx-trigger="load, every 1m"></div>
@@ -258,6 +272,11 @@
   <div id="leave" hidden role="alert">
     <div id="leave-text"></div>
     <div><button type="button" class="close" id="close-leave">Close</button></div>
+  </div>
+  <div id="timer" hidden role="alert">
+    <div>⏲️</div>
+    <div id="timer-label"></div>
+    <button type="button" id="timer-stop">Stop</button>
   </div>
   <div id="alarm" hidden>
     <div id="ring" role="alert">
@@ -524,6 +543,29 @@
     }
     new EventSource("/api/voice/events").onmessage = e => showVoice(JSON.parse(e.data));  // reconnects by itself
 
+    // --- timers: countdowns in the rail; a done one takes the screen and beeps until stopped
+    // (3 min at most, the server's RING_FOR). Own beeper: the alarm's stops when no alarm rings.
+    const timerBox = document.getElementById("timer"), timersRail = document.getElementById("timers");
+    let timerBeep = null;
+    const clockOf = s => (s >= 3600 ? Math.floor(s / 3600) + ":" + String(Math.floor(s % 3600 / 60)).padStart(2, "0")
+      : Math.floor(s / 60)) + ":" + String(s % 60).padStart(2, "0");
+    function showTimers(t) {
+      timersRail.innerHTML = t.running.map(r =>
+        `<div>⏲ ${clockOf(r.seconds)}<span>${r.label.replace(/[<&]/g, c => ({"<": "&lt;", "&": "&amp;"})[c])}</span></div>`).join("");
+      timerBox.hidden = !t.ringing.length;
+      if (t.ringing.length) {
+        document.getElementById("timer-label").textContent = t.ringing.map(r => r.label || "Time's up").join(", ");
+        timerBeep ??= setInterval(() => { const at = audio.currentTime; [0, 0.15, 0.3].forEach(d => beep(at + d, 1320)); }, 1200);
+      } else { clearInterval(timerBeep); timerBeep = null; }
+    }
+    async function pollTimers() {
+      try { showTimers(await (await fetch("/api/timers")).json()); } catch (e) { /* next second */ }
+    }
+    document.getElementById("timer-stop").addEventListener("click", async () => {
+      try { showTimers(await (await fetch("/api/timers/stop", { method: "POST" })).json()); } catch (e) { pollTimers(); }
+    });
+    pollTimers(); setInterval(pollTimers, 1000);
+
     // --- night: black between screen.dark_from and dark_until (config.yaml), unless something is
     // happening; a tap shows the dashboard for a minute ---
     // ponytail: black pixels, the backlight stays on; on the mini PC add `xset dpms force off`
@@ -533,7 +575,8 @@
     const isNight = t => !!OFF && (OFF < ON ? t >= OFF && t < ON : t >= OFF || t < ON);
     function updateNight() {
       const t = new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: TZ });
-      const busy = !overlay.hidden || !leave.hidden || voice.classList.contains("on") || Date.now() < awakeUntil;
+      const busy = !overlay.hidden || !leave.hidden || !timerBox.hidden || voice.classList.contains("on")
+        || Date.now() < awakeUntil;
       night.hidden = !isNight(t) || busy;
     }
     night.addEventListener("click", () => { awakeUntil = Date.now() + 60000; updateNight(); });
@@ -554,7 +597,7 @@
         if (track && s.paused) music.pause();
         else if (track && music.paused && !music.ended) music.play().catch(() => {});  // e.g. sound not allowed yet
       } catch (e) { /* retry next poll */ }
-      const talking = !overlay.hidden || !leave.hidden || voice.classList.contains("on");
+      const talking = !overlay.hidden || !leave.hidden || !timerBox.hidden || voice.classList.contains("on");
       music.volume = talking ? 0.15 : 1;
     }
     // ponytail: a track that won't play is skipped; if YouTube refuses them all, the queue empties

@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+	<base href="https://mpk.wroc.pl/" />
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="theme-color" content="#808080">
+
+<title>Serwis Obsługi Pasażera MPK Wrocław</title>
+
+<meta name="keywords" content="" lang="pl" />
+<meta name="description" content="Internetowy Serwis Obsługi Pasażera Miejskiego Przedsiębiorstwa Komunikacyjnego sp. z o.o. we Wrocławiu" lang="pl" />
+
+<meta property="og:title" content="" />
+<meta property="og:description" content="" />
+<meta property="og:image" content="" />
+<meta property="og:url" content="" />
+<meta property="og:site_name" content="" />
+
+<meta name="author" content="Artneo.pl" />
+<meta name="Robots" content="all" />
+<meta name="Revisit-after" content="14 days" />
+
+<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+<link rel="icon" href="images/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="css/style.min.css?1758804315" type="text/css" />
+<link rel="stylesheet" href="gfx/frontend/css/cms.css?1601380750" type="text/css" />
+<link rel="stylesheet" href="gfx/frontend/css/cookies-dialog.css?1713774664" type="text/css" />
+<script type="text/javascript" src="gfx/frontend/js/cookies-dialog.js?1713775003"></script>
+		            <style>
+            :root {
+                --primary-color: #03346b;
+            }
+        </style>
+        <dialog id="cookies-dialog" class="cookies-dialog">
+        <div id="standard-preferences">
+            <div autofocus tabindex="0" class="cookies-dialog-content">
+                <strong class="cookies-title">Przegląd prywatności</strong>
+                <div class="font-small margin-y-sm">
+                    <p>Chcąc udogodnić Ci korzystanie z naszej strony, wykorzystujemy pliki cookie, kt&oacute;re są umieszczane na Twoim komputerze, telefonie kom&oacute;rkowym lub tablecie. Pliki te pomagają nam zrozumieć Twoje potrzeby i dzięki temu doskonalić funkcjonalności naszej witryny. Są one także wykorzystywane do dostarczania spersonalizowanych treści i reklam. Część z plik&oacute;w jest niezbędna do prawidłowego działania serwisu i jego funkcjonalności. Jeżeli nie wyrażasz zgody na zapisywanie plik&oacute;w cookie, możesz łatwo zarządzać swoimi uprawnieniami, np. we własnej przeglądarce internetowej lub po wybraniu opcji Zarządzaj cookie. Szczeg&oacute;łowe informacje na ten temat znajdziesz w naszej Polityce prywatności.</p>
+                </div>
+            </div>
+            <div class="cookies-controls">
+                <button id="cookies-dialog-custom-preferences" class="cookies-close btn">Ustawienia zaawansowane</button>
+                <button class="cookies-dialog-accept-all cookies-accept-selected btn black">Przejdź do strony</button>
+            </div>
+        </div>
+        <div id="custom-preferences" hidden>
+            <div autofocus tabindex="0" class="cookies-dialog-content">
+                <strong class="cookies-title">Przegląd prywatności</strong>
+                <div class="font-small margin-y-sm">
+                    <input type="checkbox" class="read-more-state" name="readMoreState" id="readMoreState" />
+                    <span class="read-more-wrap"> <p>Ta strona korzysta z plik&oacute;w cookie, aby poprawić wrażenia podczas poruszania się po witrynie.</p>
+                         <span class="read-more-target">
+                              <p>Spośr&oacute;d nich pliki cookie, kt&oacute;re są sklasyfikowane jako niezbędne, są przechowywane w przeglądarce, ponieważ są niezbędne do działania podstawowych funkcji witryny. Używamy r&oacute;wnież plik&oacute;w cookie stron trzecich, kt&oacute;re pomagają nam analizować i rozumieć, w jaki spos&oacute;b korzystasz z tej witryny. Te pliki cookie będą przechowywane w Twojej przeglądarce tylko za Twoją zgodą. Masz r&oacute;wnież możliwość rezygnacji z tych plik&oacute;w cookie. Jednak rezygnacja z niekt&oacute;rych z tych plik&oacute;w cookie może wpłynąć na wygodę przeglądania.</p>
+                         </span>
+                    </span>
+                    <label tabindex="0" for="readMoreState" class="read-more-label">
+                        <span class="show-more">pokaż więcej</span>
+                        <span class="show-less">pokaż mniej</span>
+                    </label>
+                </div>
+                <button id="cookies-all-toggler" class="cookies-toggler btn black" >
+                    <span class="setAll">Zaznacz wszystkie</span>
+                    <span class="unSetAll">Odznacz wszystkie</span>
+                </button>
+                <div class="cookies-list font-regular">
+                    <strong class="margin-top-sm">Preferencje</strong>
+                                                                    <details class="has-children">
+                            <summary class="category-parent">
+                                <div class="agreement">
+                                    <div class="agreement-content">
+                                        <img class="plus" src="gfx/frontend//img/plus.svg">
+                                        <img class="minus" src="gfx/frontend//img/minus.svg">
+                                        <span>Niezbędne</span>
+                                    </div>
+                                                                            <div class="agreement-handler">
+                                            <input type="checkbox" required disabled checked class="children-toggler switch" id="option199" />
+                                        </div>
+                                                                    </div>
+                            </summary>
+                            <p>Niezbędne pliki cookie przyczyniają się do użyteczności strony poprzez umożliwianie podstawowych funkcji takich jak nawigacja na stronie i dostęp do bezpiecznych obszar&oacute;w strony internetowej. Strona internetowa nie może funkcjonować poprawnie bez tych ciasteczek.</p>
+                                                                                                <details class="category-child">
+                                        <summary>
+                                            <div class="agreement">
+                                                <div class="agreement-content">
+                                                    <img class="plus" src="gfx/frontend//img/plus.svg">
+                                                    <img class="minus" src="gfx/frontend//img/minus.svg">
+                                                    <span>cisession</span>
+                                                </div>
+                                                                                                    <div class="agreement-handler">
+                                                        <input type="checkbox" data-type="consent" required disabled checked name="consent[3]" value="cisession" class="switch" id="option991" />
+                                                    </div>
+                                                                                            </div>
+                                        </summary>
+                                        <p>Plik cookie odpowiadający za przechowywanie informacji o sesji użytkownika.</p>                                    </details>
+                                                                    <details class="category-child">
+                                        <summary>
+                                            <div class="agreement">
+                                                <div class="agreement-content">
+                                                    <img class="plus" src="gfx/frontend//img/plus.svg">
+                                                    <img class="minus" src="gfx/frontend//img/minus.svg">
+                                                    <span>csrf_cookie_neocms</span>
+                                                </div>
+                                                                                                    <div class="agreement-handler">
+                                                        <input type="checkbox" data-type="consent" required disabled checked name="consent[4]" value="csrf_cookie_neocms" class="switch" id="option991" />
+                                                    </div>
+                                                                                            </div>
+                                        </summary>
+                                        <p>Ten plik cookie jest ustawiany w celu zapewnienia bezpieczeństwa przed nieautoryzowanymi akcjami przez przeglądarkę.</p>                                    </details>
+                                                                                    </details>
+                                                                    <details class="has-children">
+                            <summary class="category-parent">
+                                <div class="agreement">
+                                    <div class="agreement-content">
+                                        <img class="plus" src="gfx/frontend//img/plus.svg">
+                                        <img class="minus" src="gfx/frontend//img/minus.svg">
+                                        <span>Statystyczne</span>
+                                    </div>
+                                                                            <div class="agreement-handler">
+                                            <input type="checkbox"  class="children-toggler switch" id="option199" />
+                                        </div>
+                                                                    </div>
+                            </summary>
+                            <p>Statystyczne pliki cookie pomagają właścicielem stron internetowych zrozumieć, w jaki spos&oacute;b r&oacute;żni użytkownicy zachowują się na stronie, gromadząc i zgłaszając anonimowe informacje.</p>
+                                                                                                <details class="category-child">
+                                        <summary>
+                                            <div class="agreement">
+                                                <div class="agreement-content">
+                                                    <img class="plus" src="gfx/frontend//img/plus.svg">
+                                                    <img class="minus" src="gfx/frontend//img/minus.svg">
+                                                    <span>YouTube</span>
+                                                </div>
+                                                                                                    <div class="agreement-handler">
+                                                        <input type="checkbox" data-type="consent"  name="consent[9]" value="youtube" class="switch" id="option991" />
+                                                    </div>
+                                                                                            </div>
+                                        </summary>
+                                        <p>Polityka prywatności (https://support.google.com/youtube/answer/7671399)</p>                                    </details>
+                                                                                    </details>
+                                                                    <details class="has-children">
+                            <summary class="category-parent">
+                                <div class="agreement">
+                                    <div class="agreement-content">
+                                        <img class="plus" src="gfx/frontend//img/plus.svg">
+                                        <img class="minus" src="gfx/frontend//img/minus.svg">
+                                        <span>Marketingowe</span>
+                                    </div>
+                                                                            <div class="agreement-handler">
+                                            <input type="checkbox"  class="children-toggler switch" id="option199" />
+                                        </div>
+                                                                    </div>
+                            </summary>
+                            <p>Marketingowe pliki cookie stosowane są w celu śledzenia użytkownik&oacute;w na stronach internetowych. Celem jest wyświetlanie reklam, kt&oacute;re są istotne i interesujące dla poszczeg&oacute;lnych użytkownik&oacute;w i tym samym bardziej cenne dla wydawc&oacute;w i reklamodawc&oacute;w strony trzeciej.</p>
+                                                                                                <details class="category-child">
+                                        <summary>
+                                            <div class="agreement">
+                                                <div class="agreement-content">
+                                                    <img class="plus" src="gfx/frontend//img/plus.svg">
+                                                    <img class="minus" src="gfx/frontend//img/minus.svg">
+                                                    <span>Google Analytics</span>
+                                                </div>
+                                                                                                    <div class="agreement-handler">
+                                                        <input type="checkbox" data-type="consent"  name="consent[7]" value="google_analytics" class="switch" id="option991" />
+                                                    </div>
+                                                                                            </div>
+                                        </summary>
+                                        <p>Polityka prywatności (https://policies.google.com/privacy)</p>                                    </details>
+                                                                    <details class="category-child">
+                                        <summary>
+                                            <div class="agreement">
+                                                <div class="agreement-content">
+                                                    <img class="plus" src="gfx/frontend//img/plus.svg">
+                                                    <img class="minus" src="gfx/frontend//img/minus.svg">
+                                                    <span>Google Ads</span>
+                                                </div>
+                                                                                                    <div class="agreement-handler">
+                                                        <input type="checkbox" data-type="consent"  name="consent[8]" value="google_ads" class="switch" id="option991" />
+                                                    </div>
+                                                                                            </div>
+                                        </summary>
+                                        <p>Polityka prywatności (https://policies.google.com/privacy)</p>                                    </details>
+                                                                                    </details>
+                                    </div>
+            </div>
+            <div class="cookies-controls">
+                <button id="cookies-dialog-back" class="cookies-close btn">Wróć</button>
+                <button id="cookies-dialog-accept-selected" class="cookies-close btn">Zapisz</button>
+                <button class="cookies-dialog-accept-all btn black">Włącz wszystko i przejdź do strony</button>
+            </div>
+        </div>
+    </dialog>
+
+    <script defer>
+        window.addEventListener("DOMContentLoaded", (event) => {
+            const getCookie = (name) => {
+                const cookieName = `${name}=`;
+                const cookies = document.cookie.split(";");
+                for (let i = 0; i < cookies.length; i++) {
+                    let cookie = cookies[i].trim();
+                    if (cookie.indexOf(cookieName) === 0) {
+                        return cookie.substring(cookieName.length, cookie.length);
+                    }
+                }
+                return null;
+            };
+
+            const allConsent = document.querySelectorAll('input[type=checkbox][data-type=consent]');
+            const loadConsentMode = () => {
+                const gtagConsent = {};
+                for (const consent of allConsent) {
+                    const consentValue = consent.value;
+
+                    switch (consentValue) {
+                        case 'meta_pixel':
+                            if(typeof fbq != 'undefined') {
+                                if(consent.checked) {
+                                    fbq('consent', 'grant');
+                                } else {
+                                    fbq('consent', 'revoke');
+                                }
+                            }
+                            break;
+                        case 'google_analytics':
+                            if(consent.checked) {
+                                gtagConsent.analytics_storage = 'granted';
+                            } else {
+                                gtagConsent.analytics_storage = 'denied';
+                            }
+                            break;
+                        case 'google_ads':
+                            if(consent.checked) {
+                                gtagConsent.ad_storage = 'granted';
+                                gtagConsent.ad_user_data = 'granted';
+                                gtagConsent.ad_personalization = 'granted';
+                            } else {
+                                gtagConsent.ad_storage = 'denied';
+                                gtagConsent.ad_user_data = 'denied';
+                                gtagConsent.ad_personalization = 'denied';
+                            }
+                            break;
+                    }
+                }
+
+                if(typeof gtag != 'undefined' && Object.keys(gtagConsent).length) {
+                    gtag('consent', 'update', gtagConsent);
+                }
+            }
+
+            const acceptSelectedBtn = document.querySelector('#cookies-dialog-accept-selected');
+            const acceptAllBtn = document.querySelectorAll('.cookies-dialog-accept-all');
+            acceptSelectedBtn.addEventListener('click', () => loadConsentMode());
+
+            for (const acceptBtn of acceptAllBtn) {
+                acceptBtn.addEventListener('click', () => loadConsentMode());
+            }
+
+            const cookies = getCookie('cookie-accept');
+            if(cookies)
+                loadConsentMode();
+        });
+    </script>
+
+	<!-- Google tag (gtag.js) -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  
+  gtag('consent', 'default', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied',
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied'
+  });
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DENWZRNPJ1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DENWZRNPJ1');
+</script>
+<script>(function(d){var s = d.createElement("script");s.setAttribute("data-account", "nlcgzSOTu9");s.setAttribute("src", "https://cdn.userway.org/widget.js");(d.body || d.head).appendChild(s);})(document)</script>	
+</head>
+<body class="mpk">
+	<script src="https://www.wroclaw.pl/topbar/initTopBarWroPl.js?static=true"></script>
+	<script async src="https://www.wroclaw.pl/topbar/topBarWroPl.js?static=true"></script>
+	<h1 style="display:none">MPK Wrocław</h1>
+<header uk-sticky="media:960; top: 250;animation: uk-animation-slide-top" data-gjs-custom-name="Nagłówek">
+    <div class="menu__overlay"></div>
+    <div class="wrapper header__wrapper">
+        <div class="header__logo">
+                        <a href="https://mpk.wroc.pl/strefa-pasazera/zaplanuj-podroz/zmiany-w-komunikacji#tresc-strony" class="readers-only" title="Przejdź do treści podstrony">
+                Przejdź do treści podstrony            </a>
+                        <a href="https://mpk.wroc.pl/" class="logo__link" title="Strona główna MPK Wrocław">
+                <span class="readers-only">Strona główna MPK Wrocław</span>
+                <img src="/assets/images/logo.png" alt="Logo MPK Wrocław" aria-hidden="true" class="logo__image" />
+                                </a>
+        </div>
+        <nav id="nav" class="header__navigation">
+            <div class="navigation__inner">
+                <div class="topbar">
+                    <ul class="topbar__menu" role="menu">
+						<li class="topbar__item">
+		<a class="topbar__link" target="_blank" href="https://sklep.mpk.wroc.pl/" aria-label="Sklep" title="Sklep"> <span class="icon-shop" style="" role="presentation"></span> Sklep</a>	</li>
+				<li class="topbar__item">
+		<a class="topbar__link" target="_blank" href="https://bip.mpk.wroc.pl/regulamin-przewozu" aria-label="Regulamin przewozu" title="Regulamin przewozu"> <span class="icon-table" style="" role="presentation"></span> Regulamin przewozu</a>	</li>
+				<li class="topbar__item">
+		<a class="topbar__link" target="_blank" href="https://jakdojade.pl/wroclaw/trasa/" aria-label="Wyszukaj połaczenie" title="Wyszukaj połaczenie"> <span class="icon-connectionsearch" style="" role="presentation"></span> Wyszukaj połaczenie</a>	</li>
+				<li class="topbar__item">
+		<a class="topbar__link" target="_blank" href="https://www.wroclaw.pl/komunikacja/rozklady-jazdy" aria-label="Sprawdź rozkład jazdy" title="Sprawdź rozkład jazdy"> <span class="icon-table" style="" role="presentation"></span> Sprawdź rozkład jazdy</a>	</li>
+				<li class="topbar__item">
+		<a class="topbar__link" target="_blank" href="https://www.urbancard.pl/" aria-label="Zamów URBANCARD" title="Zamów URBANCARD"> <span class="icon-urbancard" style="" role="presentation"></span> Zamów URBANCARD</a>	</li>
+				<li class="topbar__item">
+		<a class="topbar__link" target="_blank" href="https://play.google.com/store/apps/details?id=pl.wasko.android.mpk" aria-label="Pobierz aplikację iMPK" title="Pobierz aplikację iMPK"> <span class="icon-app" style="" role="presentation"></span> Pobierz iMPK</a>	</li>
+		</ul>                     <div class="topbar__lang">
+<div class="lang__box">
+            <span class="current__lang" uk-toggle="target: #languages; mode: click; animation: uk-animation-slide-top-small, uk-animation-slide-top-small" role="button" tabindex="-1">
+        pl        <span class="icon-chev-d uk-visible@m" role="presentation" ></span>
+        <span class="icon-chev-r uk-hidden@m" role="presentation" ></span>
+    </span>
+                
+    <div id="languages" class="lang__container" hidden>
+        <ul>
+            <li><a href="https://mpk.wroc.pl/lang/en" title="Wybierz język: Angielski" style="display: block;">en</a></li><li><a href="https://mpk-wroc-pl.translate.goog/?_x_tr_sl=pl&_x_tr_tl=uk&_x_tr_hl=pl" title="Wybierz język: Ukraiński" style="display: block;">ua</a></li>        </ul>
+    </div>
+</div>
+</div>
+                </div>
+                <div class="mainbar">
+                    <ul class="mainbar__menu" role="menu">
+    <li class="mainbar__item">
+        <a href="https://mpk.wroc.pl/" class="mainbar__link"><span class="icon-home" role="presentation" ></span><span class="readers-only">Strona główna</span></a>
+    </li>
+                        <li class="mainbar__item ">
+                <div class="mainbar__link has__children">
+
+            <a href="https://mpk.wroc.pl/strefa-pasazera/zaplanuj-podroz/zmiany-w-komunikacji#"  title="Strefa pasażera">Strefa pasażera <span class="icon-chev-d" role="presentation"></span><span class="readers-only">rozwiń menu</span></a>                        <div class="submenu multicolumns" style="display: none">
+                <div class="submenu__close uk-hidden@m"><span uk-icon="icon: close; ratio: 1.5;"></span></div>
+                <div class="content__columns columns__3">
+                                        <ul class="submenu__column">
+                        <li class="columns__header">Zaplanuj podróż</li>
+                                                                                                                        <li class="" >
+                            <a target="_blank" href="https://jakdojade.pl/wroclaw/trasa/" title="Wyszukiwarka połączeń">Wyszukiwarka połączeń</a>                        </li>
+                                                                                                <li class="" >
+                            <a target="_blank" href="https://www.wroclaw.pl/komunikacja/rozklady-jazdy" title="Rozkład jazdy">Rozkład jazdy</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/strefa-pasazera/zaplanuj-podroz/mapa-pozycji-pojazdow" title="Mapa pozycji pojazdów">Mapa pozycji pojazdów</a>                        </li>
+                                                                                                <li class="uk-active " >
+                            <a  href="https://mpk.wroc.pl/strefa-pasazera/zaplanuj-podroz/zmiany-w-komunikacji" title="Zmiany w komunikacji">Zmiany w komunikacji</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/strefa-pasazera/linie-turystyczne" title="LINIE TURYSTYCZNE">LINIE TURYSTYCZNE</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/strefa-pasazera/zaplanuj-podroz/legendarna-linia-0" title="LEGENDARNA LINIA 0">LEGENDARNA LINIA 0</a>                        </li>
+                                                                    </ul>
+                                        <ul class="submenu__column">
+                        <li class="columns__header">Obsługa pasażera</li>
+                                                                                                                        <li class="" >
+                            <a  href="https://mpk.wroc.pl/strefa-pasazera/obsluga-pasazera/wyslij-do-nas-zgloszenie" title="Wnioski / Reklamacje / Zgłoszenia">Wnioski / Reklamacje / Zgłoszenia</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/strefa-pasazera/obsluga-pasazera/wezwania-do-zaplaty" title="Informacje o wezwaniu do zapłaty">Informacje o wezwaniu do zapłaty</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/strefa-pasazera/obsluga-pasazera/biuro-obslugi-pasazera" title="Biuro obsługi pasażera">Biuro obsługi pasażera</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/strefa-pasazera/obsluga-pasazera/biuro-rzeczy-znalezionych" title="Biuro rzeczy znalezionych">Biuro rzeczy znalezionych</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/strefa-pasazera/obsluga-pasazera/sprzedaz-majatku" title="Sprzedaż majątku">Sprzedaż mienia</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/obsluga-pasazera/przewoz-dzieci-uczniow-niepelnosprawnych-do-placowek-oswiatowych" title="Przewóz dzieci/uczniów z niepełnosprawnościami do placówek oświatowych">Przewóz dzieci/uczniów z niepełnosprawnościami do placówek oświatowych</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/strefa-pasazera/obsluga-pasazera/pasazerowie-z-niepelnosprawnoscia" title="Pasażerowie z niepełnosprawnością">Pasażerowie z niepełnosprawnością</a>                        </li>
+                                                                    </ul>
+                                        <ul class="submenu__column">
+                        <li class="columns__header">Bilety</li>
+                                                                                                                        <li class="" >
+                            <a target="_blank" href="https://www.urbancard.pl/" title="URBANCARD">URBANCARD</a>                        </li>
+                                                                                                <li class="" >
+                            <a target="_blank" href="https://www.wroclaw.pl/rodzaje-i-ceny-biletow" title="Rodzaje i ceny biletów">Rodzaje i ceny biletów</a>                        </li>
+                                                                                                <li class="" >
+                            <a target="_blank" href="https://www.wroclaw.pl/uprawnienia-do-ulg" title="Prawa pasażera i ulgi">Prawa pasażera i ulgi</a>                        </li>
+                                                                                                <li class="" >
+                            <a target="_blank" href="https://www.urbancard.pl/punktysprzedazy" title="Punkty sprzedaży biletów">Punkty sprzedaży biletów</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/strefa-pasazera/bilety/kontrola-biletow-faq" title="Kontrola biletów (FAQ)">Kontrola biletów</a>                        </li>
+                                                                    </ul>
+                                    </div>
+            </div>
+                    </div>
+            </li>
+                <li class="mainbar__item ">
+                <div class="mainbar__link has__children">
+
+            <a href="https://mpk.wroc.pl/strefa-pasazera/zaplanuj-podroz/zmiany-w-komunikacji#"  title="O MPK">O MPK <span class="icon-chev-d" role="presentation"></span><span class="readers-only">rozwiń menu</span></a>                        <div class="submenu" style="display: none">
+                <div class="submenu__close uk-hidden@m"><span uk-icon="icon: close; ratio: 1.5;"></span></div>
+                <div class="content__columns">
+                    <ul class="submenu__column">
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/o-mpk/o-nas" title="O nas">O nas</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/o-mpk/aktualnosci" title="Aktualności">Aktualności</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/o-mpk/patroni-tramwajow" title="PATRONI TRAMWAJÓW">PATRONI TRAMWAJÓW</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/o-mpk/projekty-unijne-i-krajowe" title="Projekty Unijne i krajowe">Projekty Unijne i krajowe</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/o-mpk/informacje-dla-obligatariuszy" title="Informacje dla obligatariuszy">Informacje dla obligatariuszy</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/o-mpk/nasze-pojazdy" title="Nasze pojazdy">Nasze pojazdy</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/o-mpk/lander" title="SYMULATOR JAZDY TRAMWAJEM">SYMULATOR JAZDY TRAMWAJEM</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/kariera/praca-w-mpk-wroclaw" title="Praca w MPK Wrocław">Praca</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/o-mpk/wynajem-pojazdow" title="Wynajem pojazdów">Wynajem pojazdów</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/o-mpk/rodo" title="Przetwarzanie danych osobowych">RODO</a>                        </li>
+                                                                                                <li class="" >
+                            <a  href="https://mpk.wroc.pl/o-mpk/wykolejenia-i-rozjechania" title="Wykolejenia i rozjechania">Licznik wykolejeń</a>                        </li>
+                                            </ul>
+                </div>
+            </div>
+                    </div>
+            </li>
+                <li class="mainbar__item ">
+                        <a class="topbar__link mainbar__link"  href="https://mpk.wroc.pl/kariera" aria-label="Kariera" title="Kariera">Kariera</a>            </li>
+                <li class="mainbar__item hide-desktop">
+                        <a class="topbar__link mainbar__link" rel="nofollow noreferrer" target="_blank" href="https://sklep.mpk.wroc.pl/" aria-label="Sklep" title="Sklep">Sklep</a>            </li>
+                <li class="mainbar__item ">
+                        <a class="topbar__link mainbar__link"  href="https://mpk.wroc.pl/kontakt" aria-label="Kontakt" title="Kontakt">Kontakt</a>            </li>
+        </ul>                    <div class="mainbar__icons">
+                                                <a href="https://bip.mpk.wroc.pl/" class="mainbar__icon" role="button" aria-label="Biuletyn Informacji Publicznej" title="Biuletyn Informacji Publicznej" target="_blank"><span class="icon-bip" role="presentation"></span><span class="readers-only">Biuletyn Informacji Publicznej</span></a>
+                                                                        <a href="#hearingModal" class="mainbar__icon" role="button" aria-label="PJM MPK Wroclaw" title="PJM MPK Wroclaw" uk-toggle><span class="icon-hearing" role="presentation"></span><span class="readers-only">PJM MPK Wroclaw</span></a>
+                                                                        <a href="https://twitter.com/alertmpk" role="button" aria-label="Profil Twitter" class="mainbar__icon" title="Twitter" target="_blank" rel="nofollow noopener" ><span class="icon-tw" role="presentation"></span><span class="readers-only">Profil Twitter</span></a>
+                                                                        <a href="https://www.youtube.com/channel/UCJXCU6rgb_pBvz9Cdi5S7SQ" role="button" aria-label="Kanał YouTube" class="mainbar__icon" title="YouTube" target="_blank" rel="nofollow noopener" ><span class="icon-yt" role="presentation"></span><span class="readers-only">Kanał YouTube</span></a>
+                                                                        <a href="https://www.facebook.com/mpkwroc/" role="button" aria-label="Strona Facebook" class="mainbar__icon" title="Facebook" target="_blank" rel="nofollow noopener" ><span class="icon-fb" role="presentation"></span><span class="readers-only">Strona Facebook</span></a>
+                                                <a href="#" class="mainbar__icon" role="button" aria-label="Otwórz wyszukiwarkę" uk-toggle="target: #searchbar; mode: click; animation: uk-animation-slide-top-small, uk-animation-slide-top-small"><span class="icon-search" role="presentation"></span><span class="readers-only">Otwórz wyszukiwarkę</span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="menu__close uk-hidden@l" uk-toggle="target: #nav; animation: uk-animation-scale-up" role="button" aria-label="Zamknij menu"><span uk-icon="icon: close; ratio: 1.5;"></span><span class="readers-only">Zamknij menu</span></div>
+        </nav>
+        <div class="menu__toggle uk-hidden@l" uk-toggle="target: #nav; animation: uk-animation-scale-up" role="button" aria-label="Otwórz menu"><span uk-icon="icon: menu; ratio: 1.5;"></span><span class="readers-only">Otwórz menu</span></div>
+    </div>
+    <div id="searchbar" class="search__bar" hidden>
+    <div class="bar__close" uk-toggle="target: #searchbar; mode: click; animation: uk-animation-slide-top-small, uk-animation-slide-top-small"><span uk-icon="icon: close"></span><span class="readers-only">Zamknij wyszukiwarkę</span></div>
+    <div class="bar__inner">
+    <form action="https://mpk.wroc.pl/szukaj" method="post" accept-charset="utf-8">
+<input type="hidden" name="csrf_neocms" value="a81f4a8b9ee737136b51f34d49858b72" />                                                                              
+            <label for="search" class="readers-only">Wpisz frazę</label>
+            <input type="search" name="query" id="search" placeholder="Wpisz frazę" value=""/>
+            <input type="submit" class="button search__button" value="Szukaj" />
+    </form>    </div>
+</div>
+</header>
+<div id="hearingModal" class="uk-flex-top" uk-modal>
+    <div class="uk-modal-dialog uk-width-auto uk-margin-auto-vertical">
+        <button class="uk-modal-close-outside" type="button" uk-close></button>
+        <iframe width="900" height="507" src="https://www.youtube-nocookie.com/embed/wmMMbUA1LJw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen uk-video uk-responsive></iframe>
+    </div>
+</div>
+
+<a href="/informacje-latwe-do-czytania" id="widget_easytoread" title="Informacje dotyczące tekstu łatwego do czytania">
+    <img src="/assets/images/ico_simple_text.png" alt="Ikona standardu tekstu prostego">
+</a>
+
+<section class="breadcrumbs__container" data-gjs-skipcompontent="true">
+    <div class="wrapper">
+        <div class="breadcrumbs">
+            <ul itemscope itemtype="https://schema.org/BreadcrumbList">
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <a href="https://mpk.wroc.pl/" itemtype="https://schema.org/Thing" itemprop="item">
+                        <span itemprop="name">Home</span>
+                    </a><span class="bc__sep">/</span>
+                    <meta itemprop="position" content="1" />
+                </li>
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><span itemtype="https://schema.org/Thing" itemprop="item"><span itemprop="name">Strefa pasażera</span></span><meta itemprop="position" content="2" /> <span class="bc__sep">/</span> </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><span itemtype="https://schema.org/Thing" itemprop="item"><span itemprop="name">Zaplanuj podróż</span></span><meta itemprop="position" content="3" /> <span class="bc__sep">/</span> </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a href="https://mpk.wroc.pl/strefa-pasazera/zaplanuj-podroz/zmiany-w-komunikacji" itemtype="https://schema.org/Thing" itemprop="item"><span itemprop="name">Zmiany w komunikacji</span></a><meta itemprop="position" content="4" /></li>            </ul>
+        </div>
+    </div>
+</section>	<main class="">
+	<section class="featured__section">
+		<div class="wrapper">
+			<div class="title__section">
+				<h1>Zmiany w komunikacji</h1>
+			</div>
+		</div>
+	</section>	
+	<section id="tresc-strony" class="messages__content page__content">
+    <div class="wrapper">
+        <div class="content__columns columns__2 gap">
+                                    <div class="message__card">
+                <div class="message__icon_box">
+                                        <div class="message__icon">
+                        <span class="icon-message orange"></span>
+                    </div>
+                                    </div>
+                <div class="message__content">
+                    <div class="message__meta">
+                        <div class="message__numbers">
+                            <span class="message__label">linie: </span>
+                                                                                                                <span class="message__number">113</span>
+                                                        <span class="message__number">S7</span>
+                                                                                </div>
+                        <div class="message__date">
+                            <span class="message__label">obowiązuje: </span>
+                            <span class="date__value">11.11.2026 - 12.11.2026</span>
+                        </div>
+                    </div>
+                    <div class="message__main">
+                        <div class="main__inner">
+                            <p><a href="https://mpk.wroc.pl/komunikat/1169/2026-11-12-11112026r-zakonczenie-sezonu-na-partynicach">11.11.2026r. - zakończenie sezonu na Partynicach</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="message__card">
+                <div class="message__icon_box">
+                                        <div class="message__icon">
+                        <span class="icon-message orange"></span>
+                    </div>
+                                    </div>
+                <div class="message__content">
+                    <div class="message__meta">
+                        <div class="message__numbers">
+                            <span class="message__label">linie: </span>
+                                                                                                                <span class="message__number">144</span>
+                                                        <span class="message__number">240</span>
+                                                        <span class="message__number">247</span>
+                                                        <span class="message__number">248</span>
+                                                        <span class="message__number">250</span>
+                                                                                </div>
+                        <div class="message__date">
+                            <span class="message__label">obowiązuje: </span>
+                            <span class="date__value">24.10.2026 - 30.11.2026</span>
+                        </div>
+                    </div>
+                    <div class="message__main">
+                        <div class="main__inner">
+                            <p><a href="https://mpk.wroc.pl/komunikat/1164/2026-11-30-24102026r-remont-torowiska-na-ul-lokietka-wraz-z-lukami-na-pl-swietego-macieja">24.10.2026r. - remont torowiska na ul. Łokietka wraz z łukami na Pl. Świętego Macieja</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="message__card">
+                <div class="message__icon_box">
+                                        <div class="message__icon">
+                        <span class="icon-message orange"></span>
+                    </div>
+                                    </div>
+                <div class="message__content">
+                    <div class="message__meta">
+                        <div class="message__numbers">
+                            <span class="message__label">linie: </span>
+                                                                                                                <span class="message__number">101</span>
+                                                        <span class="message__number">103</span>
+                                                        <span class="message__number">136</span>
+                                                        <span class="message__number">152</span>
+                                                        <span class="message__number">246</span>
+                                                                                </div>
+                        <div class="message__date">
+                            <span class="message__label">obowiązuje: </span>
+                            <span class="date__value">17.10.2026 - 30.11.2026</span>
+                        </div>
+                    </div>
+                    <div class="message__main">
+                        <div class="main__inner">
+                            <p><a href="https://mpk.wroc.pl/komunikat/1159/2026-11-30-17102026r-tymczasowa-zmiana-lokalizacji-przystanku-autobusowego-gornicza">17.10.2026r. - tymczasowa zmiana lokalizacji przystanku autobusowego &quot;Górnicza&quot;</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="message__card">
+                <div class="message__icon_box">
+                                        <div class="message__icon">
+                        <span class="icon-message orange"></span>
+                    </div>
+                                    </div>
+                <div class="message__content">
+                    <div class="message__meta">
+                        <div class="message__numbers">
+                            <span class="message__label">linie: </span>
+                                                                                                                <span class="message__number">N</span>
+                                                        <span class="message__number">131</span>
+                                                        <span class="message__number">150</span>
+                                                        <span class="message__number">251</span>
+                                                                                </div>
+                        <div class="message__date">
+                            <span class="message__label">obowiązuje: </span>
+                            <span class="date__value">10.10.2026 - 31.12.2026</span>
+                        </div>
+                    </div>
+                    <div class="message__main">
+                        <div class="main__inner">
+                            <p><a href="https://mpk.wroc.pl/komunikat/1155/2026-12-31-10102026r-rozpoczecie-remontu-ul-zmudzkiej">10.10.2026r. - rozpoczęcie remontu ul. Żmudzkiej</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="message__card">
+                <div class="message__icon_box">
+                                        <div class="message__icon">
+                        <span class="icon-message orange"></span>
+                    </div>
+                                    </div>
+                <div class="message__content">
+                    <div class="message__meta">
+                        <div class="message__numbers">
+                            <span class="message__label">linie: </span>
+                                                                                                                <span class="message__number">125</span>
+                                                                                </div>
+                        <div class="message__date">
+                            <span class="message__label">obowiązuje: </span>
+                            <span class="date__value">19.09.2026 - 30.11.2026</span>
+                        </div>
+                    </div>
+                    <div class="message__main">
+                        <div class="main__inner">
+                            <p><a href="https://mpk.wroc.pl/komunikat/1140/2026-11-30-19092026r-rozpoczecie-prac-zwiazanych-z-przebudowa-skrzyzowania-ulic-komandorskiej-i-wielkiej">19.09.2026r. - rozpoczęcie prac związanych z przebudową skrzyżowania ulic Komandorskiej i Wielkiej</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="message__card">
+                <div class="message__icon_box">
+                                        <div class="message__icon">
+                        <span class="icon-message orange"></span>
+                    </div>
+                                    </div>
+                <div class="message__content">
+                    <div class="message__meta">
+                        <div class="message__numbers">
+                            <span class="message__label">linie: </span>
+                                                                                                                <span class="message__number">127</span>
+                                                        <span class="message__number">136</span>
+                                                        <span class="message__number">144</span>
+                                                        <span class="message__number">257</span>
+                                                                                </div>
+                        <div class="message__date">
+                            <span class="message__label">obowiązuje: </span>
+                            <span class="date__value">12.09.2026 - 30.11.2026</span>
+                        </div>
+                    </div>
+                    <div class="message__main">
+                        <div class="main__inner">
+                            <p><a href="https://mpk.wroc.pl/komunikat/1136/2026-11-30-12092026r-tymczasowa-zmiana-lokalizacji-przystanku-autobusowego-hallera">12.09.2026r. - tymczasowa zmiana lokalizacji przystanku autobusowego &quot;Hallera&quot;</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="message__card">
+                <div class="message__icon_box">
+                                        <div class="message__icon">
+                        <span class="icon-message orange"></span>
+                    </div>
+                                    </div>
+                <div class="message__content">
+                    <div class="message__meta">
+                        <div class="message__numbers">
+                            <span class="message__label">linie: </span>
+                                                                                                                <span class="message__number">253</span>
+                                                                                </div>
+                        <div class="message__date">
+                            <span class="message__label">obowiązuje: </span>
+                            <span class="date__value">03.09.2026 - 30.11.2026</span>
+                        </div>
+                    </div>
+                    <div class="message__main">
+                        <div class="main__inner">
+                            <p><a href="https://mpk.wroc.pl/komunikat/1132/2026-11-30-05092026r-przebudowa-ul-kamiennogorskiej">05.09.2026r. - przebudowa ul. Kamiennogórskiej</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        <div class="message__card">
+                <div class="message__icon_box">
+                                        <div class="message__icon">
+                        <span class="icon-message orange"></span>
+                    </div>
+                                    </div>
+                <div class="message__content">
+                    <div class="message__meta">
+                        <div class="message__numbers">
+                            <span class="message__label">linie: </span>
+                                                                                                                <span class="message__number">125</span>
+                                                        <span class="message__number">132</span>
+                                                                                </div>
+                        <div class="message__date">
+                            <span class="message__label">obowiązuje: </span>
+                            <span class="date__value">01.08.2026 - 31.03.2027</span>
+                        </div>
+                    </div>
+                    <div class="message__main">
+                        <div class="main__inner">
+                            <p><a href="https://mpk.wroc.pl/komunikat/1109/2027-03-31-rozbudowa-skrzyzowania-wiejska-mokronoska-awicenny">Rozbudowa skrzyżowania Wiejska-Mokronoska-Awicenny</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                                </div>
+    </div>
+</section>
+<ul class="pagination"><li class="active"><a>1</a></li><li><a href="https://mpk.wroc.pl/strefa-pasazera/zaplanuj-podroz/zmiany-w-komunikacji/p/2" data-ci-pagination-page="2">2</a></li><li><a href="https://mpk.wroc.pl/strefa-pasazera/zaplanuj-podroz/zmiany-w-komunikacji/p/2" data-ci-pagination-page="2" rel="next">&gt;</a></li></ul></main>
+	<footer>
+    <div class="wrapper">
+        <div class="footer__top">
+            <a href="https://mpk.wroc.pl/" title="Strona główna MPK Wrocław">
+                <img src="/assets/images/logo-b.png" alt="Logo MPK Wrocław" title="Logo MPK Wrocław" class="footer__logo" />
+            </a>
+            <div class="footer__menu">
+    <ul role="menu">
+                                <li>
+            <a  href="https://mpk.wroc.pl/kontakt" title="Kontakt" aria-label="Kontakt">Kontakt</a>        </li>
+                        <li>
+            <a target="_blank" href="https://sklep.mpk.wroc.pl/" title="Sklep" aria-label="Sklep">Sklep</a>        </li>
+                        <li>
+            <a target="_blank" href="http://www.domki-sulow.pl/" title="Ośrodek wypoczynkowy" aria-label="Ośrodek wypoczynkowy">Ośrodek wypoczynkowy</a>        </li>
+                        <li>
+            <a  href="https://mpk.wroc.pl/strefa-seniora-mpk" title="Strefa Seniora MPK" aria-label="Strefa Seniora MPK">Strefa Seniora MPK</a>        </li>
+                        <li>
+            <a  href="https://mpk.wroc.pl/standardy-ochrony-maloletnich" title="Standardy ochrony małoletnich" aria-label="Standardy ochrony małoletnich">Standardy ochrony małoletnich</a>        </li>
+                                </ul>
+</div>
+        </div>
+        <div class="footer__bottom">
+            <div class="footer__menu">
+    <ul role="menu">
+                                <li>
+            <a target="_blank" href="https://www.wroclaw.pl/dla-mieszkanca" title="Wiadomości z Wrocławia" aria-label="Wiadomości z Wrocławia">Wiadomości z Wrocławia</a>        </li>
+                        <li>
+            <a target="_blank" href="https://www.wroclaw.pl/pogoda-wroclaw/" title="Pogoda Wrocław" aria-label="Pogoda Wrocław">Pogoda Wrocław</a>        </li>
+                        <li>
+            <a target="_blank" href="https://www.wroclaw.pl/komunikacja/rozklady-jazdy" title="Rozkład jazdy MPK" aria-label="Rozkład jazdy MPK">Rozkład jazdy MPK</a>        </li>
+                        <li>
+            <a target="_blank" href="https://www.wroclaw.pl/" title="Wrocław" aria-label="Wrocław">Wrocław</a>        </li>
+                        <li>
+            <a  href="https://mpk.wroc.pl/deklaracja-dostepnosci" title="Deklaracja dostępności" aria-label="Deklaracja dostępności">Deklaracja dostępności</a>        </li>
+                                    <li>
+                    <button type="button" id="open-cookies" class="cookie-open">Ustawienia cookie</button>
+                </li>
+                        </ul>
+</div>
+            <div class="bottom__content">
+                <p>© Copyright by 2026 <a href="https://mpk.wroc.pl/" title="Strona www MPK Wrocław">MPK Wrocław</a> | All rights Reserved</p>
+                <p>Adres: Miejskie Przedsiębiorstwo Komunikacyjne Sp. z o.o., ul. B. Prusa 75-79,50-316 Wrocław, NIP: 896-10-04-279</p>
+            </div>
+        </div>
+    </div>
+</footer>	<script type="text/javascript" src="js/app.min.js?1773060897"></script>
+    
+	<style>
+		body .uwy *:focus {
+ 		border: 4px dashed #FFFFFF;
+		border-spacing: 15px;
+		-webkit-box-shadow: -0px 0px 0px 10px rgba(255, 255, 255, 1);
+		-moz-box-shadow: -0px 0px 0px 10px rgba(255, 255, 255, 1);
+		box-shadow: -0px 0px 0px 10px rgba(255, 255, 255, 1);
+	}
+	</style>
+</body>
+</html>

@@ -24,6 +24,7 @@
   {% if late_min %}
   <p class="advice late">You'll be ~{{ late_min }} min late. Leave by {{ leave_by.astimezone(tz).strftime("%H:%M") }}</p>
   {% elif leave_by %}<p class="advice">Leave by {{ leave_by.astimezone(tz).strftime("%H:%M") }}</p>{% endif %}
+  {% for d in disruptions %}<p class="extra">{{ d }}</p>{% endfor %}
   {% for c in options %}
   <div class="event">
     <span class="when">{{ c.departs.astimezone(tz).strftime("%H:%M") }}

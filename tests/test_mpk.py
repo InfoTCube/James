@@ -323,3 +323,40 @@ def test_arrive_early_rules_move_the_trip(db, monkeypatch):
         service.set_early(s, "siatkówka", 0)  # removes it
         s.flush()
         assert service.early_rules(s) == []
+
+
+def test_disruptions_parse_and_match(tmp_path):
+    from pathlib import Path
+
+    from assistant.modules.mpk.collector import parse_disruptions
+    from assistant.modules.mpk.service import Connection, connection_lines, disruptions_for
+
+    page = Path("tests/fixtures/mpk/disruptions.html").read_text(encoding="utf-8")
+    found = parse_disruptions(page)
+    assert len(found) == 8
+    lokietka = next(d for d in found if d.id == 1164)
+    assert lokietka.lines == "144 240 247 248 250"
+    assert (lokietka.valid_from, lokietka.valid_to) == (date(2026, 10, 24), date(2026, 11, 30))
+    assert lokietka.title.startswith("24.10.2026r. - remont torowiska na ul. Łokietka")
+    assert parse_disruptions("<html>nothing</html>") == []
+
+    t = datetime(2026, 11, 12, 8, tzinfo=TZ)
+    bus = Connection("33", False, "Pilczyce", "A", "B", t, t)
+    bus.then = Connection("144", False, "Osobowice", "B", "C", t, t)
+    assert connection_lines([bus]) == {"33", "144"}
+
+    engine = make_engine(tmp_path / "db.sqlite")
+    with Session(engine) as s:
+        s.add_all(found)
+        s.flush()
+        warnings = disruptions_for(s, {"33", "144"}, date(2026, 11, 12))
+        assert len(warnings) == 2  # Łokietka works + the moved "Hallera" stop
+        assert any(
+            w.startswith(
+                "⚠️ 144: remont torowiska na ul. Łokietka wraz z łukami na Pl. Świętego Macieja "
+                "(until 30.11) https://mpk.wroc.pl/komunikat/1164/"
+            )
+            for w in warnings
+        )
+        assert disruptions_for(s, {"144"}, date(2026, 12, 1)) == []  # over by then
+        assert disruptions_for(s, {"33"}, date(2026, 11, 12)) == []

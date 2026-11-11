@@ -4,7 +4,7 @@
   <button type="button" class="event"
           hx-post="/api/biedronka/send/{{ o.page_id }}" hx-target="find .sent" hx-swap="innerHTML">
     <span class="when">{% if o.price is not none %}{{ "%.2f" | format(o.price) | replace(".", ",") }}{% else %}?{% endif %}</span>
-    <span>{{ o.product }}{% if o.discount %} · -{{ o.discount }}%{% endif %}{% if o.old_price %} · was {{ "%.2f" | format(o.old_price) | replace(".", ",") }}{% endif %}
+    <span>{{ o.product }}{% if o.discount %} · -{{ o.discount }}%{% endif %}{% if o.old_price %} · was {{ "%.2f" | format(o.old_price) | replace(".", ",") }}{% endif %}{% if o.note %} · <b>{{ o.note }}</b>{% endif %}
       <small>{{ o.text }}{% if o.valid_to %} · until {{ o.valid_to.strftime("%d.%m") }}{% endif %}</small><small class="sent" aria-live="polite"></small></span>
   </button>
   {% endfor %}

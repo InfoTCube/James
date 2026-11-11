@@ -41,6 +41,7 @@ def mpk_widget(request: Request):
             "options": trip.options,
             "leave_by": trip.leave_by,
             "late_min": trip.late_min,
+            "disruptions": [d.rsplit(" ", 1)[0] for d in trip.disruptions],  # no link on screen
             "tz": config.tz,
             "stale": is_stale(engine, "mpk", timedelta(days=2)),
             "early": early if trip.leg.arrive_by else 0,

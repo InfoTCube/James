@@ -26,6 +26,16 @@ class BiedronkaCheck(Base):
     price: Mapped[float | None]  # the right price, when Claude saw a different one nearby
 
 
+class BiedronkaPrice(Base):
+    """A product's cheapest checked price in the leaflets on a day: the price history."""
+
+    __tablename__ = "biedronka_prices"
+
+    product: Mapped[str] = mapped_column(primary_key=True)  # folded, like BiedronkaProduct.key
+    day: Mapped[date] = mapped_column(primary_key=True)
+    price: Mapped[float]
+
+
 class BiedronkaPage(Base):
     """One page of a current grocery leaflet. Removed when the leaflet leaves the website."""
 

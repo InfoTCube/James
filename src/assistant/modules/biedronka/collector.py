@@ -182,4 +182,5 @@ class BiedronkaCheckCollector:
             for key, (ok, price) in service.parse_checks(answer or "", todo).items():
                 session.merge(BiedronkaCheck(key=key, ok=ok, price=price))
             session.flush()
+        service.record_prices(session, service.offers(session, today), today)
         send_alert(session, today)

@@ -1,0 +1,8 @@
+<section class="widget meals">
+  <h2>Dinner ideas · from this week's promos</h2>
+  <ul class="digest">
+    {% for name, uses, how in ideas %}
+    <li><b>{{ name }}</b><br><small>{{ uses }}</small><br>{{ how }}</li>
+    {% endfor %}
+  </ul>
+</section>

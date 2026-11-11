@@ -3,6 +3,7 @@
 import assistant.modules.music.models  # noqa: F401  no collectors, but their tables must exist
 import assistant.modules.notes.models  # noqa: F401
 import assistant.modules.shopping.models  # noqa: F401
+import assistant.modules.timers.models  # noqa: F401
 from assistant.core.collector import Collector
 from assistant.modules.alarm.collector import AlarmPlanner, AlarmRinger
 from assistant.modules.backup.collector import BackupCollector
@@ -14,8 +15,9 @@ from assistant.modules.events.collector import EventsCollector
 from assistant.modules.films.collector import FilmsCollector
 from assistant.modules.flights.collector import FlightsCollector
 from assistant.modules.jobs.collector import JobsCollector
+from assistant.modules.meals.collector import MealsCollector
 from assistant.modules.mpk.alerts import LeaveNowAlert
-from assistant.modules.mpk.collector import GeocodeCollector, MpkCollector
+from assistant.modules.mpk.collector import DisruptionsCollector, GeocodeCollector, MpkCollector
 from assistant.modules.news.collector import NewsCollector, NewsDigestCollector
 from assistant.modules.parcels.collector import ParcelsCollector
 from assistant.modules.sports.collector import SportsCollector
@@ -26,6 +28,7 @@ COLLECTORS: list[Collector] = [
     CalendarCollector(),
     MpkCollector(),
     GeocodeCollector(),
+    DisruptionsCollector(),
     LeaveNowAlert(),
     AlarmPlanner(),
     AlarmRinger(),
@@ -40,6 +43,7 @@ COLLECTORS: list[Collector] = [
     SportsCollector(),
     BiedronkaCollector(),
     BiedronkaCheckCollector(),
+    MealsCollector(),
     BackupCollector(),
     ParcelsCollector(),
 ]

@@ -177,6 +177,9 @@ def briefing(session: Session, now: datetime, config: Config) -> str:
         )
         if departure.connection:
             lines.append(format_connection(departure.connection, tz))
+            lines += mpk.disruptions_for(
+                session, mpk.connection_lines([departure.connection]), now.astimezone(tz).date()
+            )
 
     today = now.astimezone(tz).date()
     for b in birthdays.upcoming(session, now, tz, days=2):

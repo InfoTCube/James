@@ -19,6 +19,7 @@ from assistant.modules.events import service as events
 from assistant.modules.films import service as films
 from assistant.modules.flights import service as flights
 from assistant.modules.jobs import service as jobs
+from assistant.modules.meals import service as meals
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.alerts import format_connection
 from assistant.modules.music import client as music_client
@@ -29,6 +30,7 @@ from assistant.modules.parcels import service as parcels
 from assistant.modules.parcels.collector import ParcelsCollector
 from assistant.modules.shopping import service as shopping
 from assistant.modules.sports import service as sports
+from assistant.modules.timers import service as timers
 from assistant.modules.weather import service as weather
 
 
@@ -50,7 +52,7 @@ def reply_next(session: Session, now: datetime, config: Config, args: list[str] 
         if trip.leave_by:
             lines.append(f"Leave by {trip.leave_by.astimezone(tz):%H:%M}")
         lines += [format_connection(c, tz) for c in trip.options] or ["No connection found"]
-        return "\n".join(lines)
+        return "\n".join(lines + trip.disruptions)
 
     event = calendar.next_event_with_location(session, now, tz)
     if event is None:
@@ -514,3 +516,37 @@ def reply_got(session: Session, now: datetime, config: Config, args: list[str]) 
     gone = [i.text for ref in " ".join(args).split(",") if (i := shopping.remove(session, ref))]
     left = len(shopping.items(session))
     return f"✅ {', '.join(gone)} ({left} left)" if gone else "Not on the list."
+
+
+TIMER_USAGE = "Usage: /timer 10m pasta, /timer 1h30m, /timer 90s"
+
+
+def reply_timer(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/timer 10m [label]: start a timer (the dashboard rings it); alone: the running ones."""
+    if not args:
+        shown = timers.ringing(session, now) + timers.running(session, now)
+        if not shown:
+            return "No timers running. " + TIMER_USAGE
+        return "\n".join("⏲️ " + timers.describe(t, now) for t in shown)
+    length, label = timers.parse(" ".join(args))
+    if length is None:
+        return TIMER_USAGE
+    t = timers.add(session, length, label, now)
+    name = f"{t.label} timer" if t.label else "Timer"
+    return f"⏲️ {name} set for {timers.left(t, now)}."
+
+
+def reply_timer_off(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/timer_off [label]: stop the ringing timers, else cancel running ones (that one / all)."""
+    gone = timers.stop(session, now, " ".join(args))
+    if not gone:
+        return "No timer to stop."
+    return "⏲️ Stopped: " + ", ".join(t.label or "timer" for t in gone)
+
+
+def reply_meals(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/meals: this week's dinner ideas from the Biedronka promotions."""
+    ideas = meals.ideas(session, now.astimezone(config.tz).date())
+    if not ideas:
+        return "No dinner ideas this week yet. They come on Monday night from the checked promos."
+    return "\n\n".join(meals.format_idea(m) for m in ideas)

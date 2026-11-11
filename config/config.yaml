@@ -109,6 +109,11 @@ films:
   min_rating: 7.0
   min_votes: 5000
 
+# Dinner ideas, weekly: AI suggests 3 using this week's Biedronka offers on your /buy products.
+# `taste` steers it, e.g. "quick, high protein, no mushrooms".
+meals:
+  taste: ""
+
 # Book suggestions, monthly: best rated books on these Open Library subjects, from which AI picks 3.
 # Empty `subjects` turns books off. `languages`: has an edition in one of these (ISO 639-2 codes).
 books:

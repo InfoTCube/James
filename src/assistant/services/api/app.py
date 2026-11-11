@@ -22,6 +22,7 @@ from assistant.modules.events.routes import router as events_router
 from assistant.modules.films.routes import router as films_router
 from assistant.modules.flights.routes import router as flights_router
 from assistant.modules.jobs.routes import router as jobs_router
+from assistant.modules.meals.routes import router as meals_router
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.routes import router as mpk_router
 from assistant.modules.music.routes import router as music_router
@@ -29,6 +30,7 @@ from assistant.modules.news.routes import router as news_router
 from assistant.modules.parcels.routes import router as parcels_router
 from assistant.modules.shopping.routes import router as shopping_router
 from assistant.modules.sports.routes import router as sports_router
+from assistant.modules.timers.routes import router as timers_router
 from assistant.modules.weather.routes import router as weather_router
 from assistant.services.bot.replies import reply_status
 from assistant.services.voice.routes import router as voice_router
@@ -53,6 +55,8 @@ app.include_router(biedronka_router)
 app.include_router(music_router)
 app.include_router(parcels_router)
 app.include_router(shopping_router)
+app.include_router(timers_router)
+app.include_router(meals_router)
 app.include_router(voice_router)
 
 # get the voice (~60 MB, once) ready before the first alarm needs it

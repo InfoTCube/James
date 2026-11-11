@@ -46,3 +46,14 @@
   data vehicle table is only an hourly snapshot, so it's unusable.
 - **Not yet:** two or more changes, or walking between differently named stops. Live delays are
   only computed while the dashboard card is visible.
+
+## Disruptions
+
+`DisruptionsCollector` (every 2 h) reads MPK's planned changes from
+`mpk.wroc.pl/strefa-pasazera/zaplanuj-podroz/zmiany-w-komunikacji` (8 per page, `/p/2`, …; up to
+5 pages) into `mpk_disruptions`: announcement number, title, link, the lines on its card and its
+dates. `current_trip` adds a ⚠️ line for each one active today that touches a line of the trip's
+options (the bus after a change too): it shows in `/next`, voice, the "Getting there" card, the
+"leave now" alert, and the morning briefing for the first departure. Only planned changes:
+live breakdowns aren't on these pages. If the page markup changes, the run fails (no
+announcements found) and `/status` shows it; the fix is in `parse_disruptions`.

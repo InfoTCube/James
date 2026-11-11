@@ -1,6 +1,7 @@
 """Wrocław GTFS timetable (open data portal) → mpk_* tables."""
 
 import csv
+import html
 import io
 import logging
 import re
@@ -21,6 +22,7 @@ from assistant.core.db import utcnow
 from assistant.modules.calendar import service as calendar
 from assistant.modules.mpk import service
 from assistant.modules.mpk.models import (
+    MpkDisruption,
     MpkFeed,
     MpkGeocode,
     MpkRoute,
@@ -182,3 +184,59 @@ class GeocodeCollector:
                 lat, lon = geocode(client, loc) or (None, None)
                 session.add(MpkGeocode(query=loc, lat=lat, lon=lon, looked_up_at=utcnow()))
                 log.info("geocoded %r: %s", loc, "found" if lat else "not found")
+
+
+CHANGES = "https://mpk.wroc.pl/strefa-pasazera/zaplanuj-podroz/zmiany-w-komunikacji"
+MAX_PAGES = 5  # 8 announcements a page; usually 2–3 pages are current
+
+
+def parse_disruptions(page: str) -> list[MpkDisruption]:
+    """One "zmiany w komunikacji" page → its announcements (lines, dates, title, link)."""
+    found = []
+    for card in page.split('class="message__card"')[1:]:
+        link = re.search(
+            r'href="(https://mpk\.wroc\.pl/komunikat/(\d+)/[^"]*)"[^>]*>([^<]+)<', card
+        )
+        dates = re.search(
+            r'class="date__value">\s*(\d{2})\.(\d{2})\.(\d{4})\s*-\s*(\d{2})\.(\d{2})\.(\d{4})',
+            card,
+        )
+        lines = re.findall(r'class="message__number">\s*([^<\s]+)\s*<', card)
+        if not (link and dates and lines):
+            continue  # ponytail: an announcement without lines or dates can't be matched anyway
+        d = [int(x) for x in dates.groups()]
+        found.append(
+            MpkDisruption(
+                id=int(link[2]),
+                url=link[1],
+                title=html.unescape(link[3]).strip(),
+                lines=" ".join(lines),
+                valid_from=date(d[2], d[1], d[0]),
+                valid_to=date(d[5], d[4], d[3]),
+            )
+        )
+    return found
+
+
+class DisruptionsCollector:
+    """MPK's planned changes (roadworks, detours, moved stops), for warnings on your trips.
+    Live breakdowns aren't on these pages."""
+
+    name = "mpk_disruptions"
+    schedule = IntervalTrigger(hours=2)
+
+    def run(self, session: Session) -> None:
+        found: dict[int, MpkDisruption] = {}
+        for n in range(1, MAX_PAGES + 1):
+            url = CHANGES if n == 1 else f"{CHANGES}/p/{n}"
+            page = parse_disruptions(
+                httpx.get(url, headers=HEADERS, timeout=30).raise_for_status().text
+            )
+            if not page:
+                break
+            found |= {d.id: d for d in page}
+            time.sleep(1)
+        if not found:
+            raise RuntimeError("mpk: no announcements found; has the page changed?")
+        session.execute(delete(MpkDisruption))
+        session.add_all(found.values())
