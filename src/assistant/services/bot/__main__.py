@@ -47,6 +47,7 @@ from assistant.services.bot.replies import (
     reply_promos,
     reply_read,
     reply_sports,
+    reply_status,
     reply_today,
     reply_unread,
     reply_unwatched,
@@ -85,6 +86,7 @@ COMMANDS = {
     "note": (reply_note, "Save a note: /note buy HDMI cable"),
     "notes": (reply_notes, "Newest notes, or search: /notes hdmi"),
     "note_del": (reply_note_del, "Delete a note: /note_del 3"),
+    "status": (reply_status, "Failing collectors, AI calls used, free disk"),
 }
 
 

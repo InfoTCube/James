@@ -53,3 +53,22 @@ def test_run_collector_records_runs_and_never_raises(tmp_path):
     assert runs["bad"].status == "error" and "boom" in runs["bad"].error
     assert not is_stale(engine, "ok", timedelta(hours=1))
     assert is_stale(engine, "bad", timedelta(hours=1))
+
+
+def test_status_reports_failures_ai_calls_and_disk(tmp_path, monkeypatch):
+    from assistant.core.db import utcnow
+    from assistant.services.bot import replies
+
+    engine = make_engine(tmp_path / "a.db")
+    run_collector(FakeCollector("weather"), engine)
+    run_collector(FakeCollector("mpk", fail=True), engine)
+    monkeypatch.setattr(replies, "free_disk_gb", lambda: 1.5)
+    config = Config(location={"latitude": 0, "longitude": 0})
+    with Session(engine) as s:
+        text_ = replies.reply_status(s, utcnow(), config, [])
+    assert text_.splitlines() == [
+        "Collectors: 1/2 OK",
+        "❌ mpk (never OK): RuntimeError: boom",
+        "AI calls in 24 h: 0/30",
+        "⚠️ Disk free: 1.5 GB",
+    ]

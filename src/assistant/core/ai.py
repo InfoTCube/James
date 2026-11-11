@@ -100,6 +100,11 @@ def parse_picks(answer: str, known: set[str], limit: int) -> dict[str, str]:
     return picks
 
 
+def calls_last_day(session: Session, now: datetime) -> int:
+    """Real calls (not cache hits) in the 24 h before `now`; capped at MAX_CALLS_PER_DAY."""
+    return session.scalar(select(func.count()).where(AiCall.started_at >= now - timedelta(days=1)))
+
+
 def ask(
     module: str,
     prompt: str,
@@ -129,9 +134,7 @@ def ask(
             log.warning("ai %s: not called, outside %s–%s (pass anytime=True if it can't wait)",
                         module, *NIGHT)  # fmt: skip
             return None
-        today = session.scalar(
-            select(func.count()).where(AiCall.started_at >= now - timedelta(days=1))
-        )
+        today = calls_last_day(session, now)
     result, error, t0 = None, None, time.monotonic()
     if today >= MAX_CALLS_PER_DAY:
         error = f"daily cap reached ({MAX_CALLS_PER_DAY} calls in 24 h)"

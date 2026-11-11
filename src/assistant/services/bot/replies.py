@@ -1,10 +1,14 @@
 """Reply texts for bot commands. Plain functions over the DB, no Telegram here."""
 
+import shutil
 from datetime import date, datetime, time, timedelta
 
 from sqlalchemy.orm import Session
 
+from assistant.core import ai
+from assistant.core.collector import last_success, latest_runs
 from assistant.core.config import Config
+from assistant.core.db import DB_PATH
 from assistant.modules.alarm import service as alarm
 from assistant.modules.biedronka import service as biedronka
 from assistant.modules.birthdays import service as birthdays
@@ -388,3 +392,26 @@ def reply_flight_del(session: Session, now: datetime, config: Config, args: list
         return "Usage: /flight_del 3 (numbers from /flights)"
     w = flights.delete_watch(session, int(args[0].lstrip("#")))
     return f"🗑️ Deleted {flights.describe(w)}" if w else "No such watch."
+
+
+LOW_DISK_GB = 2
+
+
+def free_disk_gb() -> float:
+    """Free space where the database lives."""
+    return shutil.disk_usage(DB_PATH.parent).free / 1e9
+
+
+def reply_status(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/status: failing collectors (with their last good run), AI calls used, free disk."""
+    runs = latest_runs(session)
+    failed = [r for r in runs if r.status == "error"]
+    lines = [f"Collectors: {len(runs) - len(failed)}/{len(runs)} OK"]
+    for r in failed:
+        ok = last_success(session.get_bind(), r.module)
+        since = f"OK {ok.astimezone(config.tz):%d.%m %H:%M}" if ok else "never OK"
+        lines.append(f"❌ {r.module} ({since}): {(r.error or '')[:150]}")
+    lines.append(f"AI calls in 24 h: {ai.calls_last_day(session, now)}/{ai.MAX_CALLS_PER_DAY}")
+    free = free_disk_gb()
+    lines.append(f"{'⚠️ ' if free < LOW_DISK_GB else ''}Disk free: {free:.1f} GB")
+    return "\n".join(lines)

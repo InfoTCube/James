@@ -61,3 +61,13 @@ def is_stale(engine: Engine, module: str, max_age: timedelta) -> bool:
     """True if the module has no successful run within max_age — show its data as stale."""
     ok = last_success(engine, module)
     return ok is None or utcnow() - ok > max_age
+
+
+def latest_runs(session: Session) -> list[CollectorRun]:
+    """Most recent run of each collector, by module name."""
+    latest = select(func.max(CollectorRun.id)).group_by(CollectorRun.module)
+    return list(
+        session.scalars(
+            select(CollectorRun).where(CollectorRun.id.in_(latest)).order_by(CollectorRun.module)
+        )
+    )
