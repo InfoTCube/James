@@ -4,6 +4,7 @@ The dashboard plays the plain audio stream, not YouTube's player, so there are n
 """
 
 import logging
+import re
 import time
 from functools import lru_cache
 
@@ -19,8 +20,16 @@ AUDIO = {"quiet": True, "no_warnings": True, "noplaylist": True,
 Track = tuple[str, str]  # (video id, title)
 
 
+VIDEO_ID = re.compile(r"[\w-]{11}")
+
+
 def _tracks(entries) -> list[Track]:
-    return [(e["id"], e.get("title") or e["id"]) for e in entries or [] if e.get("id")]
+    """Videos only: a search also finds channels (UC…, 24 chars) and playlists."""
+    return [
+        (e["id"], e.get("title") or e["id"])
+        for e in entries or []
+        if VIDEO_ID.fullmatch(e.get("id") or "")
+    ]
 
 
 def find(query: str) -> list[Track]:
@@ -34,7 +43,7 @@ def find(query: str) -> list[Track]:
                     return _tracks(info["entries"])
                 first = (info["id"], info.get("title") or info["id"])
             else:
-                found = _tracks(ydl.extract_info(f"ytsearch1:{query}", download=False)["entries"])
+                found = _tracks(ydl.extract_info(f"ytsearch5:{query}", download=False)["entries"])
                 if not found:
                     return []
                 first = found[0]

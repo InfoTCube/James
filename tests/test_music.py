@@ -99,8 +99,9 @@ class FakeYDL:
         return False
 
     def extract_info(self, url, download):
-        if url.startswith("ytsearch1:"):
-            return {"entries": [{"id": "aaaaaaaaaaa", "title": "Małomiasteczkowy"}]}
+        if url.startswith("ytsearch5:"):  # a channel can come first: skipped
+            return {"entries": [{"id": "UCPGjLde9JT7jPF0OizNESRQ", "title": "Dawid Podsiadło"},
+                                {"id": "aaaaaaaaaaa", "title": "Małomiasteczkowy"}]}  # fmt: skip
         if "list=RD" in url:
             return {
                 "entries": [
