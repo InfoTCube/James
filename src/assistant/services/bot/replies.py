@@ -19,6 +19,7 @@ from assistant.modules.events import service as events
 from assistant.modules.films import service as films
 from assistant.modules.flights import service as flights
 from assistant.modules.jobs import service as jobs
+from assistant.modules.meals import service as meals
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.alerts import format_connection
 from assistant.modules.music import client as music_client
@@ -541,3 +542,11 @@ def reply_timer_off(session: Session, now: datetime, config: Config, args: list[
     if not gone:
         return "No timer to stop."
     return "⏲️ Stopped: " + ", ".join(t.label or "timer" for t in gone)
+
+
+def reply_meals(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/meals: this week's dinner ideas from the Biedronka promotions."""
+    ideas = meals.ideas(session, now.astimezone(config.tz).date())
+    if not ideas:
+        return "No dinner ideas this week yet. They come on Monday night from the checked promos."
+    return "\n\n".join(meals.format_idea(m) for m in ideas)

@@ -37,6 +37,8 @@ Most features are scheduled data fetching + filtering rules. **Default to determ
 | `parcels` | InPost parcel tracking + alerts (later: numbers caught from emails) | InPost ShipX public tracking API | No |
 | `shopping` | Shopping list, items on Biedronka promotion flagged | Local (later Google Tasks) | No |
 | `backup` | Nightly SQLite copy, last 7 kept | Local | No |
+| `timers` | Kitchen timers by voice/Telegram, rung by the dashboard | Local | No |
+| `meals` | 3 dinner ideas a week from the Biedronka promos | `biedronka` checked offers | Selection (weekly) |
 | `alarm` | Alarms, tied to a morning briefing | Scheduler + audio | No |
 | `music` | Play/find music (search + its YouTube Mix as radio), no ads | YouTube via yt-dlp; audio stream played by the dashboard | No |
 | `events` | Hackathons & IT events (in your cities; online ones by keyword, no online hackathons) | Crossweb.pl, Meetup | No — keyword filters |
@@ -119,7 +121,7 @@ Auth: `CLAUDE_CODE_OAUTH_TOKEN` environment variable (generated once with `claud
 
 Usage: `ai.ask(module, prompt, data, model="haiku")` → answer text or `None`. **Claude is only called 01:00–06:00 local time** (`ai.NIGHT`), so AI work doesn't use the Pro quota while the user does: schedule AI collectors in that window, and make them retry next night if they got `None` (the worker also runs every collector at startup, often in the daytime). Only what can't wait (voice fallback) passes `anytime=True`. Call it before writing in your collector's transaction (it records the call in its own). Calls are logged in the `ai_calls` table (also the cache); at most `MAX_CALLS_PER_DAY` (30) real calls per day. The CLI flags (no tools/MCP/settings, one-line system prompt) keep overhead ~600 input tokens per call; `--bare` can't be used because it ignores OAuth.
 
-Allowed AI uses: email summary, news summary, film/book selection, optional job ranking, the nightly check of Biedronka offers (wrong product / neighbour's price, one call), voice fallback for requests the intent matcher doesn't understand. Anything else: ask first. The Pro quota is shared with the user's normal Claude usage — keep calls few and batched (daily/weekly jobs, not per-item loops).
+Allowed AI uses: email summary, news summary, film/book selection, optional job ranking, the nightly check of Biedronka offers (wrong product / neighbour's price, one call), weekly meal ideas from the checked promos (one call), voice fallback for requests the intent matcher doesn't understand. Anything else: ask first. The Pro quota is shared with the user's normal Claude usage — keep calls few and batched (daily/weekly jobs, not per-item loops).
 
 ## Conventions
 
@@ -189,6 +191,10 @@ Work in this order. Keep each step small and working end-to-end before moving on
 - [x] Screen black at night (`screen` in config)
 - [x] `backup` (nightly, last 7)
 - [x] `parcels` (InPost; /track /untrack, alerts, card, voice)
+- [x] `timers` (voice + /timer, dashboard rings)
+- [x] Biedronka price history (lowest in 8 weeks)
+- [x] `meals` (weekly AI dinner ideas from the promos)
+- [ ] MPK disruptions
 - [x] `shopping` list (/list /got, voice, card, Biedronka promos flagged; Google Tasks sync with `email`)
 
 ## How to work in this repo

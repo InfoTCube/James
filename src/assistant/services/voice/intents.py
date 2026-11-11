@@ -455,6 +455,11 @@ INTENTS: list[tuple[str, Handler]] = [
         _reply(replies.reply_weather),
     ),
     (r"\b(match|matches|scores?|sports?|football)\b", _sports),  # before "next": not a trip
+    (
+        r"\b(what should i|what to|what can i) (cook|make|eat)\b|\b(dinner|meal|recipe) (ideas?"
+        r"|suggestions?)\b",
+        _meals := _reply(replies.reply_meals),
+    ),
     (r"\b(promotions?|promos?|biedronka|on sale)\b", _reply(replies.reply_promos)),
     (r"\b(parcels?|packages?|deliver(y|ies)|inpost)\b", _reply(replies.reply_track)),
     (r"\b(tram|bus|leave|departures?|trip|next)\b", _reply(replies.reply_next)),
@@ -485,7 +490,7 @@ INTENTS: list[tuple[str, Handler]] = [
 COMPILED = [(re.compile(p, re.IGNORECASE), h) for p, h in INTENTS]
 # replies made of headlines and titles: each line is all English or all Polish, so it's read by
 # one voice (tts.synthesize_line); our own sentences switch voice for Polish names instead
-ONE_LANGUAGE = {_news, _jobs, _events, _films, _books}
+ONE_LANGUAGE = {_news, _jobs, _events, _films, _books, _meals}
 
 
 def _find(text: str) -> tuple[Handler, re.Match] | None:

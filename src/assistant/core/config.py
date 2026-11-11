@@ -114,6 +114,14 @@ class FilmsConfig(BaseModel):
     min_votes: int = 5000  # IMDb
 
 
+class MealsConfig(BaseModel):
+    """Weekly dinner ideas from the Biedronka offers on your /buy products."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    taste: str = ""  # free text for the AI, e.g. "quick, high protein, no mushrooms"
+
+
 class BooksConfig(BaseModel):
     """Monthly book suggestions."""
 
@@ -166,6 +174,7 @@ class Config(BaseModel):
     news: NewsConfig = Field(default_factory=NewsConfig)
     films: FilmsConfig = Field(default_factory=FilmsConfig)
     books: BooksConfig = Field(default_factory=BooksConfig)
+    meals: MealsConfig = Field(default_factory=MealsConfig)
     sports: SportsConfig = Field(default_factory=SportsConfig)
     voice: str = "en_GB-alan-medium"  # Piper voice for reading aloud (core/tts.py)
     voice_pl: str = "pl_PL-darkman-medium"  # ...and for Polish names in it
