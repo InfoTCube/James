@@ -330,8 +330,8 @@ def _marked_book(session: Session, now: datetime, config: Config, m: re.Match) -
 def _help(session: Session, now: datetime, config: Config, m: re.Match) -> str:
     return (
         "Ask me about the weather, your next tram, today's plans, the news, birthdays, jobs, "
-        "events, flights, films, books or sports. Say wake me up at 7:30, cancel the alarm, take "
-        "a note, add dentist to my calendar tomorrow at 3 pm, or stop and snooze."
+        "events, flights, films, books, sports or promotions. Say wake me up at 7:30, cancel the "
+        "alarm, take a note, add dentist to my calendar tomorrow at 3 pm, or stop and snooze."
     )
 
 
@@ -378,6 +378,7 @@ INTENTS: list[tuple[str, Handler]] = [
         _reply(replies.reply_weather),
     ),
     (r"\b(match|matches|scores?|sports?|football)\b", _sports),  # before "next": not a trip
+    (r"\b(promotions?|promos?|biedronka|on sale)\b", _reply(replies.reply_promos)),
     (r"\b(tram|bus|leave|departures?|trip|next)\b", _reply(replies.reply_next)),
     (
         r"\b(today|tomorrow|calendar|schedule|plans?|agenda)\b|\bwhat do i have\b"

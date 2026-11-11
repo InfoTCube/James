@@ -14,6 +14,7 @@ from assistant.core import tts
 from assistant.core.config import fold, load_config
 from assistant.core.db import CollectorRun, get_engine
 from assistant.modules.alarm.routes import router as alarm_router
+from assistant.modules.biedronka.routes import router as biedronka_router
 from assistant.modules.birthdays.routes import router as birthdays_router
 from assistant.modules.books.routes import router as books_router
 from assistant.modules.calendar.routes import router as calendar_router
@@ -44,6 +45,7 @@ app.include_router(news_router)
 app.include_router(films_router)
 app.include_router(books_router)
 app.include_router(sports_router)
+app.include_router(biedronka_router)
 app.include_router(voice_router)
 
 # get the voice (~60 MB, once) ready before the first alarm needs it

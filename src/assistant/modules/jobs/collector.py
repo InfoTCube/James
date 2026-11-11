@@ -87,7 +87,9 @@ def parse_nofluffjobs(data: dict) -> list[JobOffer]:
                 title=o["title"],
                 company=o["name"],
                 url=f"https://nofluffjobs.com/pl/job/{o['url']}",
-                salary=pay and money(pay["from"], pay["to"], pay["currency"], pay["period"]),
+                # "containsSalary": "NOT_PROVIDED" comes without from, to and currency
+                salary=pay
+                and money(pay.get("from"), pay.get("to"), pay.get("currency", ""), pay["period"]),
                 seniority=", ".join(o.get("seniority", [])),
                 skills=unique(
                     t["value"]

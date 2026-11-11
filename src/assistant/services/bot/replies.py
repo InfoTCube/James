@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from assistant.core.config import Config
 from assistant.modules.alarm import service as alarm
+from assistant.modules.biedronka import service as biedronka
 from assistant.modules.birthdays import service as birthdays
 from assistant.modules.books import service as books
 from assistant.modules.calendar import service as calendar
@@ -248,6 +249,40 @@ def reply_books(session: Session, now: datetime, config: Config, args: list[str]
     if not shown:
         return "No book suggestions yet. They need books.subjects in config.yaml."
     return "\n\n".join(books.format_book(b) for b in shown)
+
+
+def reply_buy(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/buy masło, mleko, kawa: watch products in the Biedronka leaflets; /buy: the list."""
+    if args:
+        added = biedronka.add_products(session, " ".join(args).split(", "), now)
+        return "🐞 Watching: " + ", ".join(n.strip(",") for n in added)
+    watched = biedronka.products(session)
+    if not watched:
+        return "No products yet. Usage: /buy masło, mleko, kawa"
+    return "🐞 Watching: " + ", ".join(watched)
+
+
+def reply_buy_del(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/buy_del masło: stop watching a product."""
+    if not args:
+        return "Usage: /buy_del masło"
+    name = " ".join(args)
+    if biedronka.remove_product(session, name):
+        return f"Stopped watching {name}."
+    return f"{name} isn't on your list."
+
+
+def reply_promos(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/promos: your products in the current Biedronka leaflets."""
+    if not biedronka.products(session):
+        return "No products yet. Usage: /buy masło, mleko, kawa"
+    offers = biedronka.offers(session, now.astimezone(config.tz).date())
+    if not offers:
+        return "None of your products in the leaflets read so far (they're read overnight)."
+    shown = [biedronka.format_offer(o) for o in offers[:15]]
+    if len(offers) > 15:
+        shown.append(f"…and {len(offers) - 15} more on the dashboard")
+    return "\n\n".join(shown)
 
 
 def reply_watched(session: Session, now: datetime, config: Config, args: list[str]) -> str:

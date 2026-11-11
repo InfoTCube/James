@@ -47,6 +47,18 @@ def test_parse_justjoin():
     assert (offers[0].full_time, offers[11].full_time) == (True, None)  # freelance: doesn't say
 
 
+def test_parse_nofluffjobs_without_a_salary():
+    data = load("nofluffjobs.json")
+    data["postings"][2]["salary"] = {
+        "type": "permanent",
+        "period": "Month",
+        "disclosedAt": "AT_LAST_INTERVIEW",
+        "flexibleUpperBound": False,
+        "containsSalary": "NOT_PROVIDED",
+    }
+    assert collector.parse_nofluffjobs(data)[2].salary is None
+
+
 def test_parse_nofluffjobs():
     o = collector.parse_nofluffjobs(load("nofluffjobs.json"))[2]
     assert o.title == "Junior Software Engineer - .NET - Allegro Klik/Care"
