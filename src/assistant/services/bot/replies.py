@@ -20,6 +20,8 @@ from assistant.modules.flights import service as flights
 from assistant.modules.jobs import service as jobs
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.alerts import format_connection
+from assistant.modules.music import client as music_client
+from assistant.modules.music import service as music
 from assistant.modules.news import service as news
 from assistant.modules.notes import service as notes
 from assistant.modules.sports import service as sports
@@ -415,3 +417,36 @@ def reply_status(session: Session, now: datetime, config: Config, args: list[str
     free = free_disk_gb()
     lines.append(f"{'⚠️ ' if free < LOW_DISK_GB else ''}Disk free: {free:.1f} GB")
     return "\n".join(lines)
+
+
+def reply_play(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/play <song, artist or YouTube link>: that, then its YouTube Mix; alone: resume / what's
+    on."""
+    if args:
+        tracks = music_client.find(" ".join(args))
+        if not tracks:
+            return "Nothing found on YouTube."
+        music.play(session, tracks)
+        more = f"\nThen {len(tracks) - 1} more from its mix." if len(tracks) > 1 else ""
+        return f"▶️ {tracks[0][1]}{more}"
+    current = music.set_paused(session, False)
+    if current is None:
+        return "Nothing playing. Usage: /play Dawid Podsiadło"
+    lines = [f"▶️ {current.title}", *(f"· {t.title}" for t in music.up_next(session))]
+    return "\n".join(lines)
+
+
+def reply_pause(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/pause: pause the music (/play resumes it)."""
+    return "⏸️ Paused" if music.set_paused(session, True) else "Nothing playing."
+
+
+def reply_skip(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/skip: the next track."""
+    current = music.skip(session)
+    return f"▶️ {current.title}" if current else "That was the last one."
+
+
+def reply_stop(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/stop: stop the music and clear the queue."""
+    return "⏹️ Stopped" if music.stop(session) else "Nothing playing."

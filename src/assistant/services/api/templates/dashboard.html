@@ -501,6 +501,29 @@
     }
     new EventSource("/api/voice/events").onmessage = e => showVoice(JSON.parse(e.data));  // reconnects by itself
 
+    // --- music: plays the queue set by /play (YouTube audio, no player so no ads); quiet while
+    // the alarm, a briefing, "leave now" or the voice service talks ---
+    const music = new Audio();
+    let track = null;
+    async function pollMusic() {
+      try {
+        const s = await (await fetch("/api/music/state")).json();
+        if (s.video_id !== track) {
+          track = s.video_id;
+          if (track) music.src = `/api/music/stream/${track}`;
+          else { music.pause(); music.removeAttribute("src"); music.load(); }
+        }
+        if (track && s.paused) music.pause();
+        else if (track && music.paused && !music.ended) music.play().catch(() => {});  // e.g. sound not allowed yet
+      } catch (e) { /* retry next poll */ }
+      const talking = !overlay.hidden || !leave.hidden || voice.classList.contains("on");
+      music.volume = talking ? 0.15 : 1;
+    }
+    // ponytail: a track that won't play is skipped; if YouTube refuses them all, the queue empties
+    const nextTrack = () => track && fetch(`/api/music/next/${track}`, { method: "POST" }).then(pollMusic);
+    music.onended = music.onerror = nextTrack;
+    pollMusic(); setInterval(pollMusic, 2000);
+
     // After a deploy the server's version changes: reload to get the new page (kiosk has no F5).
     // Not while ringing or showing the briefing, so an update never interrupts an alarm.
     setInterval(async () => {

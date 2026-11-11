@@ -35,7 +35,7 @@ Most features are scheduled data fetching + filtering rules. **Default to determ
 | `notes` | Store and search notes | Local (SQLite and/or Markdown files) | No |
 | `flights` | Good flight deals from WRO for date windows and prices set from Telegram, checked ~2×/day | Ryanair + Wizz Air fare endpoints (unofficial) | No |
 | `alarm` | Alarms, tied to a morning briefing | Scheduler + audio | No |
-| `music` | Play/find music | Spotify Connect (spotifyd/raspotify) + Spotify Web API | No |
+| `music` | Play/find music (search + its YouTube Mix as radio), no ads | YouTube via yt-dlp; audio stream played by the dashboard | No |
 | `events` | Hackathons & IT events (in your cities; online ones by keyword, no online hackathons) | Crossweb.pl, Meetup | No — keyword filters |
 
 Cross-cutting: **morning briefing** (spoken/displayed summary after alarm), **Telegram alerts** (flights, jobs, events, "leave now for your tram"), **settings** in config files.
@@ -180,7 +180,8 @@ Work in this order. Keep each step small and working end-to-end before moving on
 - [x] `birthdays`
 - [x] `sports` (TheSportsDB; teams and whole leagues, scores; dashboard card, /sports, voice)
 - [x] `biedronka` (food leaflets by local OCR; /buy, /promos, alerts, dashboard card, voice)
-- [ ] `music`
+- [x] `music` (YouTube via yt-dlp, no ads; /play /pause /skip /stop, voice, played by the dashboard)
+- [x] `/status` (failing collectors, AI calls used, free disk; also on `/debug`)
 
 ## How to work in this repo
 

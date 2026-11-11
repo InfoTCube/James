@@ -23,6 +23,7 @@ from assistant.modules.calendar import client as calendar_client
 from assistant.modules.calendar import service as calendar
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.alerts import format_connection
+from assistant.modules.music import service as music
 from assistant.modules.news import service as news
 from assistant.modules.sports import service as sports
 from assistant.services.bot import replies
@@ -215,12 +216,27 @@ def _add_event(session: Session, now: datetime, config: Config, m: re.Match) -> 
 def _alarm_action(session: Session, now: datetime, config: Config, m: re.Match) -> str:
     ringing = alarm.ringing_alarm(session, now)
     if ringing is None:
+        if m[1].lower() == "stop" and music.stop(session):
+            return "OK."
         return "Nothing is ringing."
     if m[1].lower() == "snooze":
         actions.snooze(session, ringing, now, config)
     else:
         actions.stop(session, ringing, now, config)  # the dashboard reads the briefing
     return "OK."
+
+
+def _play(session: Session, now: datetime, config: Config, m: re.Match) -> str:
+    """ "play X" → X from YouTube; "play", "play music", "play it again" → resume."""
+    what = m["what"].strip(" .,!?")
+    if re.fullmatch(r"(some |the )?(music|it|again|it again)?", what, re.IGNORECASE):
+        return replies.reply_play(session, now, config, [])
+    return replies.reply_play(session, now, config, [what])
+
+
+def _now_playing(session: Session, now: datetime, config: Config, m: re.Match) -> str:
+    current = music.now_playing(session)
+    return f"This is {current.title}." if current else "Nothing is playing."
 
 
 def _note(session: Session, now: datetime, config: Config, m: re.Match) -> str:
@@ -330,8 +346,9 @@ def _marked_book(session: Session, now: datetime, config: Config, m: re.Match) -
 def _help(session: Session, now: datetime, config: Config, m: re.Match) -> str:
     return (
         "Ask me about the weather, your next tram, today's plans, the news, birthdays, jobs, "
-        "events, flights, films, books, sports or promotions. Say wake me up at 7:30, cancel the "
-        "alarm, take a note, add dentist to my calendar tomorrow at 3 pm, or stop and snooze."
+        "events, flights, films, books, sports or promotions. Say play and a song, wake me up "
+        "at 7:30, cancel the alarm, take a note, add dentist to my calendar tomorrow at 3 pm, or "
+        "stop and snooze."
     )
 
 
@@ -344,6 +361,12 @@ INTENTS: list[tuple[str, Handler]] = [
         _cancel_alarm,
     ),
     (r"^(stop|snooze|i'?m up)( it| that| the alarm| ringing)?$", _alarm_action),
+    (r"^(please )?play\b(?P<what>.*)", _play),
+    (r"\b(stop|turn off|switch off)\b.*\b(music|song|playing)\b", _reply(replies.reply_stop)),
+    (r"\b(pause|hold)\b.*\b(music|song)\b|^pause( it)?$", _reply(replies.reply_pause)),
+    (r"^(resume|unpause|continue)\b", _reply(replies.reply_play)),
+    (r"\b(skip|next (song|track))\b", _reply(replies.reply_skip)),  # before "next": a trip
+    (r"\bwhat('s| is) (playing|this song)\b|\bwhat song\b", _now_playing),
     (r"\b(wake me|alarm (for|at)|set (an |the |my )?alarm)\b(?P<rest>.*)", _set_alarm),
     (r"\balarms?\b", _reply(replies.reply_alarms)),
     (r"^(take a |make a |add a )?note( down)?:?\s+(that )?(?P<text>.+)", _note),

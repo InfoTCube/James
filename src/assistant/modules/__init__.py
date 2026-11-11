@@ -1,6 +1,7 @@
 """Feature modules. Register each collector here (importing it registers its tables)."""
 
-import assistant.modules.notes.models  # noqa: F401  no collector, but its table must exist
+import assistant.modules.music.models  # noqa: F401  no collectors, but their tables must exist
+import assistant.modules.notes.models  # noqa: F401
 from assistant.core.collector import Collector
 from assistant.modules.alarm.collector import AlarmPlanner, AlarmRinger
 from assistant.modules.biedronka.collector import BiedronkaCollector
