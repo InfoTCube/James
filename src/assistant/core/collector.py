@@ -32,17 +32,22 @@ def run_collector(collector: Collector, engine: Engine) -> bool:
     except Exception as e:
         log.exception("collector %s failed", collector.name)
         error = f"{type(e).__name__}: {e}"
-    with Session(engine) as session, session.begin():
-        session.execute(delete(CollectorRun).where(CollectorRun.finished_at < started - KEEP_RUNS))
-        session.add(
-            CollectorRun(
-                module=collector.name,
-                started_at=started,
-                finished_at=utcnow(),
-                status="error" if error else "ok",
-                error=error,
+    try:
+        with Session(engine) as session, session.begin():
+            session.execute(
+                delete(CollectorRun).where(CollectorRun.finished_at < started - KEEP_RUNS)
             )
-        )
+            session.add(
+                CollectorRun(
+                    module=collector.name,
+                    started_at=started,
+                    finished_at=utcnow(),
+                    status="error" if error else "ok",
+                    error=error,
+                )
+            )
+    except Exception:  # e.g. the DB stayed locked: the run is lost, the worker goes on
+        log.exception("collector %s: could not record the run", collector.name)
     log.info("collector %s: %s", collector.name, "error" if error else "ok")
     return error is None
 
