@@ -9,14 +9,19 @@ import math
 import re
 import statistics
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from difflib import SequenceMatcher
 
 from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from assistant.core.config import fold
-from assistant.modules.biedronka.models import BiedronkaCheck, BiedronkaPage, BiedronkaProduct
+from assistant.modules.biedronka.models import (
+    BiedronkaCheck,
+    BiedronkaPage,
+    BiedronkaPrice,
+    BiedronkaProduct,
+)
 
 # Of the page's width: a price this close to a line naming the product belongs to it. Further for
 # a line with a size ("…, 200 g"), which is the product's name rather than words on its packaging.
@@ -42,6 +47,7 @@ class Offer:
     image: str
     context: str = ""  # OCR text printed around the price, for the AI check
     checked: bool = False  # Claude has seen it (wrong ones aren't returned at all)
+    note: str = ""  # vs the price history: "lowest in 8 weeks", "8-week low 2,49"
 
 
 def add_products(session: Session, names: list[str], now: datetime) -> list[str]:
@@ -178,7 +184,41 @@ def offers(session: Session, today: date) -> list[Offer]:
             o.price, o.old_price, o.discount = c.price, None, None
         o.checked = c is not None
         shown.append(o)
+    add_notes(session, shown, today)
     return sorted(shown, key=lambda o: (fold(o.product), o.price is None, o.price or 0))
+
+
+HISTORY = timedelta(weeks=8)
+ENOUGH = timedelta(days=14)  # less history than this: no note, it would mislead
+
+
+def record_prices(session: Session, found: list[Offer], today: date) -> None:
+    """Save today's cheapest checked price of each product (the nightly check calls this)."""
+    cheapest: dict[str, float] = {}
+    for o in found:
+        if o.checked and o.price is not None:
+            key = fold(o.product)
+            cheapest[key] = min(o.price, cheapest.get(key, o.price))
+    for product, price in cheapest.items():
+        session.merge(BiedronkaPrice(product=product, day=today, price=price))
+
+
+def add_notes(session: Session, found: list[Offer], today: date) -> None:
+    """Compare each priced offer with the product's earlier prices (8 weeks, not today)."""
+    rows = session.execute(
+        select(BiedronkaPrice.product, BiedronkaPrice.day, BiedronkaPrice.price).where(
+            BiedronkaPrice.day >= today - HISTORY, BiedronkaPrice.day < today
+        )
+    ).all()
+    history: dict[str, list] = {}
+    for product, day, price in rows:
+        history.setdefault(product, []).append((day, price))
+    for o in found:
+        seen = history.get(fold(o.product))
+        if o.price is None or not seen or today - min(d for d, _ in seen) < ENOUGH:
+            continue
+        low = min(p for _, p in seen)
+        o.note = "lowest in 8 weeks" if o.price < low else f"8-week low {low:.2f}".replace(".", ",")
 
 
 def offer_key(o: Offer) -> str:
@@ -227,6 +267,8 @@ def format_offer(o: Offer) -> str:
         extras.append(f"was {o.old_price:.2f}".replace(".", ","))
     if o.valid_to:
         extras.append(f"until {o.valid_to:%d.%m}")
+    if o.note:
+        extras.append(o.note)
     if extras:
         head += " (" + ", ".join(extras) + ")"
     return f"{head}\n{o.text}\n{o.image}"

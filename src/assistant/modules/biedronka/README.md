@@ -26,6 +26,10 @@
   The Telegram alert goes out after the check; if Claude fails at night it goes out unchecked,
   and a daytime worker start waits for the night. Unchecked offers (e.g. a product added today)
   show as read until then.
+- **Price history** (`biedronka_prices`): after the check, each product's cheapest *checked*
+  price that day is kept (unchecked prices could be OCR mistakes). Offers then say "lowest in 8
+  weeks" or "8-week low 2,49": in alerts, `/promos` and the card. Nothing until there are 2
+  weeks of history, so it starts saying something two weeks after it's deployed.
 - **Shown:** dashboard card (every 3rd round, tap an offer to get its page on Telegram), `/promos`,
   voice ("anything on promotion?").
 - **Fragility:** high. OCR misreads Polish letters ("Masto" for "Masło"), and the price pairing is

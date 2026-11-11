@@ -295,3 +295,28 @@ def test_ai_check_waits_for_the_night(env, monkeypatch):
         collector.BiedronkaCollector().run(s)
         collector.BiedronkaCheckCollector().run(s)
     assert env.sent == []  # daytime start: no unchecked alert, the night run does it
+
+
+def test_price_history_notes(tmp_path):
+    from datetime import timedelta
+
+    engine = make_engine(tmp_path / "db.sqlite")
+
+    def offer(price, checked=True):
+        o = service.Offer("Masło", "Masło Ekstra", price, None, None, None, 1, "https://i/1")
+        o.checked = checked
+        return o
+
+    with Session(engine) as s:
+        for days_ago, price in [(30, 6.49), (20, 5.99), (9, 6.29)]:
+            service.record_prices(s, [offer(price)], TODAY - timedelta(days=days_ago))
+        service.record_prices(s, [offer(1.00, checked=False)], TODAY)  # unchecked: not kept
+        s.flush()
+        cheap, usual = offer(5.49), offer(6.49)
+        service.add_notes(s, [cheap, usual], TODAY)
+        assert (cheap.note, usual.note) == ("lowest in 8 weeks", "8-week low 5,99")
+        assert "lowest in 8 weeks)" in service.format_offer(cheap)
+
+        young = offer(5.0)  # history shorter than 2 weeks says nothing
+        service.add_notes(s, [young], TODAY - timedelta(days=25))
+        assert young.note == ""
