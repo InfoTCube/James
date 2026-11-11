@@ -1,0 +1,28 @@
+{
+  "tracking_number": "620000011234567890123456",
+  "service": "inpost_locker_standard",
+  "type": "inpost_locker_standard",
+  "status": "ready_to_pickup",
+  "custom_attributes": {
+    "size": "B",
+    "target_machine_id": "WRO118M",
+    "target_machine_detail": {
+      "name": "WRO118M",
+      "opening_hours": "24/7",
+      "location_description": "Przy sklepie Żabka",
+      "address": {"line1": "Kościuszki 70", "line2": "50-441 Wrocław"},
+      "type": ["parcel_locker"],
+      "location247": true
+    },
+    "end_of_week_collection": false
+  },
+  "tracking_details": [
+    {"status": "ready_to_pickup", "origin_status": "OPM", "agency": null, "datetime": "2026-11-11T14:02:11.000+01:00"},
+    {"status": "out_for_delivery", "origin_status": "PWO", "agency": "WRO", "datetime": "2026-11-11T08:15:40.000+01:00"},
+    {"status": "adopted_at_sorting_center", "origin_status": "PPS", "agency": "WRO", "datetime": "2026-11-10T22:41:03.000+01:00"},
+    {"status": "confirmed", "origin_status": "CNF", "agency": null, "datetime": "2026-11-09T17:20:55.000+01:00"}
+  ],
+  "expected_flow": [],
+  "created_at": "2026-11-09T17:20:55.000+01:00",
+  "updated_at": "2026-11-11T14:02:11.000+01:00"
+}

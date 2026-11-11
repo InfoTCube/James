@@ -74,7 +74,9 @@ class AiCall(Base):
 def make_engine(path: Path) -> Engine:
     """Create an engine with WAL + foreign keys, and create all tables."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    engine = create_engine(f"sqlite:///{path}")
+    # writers queue for the lock instead of failing after the default 5 s: the GTFS import holds
+    # it ~20 s (longer on the mini PC) while other collectors also want to write
+    engine = create_engine(f"sqlite:///{path}", connect_args={"timeout": 60})
 
     @event.listens_for(engine, "connect")
     def _pragmas(conn, _):

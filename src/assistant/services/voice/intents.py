@@ -23,6 +23,7 @@ from assistant.modules.calendar import client as calendar_client
 from assistant.modules.calendar import service as calendar
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.alerts import format_connection
+from assistant.modules.music import service as music
 from assistant.modules.news import service as news
 from assistant.modules.sports import service as sports
 from assistant.services.bot import replies
@@ -32,9 +33,12 @@ log = logging.getLogger(__name__)
 Handler = Callable[[Session, datetime, Config, re.Match], str]
 
 AI_PROMPT = (
-    "The input is a spoken request to a home assistant that its commands didn't cover. Answer in "
-    "at most two short sentences, plain text to be read aloud. If it needs the user's own data "
-    "(calendar, alarms, transport, notes) or an action, say you can't do that by voice yet."
+    "The input is context about the user (time, their places in Wrocław, today's and tomorrow's "
+    "calendar), then a spoken question to their home assistant that its commands didn't cover. "
+    "Answer in at most three short sentences, plain text to be read aloud. Use the context: e.g. "
+    "for food or things to do, think where the user will be then and suggest specific places "
+    "near there from what you know of Wrocław (they may have changed: say so briefly). If it "
+    "needs data you weren't given or an action, say you can't do that by voice yet."
 )
 SORRY = "Sorry, I didn't get that."
 NUMBERS = {w: i for i, w in enumerate(
@@ -215,12 +219,42 @@ def _add_event(session: Session, now: datetime, config: Config, m: re.Match) -> 
 def _alarm_action(session: Session, now: datetime, config: Config, m: re.Match) -> str:
     ringing = alarm.ringing_alarm(session, now)
     if ringing is None:
+        if m[1].lower() == "stop" and music.stop(session):
+            return "OK."
         return "Nothing is ringing."
     if m[1].lower() == "snooze":
         actions.snooze(session, ringing, now, config)
     else:
         actions.stop(session, ringing, now, config)  # the dashboard reads the briefing
     return "OK."
+
+
+def _play(session: Session, now: datetime, config: Config, m: re.Match) -> str:
+    """ "play X" → X from YouTube; "play", "play music", "play it again" → resume."""
+    what = m["what"].strip(" .,!?")
+    if re.fullmatch(r"(some |the )?(music|it|again|it again)?", what, re.IGNORECASE):
+        return replies.reply_play(session, now, config, [])
+    return replies.reply_play(session, now, config, [what])
+
+
+def _shop_add(session: Session, now: datetime, config: Config, m: re.Match) -> str:
+    """ "add milk and bread to my shopping list"."""
+    items = re.split(r",\s*|\s+and\s+", m["items"])
+    reply = replies.reply_list(session, now, config, [", ".join(items)])
+    return reply.splitlines()[0]  # "Added: milk, bread", not the whole list read aloud
+
+
+def _shop_remove(session: Session, now: datetime, config: Config, m: re.Match) -> str:
+    return replies.reply_got(session, now, config, [m["item"]])
+
+
+def _shop_clear(session: Session, now: datetime, config: Config, m: re.Match) -> str:
+    return replies.reply_got(session, now, config, ["all"])
+
+
+def _now_playing(session: Session, now: datetime, config: Config, m: re.Match) -> str:
+    current = music.now_playing(session)
+    return f"This is {current.title}." if current else "Nothing is playing."
 
 
 def _note(session: Session, now: datetime, config: Config, m: re.Match) -> str:
@@ -330,8 +364,9 @@ def _marked_book(session: Session, now: datetime, config: Config, m: re.Match) -
 def _help(session: Session, now: datetime, config: Config, m: re.Match) -> str:
     return (
         "Ask me about the weather, your next tram, today's plans, the news, birthdays, jobs, "
-        "events, flights, films, books, sports or promotions. Say wake me up at 7:30, cancel the "
-        "alarm, take a note, add dentist to my calendar tomorrow at 3 pm, or stop and snooze."
+        "events, flights, films, books, sports or promotions. Say play and a song, wake me up "
+        "at 7:30, cancel the alarm, take a note, add dentist to my calendar tomorrow at 3 pm, or "
+        "stop and snooze."
     )
 
 
@@ -344,6 +379,12 @@ INTENTS: list[tuple[str, Handler]] = [
         _cancel_alarm,
     ),
     (r"^(stop|snooze|i'?m up)( it| that| the alarm| ringing)?$", _alarm_action),
+    (r"^(please )?play\b(?P<what>.*)", _play),
+    (r"\b(stop|turn off|switch off)\b.*\b(music|song|playing)\b", _reply(replies.reply_stop)),
+    (r"\b(pause|hold)\b.*\b(music|song)\b|^pause( it)?$", _reply(replies.reply_pause)),
+    (r"^(resume|unpause|continue)\b", _reply(replies.reply_play)),
+    (r"\b(skip|next (song|track))\b", _reply(replies.reply_skip)),  # before "next": a trip
+    (r"\bwhat('s| is) (playing|this song)\b|\bwhat song\b", _now_playing),
     (r"\b(wake me|alarm (for|at)|set (an |the |my )?alarm)\b(?P<rest>.*)", _set_alarm),
     (r"\balarms?\b", _reply(replies.reply_alarms)),
     (r"^(take a |make a |add a )?note( down)?:?\s+(that )?(?P<text>.+)", _note),
@@ -361,6 +402,19 @@ INTENTS: list[tuple[str, Handler]] = [
         _arrive_on_time,
     ),
     (
+        r"\b(add|put)\b (?P<items>.+?) (to|on) (my |the )?(shopping )?list\b",
+        _shop_add,
+    ),
+    (
+        r"\b(remove|take|cross|tick)\b( off)? (?P<item>.+?) (from|off) (my |the )?(shopping )?list",
+        _shop_remove,
+    ),
+    (r"\b(clear|empty)\b.*\bshopping list\b|\b(clear|empty) (my |the )?list\b", _shop_clear),
+    (
+        r"\bshopping\b|\bwhat do i (need to )?buy\b|\bwhat'?s on (my|the) list\b",
+        _reply(replies.reply_list),
+    ),
+    (
         r"^(please )?(add|put|create|schedule|make|new)\b"
         r".*\b(calendar|event|appointment|meeting)\b",
         _add_event,
@@ -374,16 +428,24 @@ INTENTS: list[tuple[str, Handler]] = [
     ),
     (r"\b(briefing|good morning)\b", _reply(replies.reply_briefing)),
     (
-        r"\b(weather|wear|jacket|coat|umbrella|rain\w*|cold|warm|temperature|forecast)\b",
+        r"\b(weather|wear|jacket|coat|umbrella|rain\w*|cold|warm|temperature|forecast"
+        r"|air|smog|pollution)\b",
         _reply(replies.reply_weather),
     ),
     (r"\b(match|matches|scores?|sports?|football)\b", _sports),  # before "next": not a trip
     (r"\b(promotions?|promos?|biedronka|on sale)\b", _reply(replies.reply_promos)),
+    (r"\b(parcels?|packages?|deliver(y|ies)|inpost)\b", _reply(replies.reply_track)),
     (r"\b(tram|bus|leave|departures?|trip|next)\b", _reply(replies.reply_next)),
     (
-        r"\b(today|tomorrow|calendar|schedule|plans?|agenda)\b|\bwhat do i have\b"
-        r"|\bdo i have anything\b|\bwhat('s| is) on\b|\bwhat am i doing\b|\bam i (busy|free)\b"
-        rf"|\b({'|'.join(WEEKDAYS)})\b",  # a day named and nothing else matched: its calendar
+        r"\b(calendar|schedule|plans?|agenda)\b|\bwhat do i have\b"
+        r"|\bdo i have anything\b|\bwhat('s| is) on\b|\bwhat am i doing\b|\bam i (busy|free)\b",
+        _agenda,
+    ),
+    (  # a day named and nothing else matched: its calendar, unless it asks something else
+        # ("where can I eat lunch tomorrow" goes to Claude)
+        r"^(?!.*\b(where|why|how|who|which|can|could|should|recommend|suggest|eat|lunch"
+        r"|dinner|breakfast|restaurant|cook|buy|weather)\b)"
+        rf".*\b(today|tomorrow|{'|'.join(WEEKDAYS)})\b",
         _agenda,
     ),
     (r"\bbirthdays?\b", _reply(replies.reply_birthdays)),
@@ -425,7 +487,32 @@ def answer(text: str, now: datetime, config: Config) -> tuple[str, bool]:
         handler, m = found
         with Session(get_engine()) as session, session.begin():  # e.g. a new alarm is saved
             return handler(session, now, config, m), handler in ONE_LANGUAGE
-    return ai.ask("voice", AI_PROMPT, text, anytime=True) or SORRY, False  # outside a transaction
+    with Session(get_engine()) as session:
+        context = ai_context(session, now, config)
+    data = f"{context}\n\nQuestion: {text}"
+    return ai.ask("voice", AI_PROMPT, data, anytime=True) or SORRY, False  # outside a transaction
+
+
+def ai_context(session: Session, now: datetime, config: Config) -> str:
+    """What Claude knows besides the question: the time, the user's places, today's and
+    tomorrow's events (with where they are), so "where can I eat lunch tomorrow" has an answer."""
+    local = now.astimezone(config.tz)
+    lines = [f"Now: {local:%A %d %B %Y, %H:%M}, Wrocław, Poland."]
+    for alias, place in config.places.items():
+        known = ", ".join(place.keywords) or place.stops[0]
+        lines.append(f"The user's place '{alias}': {known} (nearest stop: {place.stops[0]})")
+    for label, day in (("Today", local), ("Tomorrow", local + timedelta(days=1))):
+        events = calendar.day_events(session, day, config.tz, config.location_rules)
+        for e in events:
+            when = (
+                "all day"
+                if e.all_day
+                else (f"{e.start.astimezone(config.tz):%H:%M}–{e.end.astimezone(config.tz):%H:%M}")
+            )
+            lines.append(f"{label} {when}: {e.title}" + (f" at {e.location}" if e.location else ""))
+        if not events:
+            lines.append(f"{label}: nothing in the calendar (at home or free).")
+    return "\n".join(lines)
 
 
 def spoken(text: str, max_lines: int = 8) -> list[str]:

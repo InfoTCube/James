@@ -13,3 +13,11 @@
   ≥0.5 mm), wind (≥40 km/h) and heat (feels like ≥27°).
 - **Widget:** `GET /widgets/weather` (htmx fragment). Marked stale if there's no successful run in 3 h.
 - **Fragility:** low. It's a stable public API, and `parse()` skips hours with null values.
+
+## Air quality
+
+Same run, second request: `air-quality-api.open-meteo.com` (CAMS Europe forecast, free, no key)
+→ `weather_air` (PM2.5, PM10, European AQI). The card shows the current air. When the next 12 h
+reach "poor" (AQI 60+), a 😷 line with what to do goes on the card, `/weather`, voice and the
+briefing. At "very poor" (80+) there's also a Telegram alert, once a day. If that API fails, the
+weather still updates. CAMS is a model at ~10 km: a stove smoking next door won't show up.

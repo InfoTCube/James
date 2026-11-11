@@ -1,0 +1,8 @@
+<section class="widget parcels{% if stale %} stale{% endif %}">
+  <h2>Parcels{% if stale %} <small class="badge">stale</small>{% endif %}</h2>
+  <ul class="digest">
+    {% for parts in lines %}
+    <li>{{ parts[0] }}{% for more in parts[1:] %}<br><small>{{ more }}</small>{% endfor %}</li>
+    {% endfor %}
+  </ul>
+</section>

@@ -222,3 +222,41 @@ def test_leave_earlier(session):
     assert reply_early(session, NOW, CONFIG, []) == "Siatkówka: 10 min early"
     assert reply_early(session, NOW, CONFIG, ["0"]) == "Siatkówka: arriving on time again."
     assert reply_early(session, NOW, CONFIG, ["soon"]).startswith("Usage")
+
+
+def test_a_day_word_alone_does_not_make_a_calendar_question():
+    from assistant.services.voice import intents
+
+    def handler(text):
+        found = intents._find(text)
+        return found[0] if found else None
+
+    assert handler("Where can I eat lunch tomorrow?") is None  # → Claude
+    assert handler("Should I cook something on Friday?") is None
+    assert handler("Tomorrow?") is intents._agenda
+    assert handler("What about Friday") is intents._agenda
+    assert handler("Can you check my calendar for tomorrow?") is intents._agenda
+
+
+def test_ai_fallback_gets_places_and_calendar(session):
+    from assistant.modules.calendar.models import CalendarEvent
+    from assistant.services.voice import intents
+
+    config = Config(
+        location={"latitude": 51.1, "longitude": 17.0},
+        places={"home": {"stops": ["Kościuszki"], "keywords": ["Kościuszki 71"]},
+                "uni": {"stops": ["PL. GRUNWALDZKI"]}},
+    )  # fmt: skip
+    start = datetime(2026, 10, 7, 9, tzinfo=TZ)
+    session.add(
+        CalendarEvent(id="w", start=start, end=start + timedelta(hours=4), title="Wykład",
+                      location="Politechnika", all_day=False, kind="default")
+    )  # fmt: skip
+    session.flush()
+    assert intents.ai_context(session, NOW, config).splitlines() == [
+        "Now: Tuesday 06 October 2026, 22:15, Wrocław, Poland.",
+        "The user's place 'home': Kościuszki 71 (nearest stop: Kościuszki)",
+        "The user's place 'uni': PL. GRUNWALDZKI (nearest stop: PL. GRUNWALDZKI)",
+        "Today: nothing in the calendar (at home or free).",
+        "Tomorrow 09:00–13:00: Wykład at Politechnika",
+    ]

@@ -146,6 +146,13 @@ class ListeningConfig(BaseModel):
     device: str | None = None  # sound device name (or part of it); None = system default
 
 
+class ScreenConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    dark_from: time | None = time(23, 0)  # dashboard goes black from here (None: never)
+    dark_until: time = time(7, 0)  # ...until here; an alarm, "leave now", voice or a tap wakes it
+
+
 class Config(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -163,6 +170,7 @@ class Config(BaseModel):
     voice: str = "en_GB-alan-medium"  # Piper voice for reading aloud (core/tts.py)
     voice_pl: str = "pl_PL-darkman-medium"  # ...and for Polish names in it
     listening: ListeningConfig = Field(default_factory=ListeningConfig)
+    screen: ScreenConfig = Field(default_factory=ScreenConfig)
 
     @model_validator(mode="after")
     def _rule_places_exist(self) -> "Config":

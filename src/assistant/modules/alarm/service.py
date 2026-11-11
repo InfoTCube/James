@@ -165,6 +165,8 @@ def briefing(session: Session, now: datetime, config: Config) -> str:
             line += f" · 👕 {advice.layers}"
         lines.append(line)
         lines += advice.extras if advice else []
+        if air := weather.get_air_advice(session, now, tz):
+            lines.append(air)
 
     departure = mpk.first_departure(session, now.astimezone(tz).date(), config, after=now)
     if departure:

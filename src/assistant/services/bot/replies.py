@@ -1,10 +1,15 @@
 """Reply texts for bot commands. Plain functions over the DB, no Telegram here."""
 
+import re
+import shutil
 from datetime import date, datetime, time, timedelta
 
 from sqlalchemy.orm import Session
 
+from assistant.core import ai
+from assistant.core.collector import last_success, latest_runs
 from assistant.core.config import Config
+from assistant.core.db import DB_PATH
 from assistant.modules.alarm import service as alarm
 from assistant.modules.biedronka import service as biedronka
 from assistant.modules.birthdays import service as birthdays
@@ -16,8 +21,13 @@ from assistant.modules.flights import service as flights
 from assistant.modules.jobs import service as jobs
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.alerts import format_connection
+from assistant.modules.music import client as music_client
+from assistant.modules.music import service as music
 from assistant.modules.news import service as news
 from assistant.modules.notes import service as notes
+from assistant.modules.parcels import service as parcels
+from assistant.modules.parcels.collector import ParcelsCollector
+from assistant.modules.shopping import service as shopping
 from assistant.modules.sports import service as sports
 from assistant.modules.weather import service as weather
 
@@ -114,6 +124,12 @@ def reply_weather(session: Session, now: datetime, config: Config, args: list[st
     if advice:
         lines.append(f"👕 {advice.layers}")
         lines += advice.extras
+    air = weather.air_now(session, now)
+    if air:
+        lines.append(
+            weather.get_air_advice(session, now, tz)
+            or f"Air {weather.aqi_label(air.aqi)} · PM2.5 {air.pm2_5:.0f} µg/m³"
+        )
     return "\n".join(lines)
 
 
@@ -388,3 +404,113 @@ def reply_flight_del(session: Session, now: datetime, config: Config, args: list
         return "Usage: /flight_del 3 (numbers from /flights)"
     w = flights.delete_watch(session, int(args[0].lstrip("#")))
     return f"🗑️ Deleted {flights.describe(w)}" if w else "No such watch."
+
+
+LOW_DISK_GB = 2
+
+
+def free_disk_gb() -> float:
+    """Free space where the database lives."""
+    return shutil.disk_usage(DB_PATH.parent).free / 1e9
+
+
+def reply_status(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/status: failing collectors (with their last good run), AI calls used, free disk."""
+    runs = latest_runs(session)
+    failed = [r for r in runs if r.status == "error"]
+    lines = [f"Collectors: {len(runs) - len(failed)}/{len(runs)} OK"]
+    for r in failed:
+        ok = last_success(session.get_bind(), r.module)
+        since = f"OK {ok.astimezone(config.tz):%d.%m %H:%M}" if ok else "never OK"
+        lines.append(f"❌ {r.module} ({since}): {(r.error or '')[:150]}")
+    lines.append(f"AI calls in 24 h: {ai.calls_last_day(session, now)}/{ai.MAX_CALLS_PER_DAY}")
+    free = free_disk_gb()
+    lines.append(f"{'⚠️ ' if free < LOW_DISK_GB else ''}Disk free: {free:.1f} GB")
+    return "\n".join(lines)
+
+
+def reply_play(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/play <song, artist or YouTube link>: that, then its YouTube Mix; alone: resume / what's
+    on."""
+    if args:
+        tracks = music_client.find(" ".join(args))
+        if not tracks:
+            return "Nothing found on YouTube."
+        music.play(session, tracks)
+        more = f"\nThen {len(tracks) - 1} more from its mix." if len(tracks) > 1 else ""
+        return f"▶️ {tracks[0][1]}{more}"
+    current = music.set_paused(session, False)
+    if current is None:
+        return "Nothing playing. Usage: /play Dawid Podsiadło"
+    lines = [f"▶️ {current.title}", *(f"· {t.title}" for t in music.up_next(session))]
+    return "\n".join(lines)
+
+
+def reply_pause(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/pause: pause the music (/play resumes it)."""
+    return "⏸️ Paused" if music.set_paused(session, True) else "Nothing playing."
+
+
+def reply_skip(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/skip: the next track."""
+    current = music.skip(session)
+    return f"▶️ {current.title}" if current else "That was the last one."
+
+
+def reply_stop(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/stop: stop the music and clear the queue."""
+    return "⏹️ Stopped" if music.stop(session) else "Nothing playing."
+
+
+def reply_track(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/track 620000011234567890123456 [headphones]: track an InPost parcel; /track: the list."""
+    text = " ".join(args)
+    numbers = parcels.find_numbers(text)
+    if not numbers:
+        if args:
+            return "Usage: /track <24-digit InPost number> [name]"
+        tracked = parcels.parcels(session)
+        if not tracked:
+            return "No parcels tracked. Usage: /track <24-digit InPost number> [name]"
+        return "\n".join(parcels.format_parcel(p, config.tz) for p in tracked)
+    label = text
+    for n in numbers:  # the name is what's left after the number(s)
+        label = re.sub(r"[ -]?".join(n), "", label)
+    label = " ".join(label.split()) if len(numbers) == 1 else ""
+    added = [parcels.add(session, n, label, now) for n in numbers]
+    session.flush()
+    try:
+        ParcelsCollector().check(session, alert=False)
+    except Exception:  # InPost down: the collector checks again in 20 min
+        pass
+    return "\n".join(parcels.format_parcel(p, config.tz) for p in added)
+
+
+def reply_untrack(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/untrack headphones (or the last digits of its number): stop tracking it."""
+    if not args:
+        return "Usage: /untrack <name or last digits>"
+    p = parcels.remove(session, " ".join(args))
+    return f"🗑️ Stopped tracking {parcels.name(p)}" if p else "No such parcel."
+
+
+def reply_list(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/list mleko, chleb: add to the shopping list; /list: the list (🐞 = on promotion)."""
+    lines = []
+    if args:
+        added = shopping.add(session, " ".join(args).split(","), now)
+        lines.append("🛒 Added: " + ", ".join(added) if added else "🛒 Already on the list.")
+        return "\n".join(lines + shopping.format_list(session, now.astimezone(config.tz).date()))
+    lines = shopping.format_list(session, now.astimezone(config.tz).date())
+    return "🛒 Shopping list:\n" + "\n".join(lines) if lines else "🛒 The list is empty."
+
+
+def reply_got(session: Session, now: datetime, config: Config, args: list[str]) -> str:
+    """/got mleko (or its number): tick it off; /got all: empty the list."""
+    if not args:
+        return "Usage: /got mleko, /got 3 or /got all"
+    if args == ["all"]:
+        return f"🛒 Cleared {shopping.clear(session)} items."
+    gone = [i.text for ref in " ".join(args).split(",") if (i := shopping.remove(session, ref))]
+    left = len(shopping.items(session))
+    return f"✅ {', '.join(gone)} ({left} left)" if gone else "Not on the list."

@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from assistant.modules.weather.models import WeatherHourly
+from assistant.modules.weather.models import WeatherAir, WeatherHourly
 
 QUICK_TRIP = timedelta(hours=1)  # no more events today: dress for a short trip out now
 
@@ -132,3 +132,40 @@ def get_clothing_advice(
     """
     windows = outdoor_windows(events, now) if events else []
     return clothing_advice(hours_in(session, windows or [default_window(now)]), tz)
+
+
+# European AQI bands (upper bound, label)
+AQI_BANDS = [(20, "good"), (40, "fair"), (60, "moderate"), (80, "poor"), (100, "very poor")]
+ADVISE_AQI = 60  # poor: say so in the briefing and /weather
+ALERT_AQI = 80  # very poor: also a Telegram alert, once a day
+
+
+def aqi_label(aqi: int) -> str:
+    return next((label for top, label in AQI_BANDS if aqi < top), "extremely poor")
+
+
+def air_now(session: Session, now: datetime) -> WeatherAir | None:
+    """The air quality forecast for the current hour."""
+    q = select(WeatherAir).where(WeatherAir.time.between(now - timedelta(hours=1), now))
+    return session.scalar(q.order_by(WeatherAir.time.desc()).limit(1))
+
+
+def worst_air(session: Session, now: datetime, ahead: timedelta) -> WeatherAir | None:
+    """The hour with the worst air from now to now + ahead."""
+    q = select(WeatherAir).where(WeatherAir.time.between(now - timedelta(hours=1), now + ahead))
+    return session.scalar(q.order_by(WeatherAir.aqi.desc(), WeatherAir.time).limit(1))
+
+
+def air_advice(worst: WeatherAir, now: datetime, tz: ZoneInfo) -> str:
+    """What to do about bad air, e.g. "😷 Air very poor around 21:00 (PM2.5 62 µg/m³): …"."""
+    when = "now" if worst.time <= now else f"around {worst.time.astimezone(tz):%H:%M}"
+    todo = "keep windows shut, skip running outside"
+    if worst.aqi >= ALERT_AQI:
+        todo += ", wear a mask (FFP2) outside"
+    return f"😷 Air {aqi_label(worst.aqi)} {when} (PM2.5 {worst.pm2_5:.0f} µg/m³): {todo}."
+
+
+def get_air_advice(session: Session, now: datetime, tz: ZoneInfo) -> str | None:
+    """A warning line when the air gets poor in the next 12 h, else None."""
+    worst = worst_air(session, now, timedelta(hours=12))
+    return air_advice(worst, now, tz) if worst and worst.aqi >= ADVISE_AQI else None

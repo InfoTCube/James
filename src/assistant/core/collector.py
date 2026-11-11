@@ -32,17 +32,22 @@ def run_collector(collector: Collector, engine: Engine) -> bool:
     except Exception as e:
         log.exception("collector %s failed", collector.name)
         error = f"{type(e).__name__}: {e}"
-    with Session(engine) as session, session.begin():
-        session.execute(delete(CollectorRun).where(CollectorRun.finished_at < started - KEEP_RUNS))
-        session.add(
-            CollectorRun(
-                module=collector.name,
-                started_at=started,
-                finished_at=utcnow(),
-                status="error" if error else "ok",
-                error=error,
+    try:
+        with Session(engine) as session, session.begin():
+            session.execute(
+                delete(CollectorRun).where(CollectorRun.finished_at < started - KEEP_RUNS)
             )
-        )
+            session.add(
+                CollectorRun(
+                    module=collector.name,
+                    started_at=started,
+                    finished_at=utcnow(),
+                    status="error" if error else "ok",
+                    error=error,
+                )
+            )
+    except Exception:  # e.g. the DB stayed locked: the run is lost, the worker goes on
+        log.exception("collector %s: could not record the run", collector.name)
     log.info("collector %s: %s", collector.name, "error" if error else "ok")
     return error is None
 
@@ -61,3 +66,13 @@ def is_stale(engine: Engine, module: str, max_age: timedelta) -> bool:
     """True if the module has no successful run within max_age — show its data as stale."""
     ok = last_success(engine, module)
     return ok is None or utcnow() - ok > max_age
+
+
+def latest_runs(session: Session) -> list[CollectorRun]:
+    """Most recent run of each collector, by module name."""
+    latest = select(func.max(CollectorRun.id)).group_by(CollectorRun.module)
+    return list(
+        session.scalars(
+            select(CollectorRun).where(CollectorRun.id.in_(latest)).order_by(CollectorRun.module)
+        )
+    )

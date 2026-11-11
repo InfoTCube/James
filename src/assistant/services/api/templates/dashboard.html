@@ -32,7 +32,7 @@
     /* left rail: always visible */
     #rail {
       display: flex; flex-direction: column; gap: calc(var(--gap) / 2);
-      padding: var(--gap); border-right: 1px solid var(--panel);
+      padding: var(--gap); border-right: 1px solid var(--panel); min-height: 0;
     }
     #clock {
       font: 300 clamp(56px, min(11vw, 19.5vh), 230px)/0.85 var(--numbers);
@@ -43,7 +43,11 @@
     #temp { font: 500 2.2em/1 var(--numbers); color: var(--sky); min-height: 1em; }
     #next-alarm { font: 500 1.6em/1 var(--numbers); }
     #next-alarm span { color: var(--slate); font: 400 0.6em var(--text); margin-left: 0.3em; }
-    #cards { margin: auto 0 0; padding: 0; list-style: none; color: var(--slate); font-size: 0.8em; }
+    #cards {  /* scrolls on its own when there are more cards than fit */
+      margin: auto 0 0; padding: 0; list-style: none; color: var(--slate); font-size: 0.8em;
+      min-height: 0; overflow-y: auto; position: relative; scrollbar-width: thin;
+      scrollbar-color: var(--panel) transparent; overscroll-behavior: contain;
+    }
     #cards button {  /* tap a card's name to show it (touch screen: big enough to hit) */
       display: block; width: 100%; min-height: 2.2em; padding: 0.25em 0 0.25em 0.9em;
       border: 0; border-left: 3px solid transparent; background: none; color: inherit;
@@ -112,6 +116,8 @@
     .close:focus-visible { outline: 3px solid var(--paper); outline-offset: 3px; }
     #leave .close { margin: 1.2em 0 0; }
     #sound-hint { color: var(--amber); font-size: 0.7em; }
+    #night { position: fixed; inset: 0; z-index: 50; background: #000; cursor: none; }
+    #night[hidden] { display: none; }
     #leave[hidden] { display: none; }
     #leave {
       position: fixed; inset: 0; z-index: 9; display: grid; align-content: center;
@@ -220,6 +226,7 @@
   </style>
 </head>
 <body>
+  <div id="night" hidden></div>
   <aside id="rail">
     <div id="clock"></div>
     <div id="date"></div>
@@ -233,6 +240,8 @@
       <div class="slot" data-name="Weather" hx-get="/widgets/weather" hx-trigger="load, every 10m"></div>
       <div class="slot" data-name="Getting there" hx-get="/widgets/mpk" hx-trigger="load, every 1m"></div>
       <div class="slot" data-name="Calendar" hx-get="/widgets/calendar" hx-trigger="load, every 5m"></div>
+      <div class="slot" data-name="Shopping" hx-get="/widgets/shopping" hx-trigger="load, every 5m"></div>
+      <div class="slot" data-name="Parcels" hx-get="/widgets/parcels" hx-trigger="load, every 5m"></div>
       <div class="slot" data-name="Birthdays" hx-get="/widgets/birthdays" hx-trigger="load, every 30m"></div>
       <!-- data-every="10": only in every 10th round of the rotation; any time with a tap -->
       <div class="slot scrolls" data-name="Jobs" data-every="10" hx-get="/widgets/jobs" hx-trigger="load, every 30m"></div>
@@ -328,6 +337,20 @@
         li.append(button);
         return li;
       }));
+      revealCurrent();
+    }
+
+    // Keep the shown card's name visible in the rail: scroll to it when it's off screen, unless
+    // you're browsing the list yourself (touched or scrolled it in the last 10 s).
+    let browsingUntil = 0;
+    const browsing = () => { browsingUntil = Date.now() + 10000; };
+    ["pointerdown", "wheel", "touchmove"].forEach(e => list.addEventListener(e, browsing, { passive: true }));
+    function revealCurrent() {
+      const li = list.querySelector("button.on")?.parentElement;
+      if (!li || Date.now() < browsingUntil) return;
+      const top = li.offsetTop, bottom = top + li.offsetHeight;
+      if (top >= list.scrollTop && bottom <= list.scrollTop + list.clientHeight) return;
+      list.scrollTo({ top: top - (list.clientHeight - li.offsetHeight) / 2, behavior: "smooth" });
     }
 
     tick(); setInterval(tick, 1000);
@@ -500,6 +523,44 @@
       voiceReply.children[v.line]?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
     new EventSource("/api/voice/events").onmessage = e => showVoice(JSON.parse(e.data));  // reconnects by itself
+
+    // --- night: black between screen.dark_from and dark_until (config.yaml), unless something is
+    // happening; a tap shows the dashboard for a minute ---
+    // ponytail: black pixels, the backlight stays on; on the mini PC add `xset dpms force off`
+    // from the host if the glow or power matters
+    const night = document.getElementById("night"), OFF = "{{ screen_off }}", ON = "{{ screen_on }}";
+    let awakeUntil = 0;
+    const isNight = t => !!OFF && (OFF < ON ? t >= OFF && t < ON : t >= OFF || t < ON);
+    function updateNight() {
+      const t = new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: TZ });
+      const busy = !overlay.hidden || !leave.hidden || voice.classList.contains("on") || Date.now() < awakeUntil;
+      night.hidden = !isNight(t) || busy;
+    }
+    night.addEventListener("click", () => { awakeUntil = Date.now() + 60000; updateNight(); });
+    updateNight(); setInterval(updateNight, 1000);
+
+    // --- music: plays the queue set by /play (YouTube audio, no player so no ads); quiet while
+    // the alarm, a briefing, "leave now" or the voice service talks ---
+    const music = new Audio();
+    let track = null;
+    async function pollMusic() {
+      try {
+        const s = await (await fetch("/api/music/state")).json();
+        if (s.video_id !== track) {
+          track = s.video_id;
+          if (track) music.src = `/api/music/stream/${track}`;
+          else { music.pause(); music.removeAttribute("src"); music.load(); }
+        }
+        if (track && s.paused) music.pause();
+        else if (track && music.paused && !music.ended) music.play().catch(() => {});  // e.g. sound not allowed yet
+      } catch (e) { /* retry next poll */ }
+      const talking = !overlay.hidden || !leave.hidden || voice.classList.contains("on");
+      music.volume = talking ? 0.15 : 1;
+    }
+    // ponytail: a track that won't play is skipped; if YouTube refuses them all, the queue empties
+    const nextTrack = () => track && fetch(`/api/music/next/${track}`, { method: "POST" }).then(pollMusic);
+    music.onended = music.onerror = nextTrack;
+    pollMusic(); setInterval(pollMusic, 2000);
 
     // After a deploy the server's version changes: reload to get the new page (kiosk has no F5).
     // Not while ringing or showing the briefing, so an update never interrupts an alarm.

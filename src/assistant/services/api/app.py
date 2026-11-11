@@ -7,12 +7,12 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query, Request, Response
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from assistant.core import tts
+from assistant.core.collector import latest_runs
 from assistant.core.config import fold, load_config
-from assistant.core.db import CollectorRun, get_engine
+from assistant.core.db import get_engine, utcnow
 from assistant.modules.alarm.routes import router as alarm_router
 from assistant.modules.biedronka.routes import router as biedronka_router
 from assistant.modules.birthdays.routes import router as birthdays_router
@@ -24,9 +24,13 @@ from assistant.modules.flights.routes import router as flights_router
 from assistant.modules.jobs.routes import router as jobs_router
 from assistant.modules.mpk import service as mpk
 from assistant.modules.mpk.routes import router as mpk_router
+from assistant.modules.music.routes import router as music_router
 from assistant.modules.news.routes import router as news_router
+from assistant.modules.parcels.routes import router as parcels_router
+from assistant.modules.shopping.routes import router as shopping_router
 from assistant.modules.sports.routes import router as sports_router
 from assistant.modules.weather.routes import router as weather_router
+from assistant.services.bot.replies import reply_status
 from assistant.services.voice.routes import router as voice_router
 
 templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
@@ -46,6 +50,9 @@ app.include_router(films_router)
 app.include_router(books_router)
 app.include_router(sports_router)
 app.include_router(biedronka_router)
+app.include_router(music_router)
+app.include_router(parcels_router)
+app.include_router(shopping_router)
 app.include_router(voice_router)
 
 # get the voice (~60 MB, once) ready before the first alarm needs it
@@ -60,19 +67,6 @@ def polish_lexicon(_hour: int) -> set[str]:
         return {fold(w) for name in mpk.stop_names(session) for w in name.split() if len(w) > 2}
 
 
-def latest_runs() -> list[CollectorRun]:
-    """Most recent run of each collector."""
-    latest = select(func.max(CollectorRun.id)).group_by(CollectorRun.module)
-    with Session(get_engine()) as session:
-        return list(
-            session.scalars(
-                select(CollectorRun)
-                .where(CollectorRun.id.in_(latest))
-                .order_by(CollectorRun.module)
-            )
-        )
-
-
 @app.get("/api/health")
 def health() -> dict:
     return {"status": "ok", "version": VERSION}
@@ -80,13 +74,23 @@ def health() -> dict:
 
 @app.get("/")
 def dashboard(request: Request):
-    return templates.TemplateResponse(request, "dashboard.html", {"version": VERSION})
+    screen = load_config().screen
+    off = screen.dark_from.strftime("%H:%M") if screen.dark_from else ""
+    return templates.TemplateResponse(
+        request,
+        "dashboard.html",
+        {"version": VERSION, "screen_off": off, "screen_on": screen.dark_until.strftime("%H:%M")},
+    )
 
 
 @app.get("/debug")
 def debug(request: Request):
+    config = load_config()
+    with Session(get_engine()) as session:
+        status = reply_status(session, utcnow(), config, [])
+        runs = latest_runs(session)
     return templates.TemplateResponse(
-        request, "debug.html", {"runs": latest_runs(), "tz": load_config().tz}
+        request, "debug.html", {"runs": runs, "status": status, "tz": config.tz}
     )
 
 

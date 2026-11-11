@@ -1,0 +1,49 @@
+{
+ "latitude": 51.1,
+ "longitude": 17.0,
+ "generationtime_ms": 0.2930164337158203,
+ "utc_offset_seconds": 0,
+ "timezone": "GMT",
+ "timezone_abbreviation": "GMT",
+ "elevation": 132.0,
+ "hourly_units": {
+  "time": "unixtime",
+  "pm2_5": "\u00ce\u00bcg/m\u00c2\u00b3",
+  "pm10": "\u00ce\u00bcg/m\u00c2\u00b3",
+  "european_aqi": "EAQI"
+ },
+ "hourly": {
+  "time": [
+   1794355200,
+   1794358800,
+   1794362400,
+   1794366000,
+   1794369600,
+   1794373200
+  ],
+  "pm2_5": [
+   38.0,
+   40.0,
+   41.5,
+   42.1,
+   38.4,
+   36.0
+  ],
+  "pm10": [
+   41.0,
+   44.7,
+   46.3,
+   48.8,
+   46.1,
+   40.3
+  ],
+  "european_aqi": [
+   53,
+   54,
+   null,
+   55,
+   85,
+   52
+  ]
+ }
+}

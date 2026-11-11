@@ -12,11 +12,12 @@ from apscheduler.triggers.cron import CronTrigger
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
+from assistant.core import ai
 from assistant.core.config import load_config
 from assistant.core.db import SentNotification, utcnow
 from assistant.core.notifier import notify
 from assistant.modules.biedronka import service
-from assistant.modules.biedronka.models import BiedronkaPage
+from assistant.modules.biedronka.models import BiedronkaCheck, BiedronkaPage
 
 log = logging.getLogger(__name__)
 
@@ -149,5 +150,36 @@ class BiedronkaCollector:
             raise RuntimeError("biedronka: no leaflet page could be read")
         session.add_all(new_pages)
         session.execute(delete(BiedronkaPage).where(BiedronkaPage.press_id.not_in(links)))
-        session.flush()
+
+
+CHECK_PROMPT = (
+    "Each input line is an offer that OCR found in a Polish supermarket leaflet: "
+    "id | product the user wants | words the leaflet has for it | price | other words printed "
+    "around that price. OCR misreads letters (ł as t, ą as q). For each id, answer one line: "
+    "'id | ok' if it really is that product (a kind of it counts: 'ryb' wants any fish, 'jaja' "
+    "wants eggs, not egg pasta) and the price is its own; 'id | wrong' if it's another product "
+    "or the price belongs to a neighbouring product with no better one in sight; 'id | price "
+    "6,99' if it's the product but the nearby words show its real price is different. Nothing else."
+)
+
+
+class BiedronkaCheckCollector:
+    """After the night's reading: Claude checks the new offers in one call (wrong product, a
+    neighbour's price), then the alert goes out with what's left. Without Claude (failed): the
+    alert goes out unchecked; in the daytime it waits for the night."""
+
+    name = "biedronka_check"
+    schedule = CronTrigger(hour=5, minute=50)  # after the last reading run (05:35)
+
+    def run(self, session: Session) -> None:
+        now = utcnow()
+        today = now.astimezone(load_config().tz).date()
+        todo = [o for o in service.offers(session, today) if not o.checked]
+        if todo:
+            answer = ai.ask("biedronka", CHECK_PROMPT, service.check_input(todo))
+            if answer is None and not ai.at_night(now):
+                return  # the worker started in the daytime: check (and alert) tonight
+            for key, (ok, price) in service.parse_checks(answer or "", todo).items():
+                session.merge(BiedronkaCheck(key=key, ok=ok, price=price))
+            session.flush()
         send_alert(session, today)

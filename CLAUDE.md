@@ -31,11 +31,14 @@ Most features are scheduled data fetching + filtering rules. **Default to determ
 | `books` | Monthly book suggestions | Open Library | Selection |
 | `sports` | Football/volleyball matches for chosen teams/leagues + scores | TheSportsDB (public key, no signup) | No |
 | `news` | News digest (written overnight; raw headlines without AI) | RSS/Atom feeds from config | Summary |
-| `biedronka` | Promotions on products the user actually buys | Biedronka leaflets (images, read by local OCR) | No |
+| `biedronka` | Promotions on products the user actually buys | Biedronka leaflets (images, read by local OCR) | Nightly check of the matches |
 | `notes` | Store and search notes | Local (SQLite and/or Markdown files) | No |
 | `flights` | Good flight deals from WRO for date windows and prices set from Telegram, checked ~2×/day | Ryanair + Wizz Air fare endpoints (unofficial) | No |
+| `parcels` | InPost parcel tracking + alerts (later: numbers caught from emails) | InPost ShipX public tracking API | No |
+| `shopping` | Shopping list, items on Biedronka promotion flagged | Local (later Google Tasks) | No |
+| `backup` | Nightly SQLite copy, last 7 kept | Local | No |
 | `alarm` | Alarms, tied to a morning briefing | Scheduler + audio | No |
-| `music` | Play/find music | Spotify Connect (spotifyd/raspotify) + Spotify Web API | No |
+| `music` | Play/find music (search + its YouTube Mix as radio), no ads | YouTube via yt-dlp; audio stream played by the dashboard | No |
 | `events` | Hackathons & IT events (in your cities; online ones by keyword, no online hackathons) | Crossweb.pl, Meetup | No — keyword filters |
 
 Cross-cutting: **morning briefing** (spoken/displayed summary after alarm), **Telegram alerts** (flights, jobs, events, "leave now for your tram"), **settings** in config files.
@@ -116,7 +119,7 @@ Auth: `CLAUDE_CODE_OAUTH_TOKEN` environment variable (generated once with `claud
 
 Usage: `ai.ask(module, prompt, data, model="haiku")` → answer text or `None`. **Claude is only called 01:00–06:00 local time** (`ai.NIGHT`), so AI work doesn't use the Pro quota while the user does: schedule AI collectors in that window, and make them retry next night if they got `None` (the worker also runs every collector at startup, often in the daytime). Only what can't wait (voice fallback) passes `anytime=True`. Call it before writing in your collector's transaction (it records the call in its own). Calls are logged in the `ai_calls` table (also the cache); at most `MAX_CALLS_PER_DAY` (30) real calls per day. The CLI flags (no tools/MCP/settings, one-line system prompt) keep overhead ~600 input tokens per call; `--bare` can't be used because it ignores OAuth.
 
-Allowed AI uses: email summary, news summary, film/book selection, optional job ranking, voice fallback for requests the intent matcher doesn't understand. Anything else: ask first. The Pro quota is shared with the user's normal Claude usage — keep calls few and batched (daily/weekly jobs, not per-item loops).
+Allowed AI uses: email summary, news summary, film/book selection, optional job ranking, the nightly check of Biedronka offers (wrong product / neighbour's price, one call), voice fallback for requests the intent matcher doesn't understand. Anything else: ask first. The Pro quota is shared with the user's normal Claude usage — keep calls few and batched (daily/weekly jobs, not per-item loops).
 
 ## Conventions
 
@@ -174,13 +177,19 @@ Work in this order. Keep each step small and working end-to-end before moving on
 **Phase 4 — AI-assisted & the rest**
 - [x] `core/ai.py` wrapper
 - [x] `news` (RSS/Atom hourly; AI digest overnight; dashboard card, /news, top 3 in the morning briefing)
-- [ ] `email`
+- [ ] `email` (also: InPost tracking numbers from emails → `parcels`, via `parcels.service.find_numbers`)
 - [x] `films` (JustWatch, PL subscription streaming; AI picks 3 a week; dashboard card, /films, voice)
 - [x] `books` (Open Library; AI picks 3 a month; dashboard card, /books, voice)
 - [x] `birthdays`
 - [x] `sports` (TheSportsDB; teams and whole leagues, scores; dashboard card, /sports, voice)
 - [x] `biedronka` (food leaflets by local OCR; /buy, /promos, alerts, dashboard card, voice)
-- [ ] `music`
+- [x] `music` (YouTube via yt-dlp, no ads; /play /pause /skip /stop, voice, played by the dashboard)
+- [x] `/status` (failing collectors, AI calls used, free disk; also on `/debug`)
+- [x] Air quality in `weather` (Open-Meteo CAMS; card, briefing, smog alert)
+- [x] Screen black at night (`screen` in config)
+- [x] `backup` (nightly, last 7)
+- [x] `parcels` (InPost; /track /untrack, alerts, card, voice)
+- [x] `shopping` list (/list /got, voice, card, Biedronka promos flagged; Google Tasks sync with `email`)
 
 ## How to work in this repo
 
